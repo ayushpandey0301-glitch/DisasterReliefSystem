@@ -105,7 +105,7 @@ def reports_home():
 
         cursor.execute("""
             SELECT COUNT(*) AS total
-            FROM relief_requests
+            FROM resource_requests
         """)
 
         total_requests = cursor.fetchone()["total"]
@@ -119,7 +119,7 @@ def reports_home():
             SELECT
                 status,
                 COUNT(*) AS total
-            FROM relief_requests
+            FROM resource_requests
             GROUP BY status
             ORDER BY total DESC
         """)
@@ -135,7 +135,7 @@ def reports_home():
             SELECT
                 priority,
                 COUNT(*) AS total
-            FROM relief_requests
+            FROM resource_requests
             GROUP BY priority
             ORDER BY total DESC
         """)
