@@ -108,7 +108,7 @@ def dashboard_home():
                 priority,
                 status,
                 created_at
-            FROM relief_requests
+            FROM resource_requests
             ORDER BY created_at DESC
             LIMIT 5
         """)
