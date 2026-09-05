@@ -101,15 +101,17 @@ def dashboard_home():
 
         cursor.execute("""
             SELECT
-                request_id,
-                requester_name,
-                request_type,
-                location,
-                priority,
-                status,
-                created_at
-            FROM resource_requests
-            ORDER BY created_at DESC
+                rr.request_id,
+                u.full_name AS requester_name,
+                rr.resource_type AS request_type,
+                rr.request_location AS location,
+                rr.priority,
+                rr.status,
+                rr.requested_at AS created_at
+            FROM resource_requests rr
+            LEFT JOIN users u
+                ON rr.requested_by = u.user_id
+            ORDER BY rr.requested_at DESC
             LIMIT 5
         """)
 
