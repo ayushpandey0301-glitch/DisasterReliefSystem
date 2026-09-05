@@ -39,4 +39,37 @@ def get_db_connection():
             ssl_verify_identity=False
         )
 
+    # =====================================================
+    # TEMPORARY RENDER DATABASE DIAGNOSTIC
+    # =====================================================
+
+    try:
+
+        cursor = connection.cursor()
+
+        cursor.execute("SELECT DATABASE()")
+        current_database = cursor.fetchone()
+
+        print("========================================")
+        print("DATABASE DIAGNOSTIC")
+        print("DB_HOST:", DB_HOST)
+        print("DB_NAME FROM CONFIG:", DB_NAME)
+        print("CURRENT DATABASE:", current_database)
+
+        cursor.execute("SHOW TABLES")
+        tables = cursor.fetchall()
+
+        print("TABLES VISIBLE TO RENDER:")
+
+        for table in tables:
+            print(table)
+
+        print("========================================")
+
+        cursor.close()
+
+    except Exception as diagnostic_error:
+
+        print("DATABASE DIAGNOSTIC ERROR:", diagnostic_error)
+
     return connection
