@@ -208,253 +208,333 @@ Add Relief Request | Disaster Relief Management System
 
 <div class="request-form-page">
 
-<div class="request-form-header">
+    <div class="request-form-header">
 
-    <h1>Add Relief Request</h1>
+        <h1>Add Relief Request</h1>
 
-    <p>
-        Create a new relief request for disaster response.
-    </p>
+        <p>
+            Create a new relief request for disaster response.
+        </p>
 
-</div>
+    </div>
 
 
-<div class="request-form-container">
+    <div class="request-form-container">
 
-    <form method="POST"
-          action="{{ url_for('requests.add_request') }}"
-          class="request-form">
+        <form method="POST"
+              action="{{ url_for('requests.add_request') }}"
+              class="request-form">
 
-        <!-- CSRF PROTECTION -->
+            <!-- CSRF PROTECTION -->
 
-        <input type="hidden"
-               name="csrf_token"
-               value="{{ csrf_token() }}">
+            <input type="hidden"
+                   name="csrf_token"
+                   value="{{ csrf_token() }}">
 
 
-        <!-- REQUESTER NAME -->
+            <!-- DISASTER ID -->
 
-        <div class="form-group">
+            <div class="form-group">
 
-            <label for="requester_name">
-                Requester Name
-                <span class="required">*</span>
-            </label>
+                <label for="disaster_id">
 
-            <input
-                type="text"
-                id="requester_name"
-                name="requester_name"
-                placeholder="Enter requester name"
-                required
-            >
+                    Disaster ID
 
-        </div>
+                    <span class="required">*</span>
 
+                </label>
 
-        <!-- CONTACT -->
+                <input
+                    type="number"
+                    id="disaster_id"
+                    name="disaster_id"
+                    placeholder="Enter disaster ID"
+                    min="1"
+                    required
+                >
 
-        <div class="form-group">
+                <span class="form-hint">
+                    Enter the ID of the disaster related to this request.
+                </span>
 
-            <label for="contact">
-                Contact Number
-            </label>
+            </div>
 
-            <input
-                type="text"
-                id="contact"
-                name="contact"
-                placeholder="Enter contact number"
-            >
 
-        </div>
+            <!-- REQUESTER -->
 
+            <div class="form-group">
 
-        <!-- REQUEST TYPE -->
+                <label for="requester_name">
 
-        <div class="form-group">
+                    Requester
 
-            <label for="request_type">
-                Request Type
-                <span class="required">*</span>
-            </label>
+                </label>
 
-            <select
-                id="request_type"
-                name="request_type"
-                required
-            >
+                <input
+                    type="text"
+                    id="requester_name"
+                    value="{{ session.get('full_name', '') }}"
+                    placeholder="Logged-in user"
+                    readonly
+                >
 
-                <option value="">
-                    Select request type
-                </option>
+                <span class="form-hint">
+                    The request will be registered under your account.
+                </span>
 
-                <option value="Food">
-                    Food
-                </option>
+            </div>
 
-                <option value="Water">
-                    Water
-                </option>
 
-                <option value="Medicine">
-                    Medicine
-                </option>
+            <!-- RESOURCE TYPE -->
 
-                <option value="Clothing">
-                    Clothing
-                </option>
+            <div class="form-group">
 
-                <option value="Shelter">
-                    Shelter
-                </option>
+                <label for="request_type">
 
-                <option value="Rescue">
-                    Rescue
-                </option>
+                    Resource Type
 
-                <option value="Other">
-                    Other
-                </option>
+                    <span class="required">*</span>
 
-            </select>
+                </label>
 
-        </div>
+                <select
+                    id="request_type"
+                    name="request_type"
+                    required
+                >
 
+                    <option value="">
+                        Select resource type
+                    </option>
 
-        <!-- LOCATION -->
+                    <option value="Food">
+                        Food
+                    </option>
 
-        <div class="form-group">
+                    <option value="Water">
+                        Water
+                    </option>
 
-            <label for="location">
-                Location
-                <span class="required">*</span>
-            </label>
+                    <option value="Medicine">
+                        Medicine
+                    </option>
 
-            <input
-                type="text"
-                id="location"
-                name="location"
-                placeholder="Enter request location"
-                required
-            >
+                    <option value="Clothing">
+                        Clothing
+                    </option>
 
-        </div>
+                    <option value="Shelter">
+                        Shelter
+                    </option>
 
+                    <option value="Rescue">
+                        Rescue
+                    </option>
 
-        <!-- PRIORITY -->
+                    <option value="Other">
+                        Other
+                    </option>
 
-        <div class="form-group">
+                </select>
 
-            <label for="priority">
-                Priority
-            </label>
+            </div>
 
-            <select
-                id="priority"
-                name="priority"
-            >
 
-                <option value="Low">
-                    Low
-                </option>
+            <!-- RESOURCE NAME -->
 
-                <option value="Medium" selected>
-                    Medium
-                </option>
+            <div class="form-group">
 
-                <option value="High">
-                    High
-                </option>
+                <label for="resource_name">
 
-                <option value="Critical">
-                    Critical
-                </option>
+                    Resource Name
 
-            </select>
+                    <span class="required">*</span>
 
-        </div>
+                </label>
 
+                <input
+                    type="text"
+                    id="resource_name"
+                    name="resource_name"
+                    placeholder="Example: Drinking Water"
+                    maxlength="150"
+                    required
+                >
 
-        <!-- STATUS -->
+            </div>
 
-        <div class="form-group">
 
-            <label for="status">
-                Status
-            </label>
+            <!-- QUANTITY -->
 
-            <select
-                id="status"
-                name="status"
-            >
+            <div class="form-group">
 
-                <option value="Pending" selected>
-                    Pending
-                </option>
+                <label for="quantity_requested">
 
-                <option value="In Progress">
-                    In Progress
-                </option>
+                    Quantity Requested
 
-                <option value="Resolved">
-                    Resolved
-                </option>
+                    <span class="required">*</span>
 
-                <option value="Rejected">
-                    Rejected
-                </option>
+                </label>
 
-            </select>
+                <input
+                    type="number"
+                    id="quantity_requested"
+                    name="quantity_requested"
+                    placeholder="Enter quantity"
+                    min="1"
+                    required
+                >
 
-        </div>
+            </div>
 
 
-        <!-- DESCRIPTION -->
+            <!-- LOCATION -->
 
-        <div class="form-group full-width">
+            <div class="form-group">
 
-            <label for="description">
-                Description
-            </label>
+                <label for="location">
 
-            <textarea
-                id="description"
-                name="description"
-                placeholder="Describe the relief required..."
-            ></textarea>
+                    Location
 
-        </div>
+                    <span class="required">*</span>
 
+                </label>
 
-        <!-- BUTTONS -->
+                <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    placeholder="Enter request location"
+                    maxlength="255"
+                    required
+                >
 
-        <div class="form-actions">
+            </div>
 
-            <a href="{{ url_for('requests.request_list') }}"
-               class="btn btn-cancel">
 
-                <i class="fa-solid fa-arrow-left"></i>
+            <!-- PRIORITY -->
 
-                Cancel
+            <div class="form-group">
 
-            </a>
+                <label for="priority">
 
-            <button
-                type="submit"
-                class="btn btn-submit">
+                    Priority
 
-                <i class="fa-solid fa-plus"></i>
+                </label>
 
-                Add Request
+                <select
+                    id="priority"
+                    name="priority"
+                >
 
-            </button>
+                    <option value="Low">
+                        Low
+                    </option>
 
-        </div>
+                    <option value="Medium" selected>
+                        Medium
+                    </option>
 
-    </form>
+                    <option value="High">
+                        High
+                    </option>
 
-</div>
+                    <option value="Critical">
+                        Critical
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="form-group">
+
+                <label for="status">
+
+                    Status
+
+                </label>
+
+                <select
+                    id="status"
+                    name="status"
+                >
+
+                    <option value="Pending" selected>
+                        Pending
+                    </option>
+
+                    <option value="Approved">
+                        Approved
+                    </option>
+
+                    <option value="Rejected">
+                        Rejected
+                    </option>
+
+                    <option value="Partially Allocated">
+                        Partially Allocated
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- REASON -->
+
+            <div class="form-group full-width">
+
+                <label for="description">
+
+                    Reason / Description
+
+                </label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Describe the relief required..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <a href="{{ url_for('requests.request_list') }}"
+                   class="btn btn-cancel">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    Cancel
+
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-submit">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add Request
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 
