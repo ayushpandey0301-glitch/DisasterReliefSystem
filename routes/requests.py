@@ -28,9 +28,10 @@ VALID_PRIORITIES = {
 
 VALID_STATUSES = {
     "Pending",
-    "In Progress",
-    "Resolved",
-    "Rejected"
+    "Approved",
+    "Rejected",
+    "Partially Allocated",
+    "Completed"
 }
 
 
@@ -49,22 +50,32 @@ def request_list():
     cursor = None
 
     try:
+
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
         cursor.execute("""
             SELECT
-                request_id,
-                requester_name,
-                contact,
-                request_type,
-                description,
-                location,
-                priority,
-                status,
-                created_at
-            FROM relief_requests
-            ORDER BY created_at DESC
+                rr.request_id,
+                rr.disaster_id,
+                d.disaster_name,
+                rr.requested_by,
+                u.full_name AS requester_name,
+                u.phone AS contact,
+                rr.resource_type AS request_type,
+                rr.resource_name,
+                rr.quantity_requested,
+                rr.reason AS description,
+                rr.request_location AS location,
+                rr.priority,
+                rr.status,
+                rr.requested_at AS created_at
+            FROM resource_requests rr
+            LEFT JOIN users u
+                ON rr.requested_by = u.user_id
+            LEFT JOIN disasters d
+                ON rr.disaster_id = d.disaster_id
+            ORDER BY rr.requested_at DESC
         """)
 
         requests_list = cursor.fetchall()
@@ -114,22 +125,32 @@ def request_details(request_id):
     cursor = None
 
     try:
+
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
         cursor.execute("""
             SELECT
-                request_id,
-                requester_name,
-                contact,
-                request_type,
-                description,
-                location,
-                priority,
-                status,
-                created_at
-            FROM relief_requests
-            WHERE request_id = %s
+                rr.request_id,
+                rr.disaster_id,
+                d.disaster_name,
+                rr.requested_by,
+                u.full_name AS requester_name,
+                u.phone AS contact,
+                rr.resource_type AS request_type,
+                rr.resource_name,
+                rr.quantity_requested,
+                rr.reason AS description,
+                rr.request_location AS location,
+                rr.priority,
+                rr.status,
+                rr.requested_at AS created_at
+            FROM resource_requests rr
+            LEFT JOIN users u
+                ON rr.requested_by = u.user_id
+            LEFT JOIN disasters d
+                ON rr.disaster_id = d.disaster_id
+            WHERE rr.request_id = %s
         """, (request_id,))
 
         relief_request = cursor.fetchone()
@@ -191,18 +212,23 @@ def add_request():
 
     if request.method == "POST":
 
-        requester_name = request.form.get(
-            "requester_name",
-            ""
-        ).strip()
-
-        contact = request.form.get(
-            "contact",
+        disaster_id = request.form.get(
+            "disaster_id",
             ""
         ).strip()
 
         request_type = request.form.get(
             "request_type",
+            ""
+        ).strip()
+
+        resource_name = request.form.get(
+            "resource_name",
+            ""
+        ).strip()
+
+        quantity_requested = request.form.get(
+            "quantity_requested",
             ""
         ).strip()
 
@@ -230,10 +256,16 @@ def add_request():
         # REQUIRED FIELD VALIDATION
         # -------------------------------------------------
 
-        if not requester_name or not request_type or not location:
+        if (
+            not disaster_id
+            or not request_type
+            or not resource_name
+            or not quantity_requested
+            or not location
+        ):
 
             flash(
-                "Requester name, request type and location are required.",
+                "Disaster ID, resource type, resource name, quantity and location are required.",
                 "error"
             )
 
@@ -242,13 +274,13 @@ def add_request():
             )
 
         # -------------------------------------------------
-        # REQUESTER NAME VALIDATION
+        # DISASTER ID VALIDATION
         # -------------------------------------------------
 
-        if len(requester_name) < 2:
+        if not disaster_id.isdigit():
 
             flash(
-                "Requester name must contain at least 2 characters.",
+                "Disaster ID must be a valid number.",
                 "error"
             )
 
@@ -256,10 +288,12 @@ def add_request():
                 url_for("requests.add_request")
             )
 
-        if len(requester_name) > 100:
+        disaster_id = int(disaster_id)
+
+        if disaster_id <= 0:
 
             flash(
-                "Requester name cannot exceed 100 characters.",
+                "Disaster ID must be greater than 0.",
                 "error"
             )
 
@@ -268,41 +302,67 @@ def add_request():
             )
 
         # -------------------------------------------------
-        # CONTACT VALIDATION
-        # -------------------------------------------------
-
-        if contact:
-
-            if not contact.isdigit():
-
-                flash(
-                    "Contact must contain only digits.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for("requests.add_request")
-                )
-
-            if len(contact) < 7 or len(contact) > 15:
-
-                flash(
-                    "Contact must contain between 7 and 15 digits.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for("requests.add_request")
-                )
-
-        # -------------------------------------------------
-        # REQUEST TYPE VALIDATION
+        # RESOURCE TYPE VALIDATION
         # -------------------------------------------------
 
         if request_type not in VALID_REQUEST_TYPES:
 
             flash(
                 "Invalid request type selected.",
+                "error"
+            )
+
+            return redirect(
+                url_for("requests.add_request")
+            )
+
+        # -------------------------------------------------
+        # RESOURCE NAME VALIDATION
+        # -------------------------------------------------
+
+        if len(resource_name) < 2:
+
+            flash(
+                "Resource name must contain at least 2 characters.",
+                "error"
+            )
+
+            return redirect(
+                url_for("requests.add_request")
+            )
+
+        if len(resource_name) > 150:
+
+            flash(
+                "Resource name cannot exceed 150 characters.",
+                "error"
+            )
+
+            return redirect(
+                url_for("requests.add_request")
+            )
+
+        # -------------------------------------------------
+        # QUANTITY VALIDATION
+        # -------------------------------------------------
+
+        if not quantity_requested.isdigit():
+
+            flash(
+                "Quantity must be a valid positive number.",
+                "error"
+            )
+
+            return redirect(
+                url_for("requests.add_request")
+            )
+
+        quantity_requested = int(quantity_requested)
+
+        if quantity_requested <= 0:
+
+            flash(
+                "Quantity must be greater than 0.",
                 "error"
             )
 
@@ -393,15 +453,44 @@ def add_request():
             connection = get_db_connection()
             cursor = connection.cursor()
 
+            # -------------------------------------------------
+            # CHECK DISASTER EXISTS
+            # -------------------------------------------------
+
             cursor.execute("""
-                INSERT INTO relief_requests
+                SELECT disaster_id
+                FROM disasters
+                WHERE disaster_id = %s
+            """, (disaster_id,))
+
+            disaster = cursor.fetchone()
+
+            if not disaster:
+
+                flash(
+                    "Selected disaster does not exist.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for("requests.add_request")
+                )
+
+            # -------------------------------------------------
+            # INSERT REQUEST
+            # -------------------------------------------------
+
+            cursor.execute("""
+                INSERT INTO resource_requests
                 (
-                    requester_name,
-                    contact,
-                    request_type,
-                    description,
-                    location,
+                    disaster_id,
+                    requested_by,
+                    resource_type,
+                    resource_name,
+                    quantity_requested,
                     priority,
+                    request_location,
+                    reason,
                     status
                 )
                 VALUES
@@ -412,15 +501,19 @@ def add_request():
                     %s,
                     %s,
                     %s,
+                    %s,
+                    %s,
                     %s
                 )
             """, (
-                requester_name,
-                contact or None,
+                disaster_id,
+                session["user_id"],
                 request_type,
-                description or None,
-                location,
+                resource_name,
+                quantity_requested,
                 priority,
+                location,
+                description or None,
                 status
             ))
 
@@ -491,16 +584,25 @@ def edit_request(request_id):
 
         cursor.execute("""
             SELECT
-                request_id,
-                requester_name,
-                contact,
-                request_type,
-                description,
-                location,
-                priority,
-                status
-            FROM relief_requests
-            WHERE request_id = %s
+                rr.request_id,
+                rr.disaster_id,
+                d.disaster_name,
+                rr.requested_by,
+                u.full_name AS requester_name,
+                u.phone AS contact,
+                rr.resource_type AS request_type,
+                rr.resource_name,
+                rr.quantity_requested,
+                rr.reason AS description,
+                rr.request_location AS location,
+                rr.priority,
+                rr.status
+            FROM resource_requests rr
+            LEFT JOIN users u
+                ON rr.requested_by = u.user_id
+            LEFT JOIN disasters d
+                ON rr.disaster_id = d.disaster_id
+            WHERE rr.request_id = %s
         """, (request_id,))
 
         relief_request = cursor.fetchone()
@@ -518,19 +620,24 @@ def edit_request(request_id):
 
         if request.method == "POST":
 
-            requester_name = request.form.get(
-                "requester_name",
-                ""
-            ).strip()
-
-            contact = request.form.get(
-                "contact",
-                ""
+            disaster_id = request.form.get(
+                "disaster_id",
+                str(relief_request["disaster_id"])
             ).strip()
 
             request_type = request.form.get(
                 "request_type",
                 ""
+            ).strip()
+
+            resource_name = request.form.get(
+                "resource_name",
+                relief_request["resource_name"] or ""
+            ).strip()
+
+            quantity_requested = request.form.get(
+                "quantity_requested",
+                str(relief_request["quantity_requested"])
             ).strip()
 
             description = request.form.get(
@@ -557,10 +664,16 @@ def edit_request(request_id):
             # REQUIRED FIELD VALIDATION
             # -------------------------------------------------
 
-            if not requester_name or not request_type or not location:
+            if (
+                not disaster_id
+                or not request_type
+                or not resource_name
+                or not quantity_requested
+                or not location
+            ):
 
                 flash(
-                    "Requester name, request type and location are required.",
+                    "Disaster ID, resource type, resource name, quantity and location are required.",
                     "error"
                 )
 
@@ -572,13 +685,13 @@ def edit_request(request_id):
                 )
 
             # -------------------------------------------------
-            # REQUESTER NAME VALIDATION
+            # DISASTER ID VALIDATION
             # -------------------------------------------------
 
-            if len(requester_name) < 2:
+            if not disaster_id.isdigit():
 
                 flash(
-                    "Requester name must contain at least 2 characters.",
+                    "Disaster ID must be a valid number.",
                     "error"
                 )
 
@@ -589,10 +702,12 @@ def edit_request(request_id):
                     )
                 )
 
-            if len(requester_name) > 100:
+            disaster_id = int(disaster_id)
+
+            if disaster_id <= 0:
 
                 flash(
-                    "Requester name cannot exceed 100 characters.",
+                    "Disaster ID must be greater than 0.",
                     "error"
                 )
 
@@ -604,38 +719,30 @@ def edit_request(request_id):
                 )
 
             # -------------------------------------------------
-            # CONTACT VALIDATION
+            # CHECK DISASTER EXISTS
             # -------------------------------------------------
 
-            if contact:
+            cursor.execute("""
+                SELECT disaster_id
+                FROM disasters
+                WHERE disaster_id = %s
+            """, (disaster_id,))
 
-                if not contact.isdigit():
+            disaster = cursor.fetchone()
 
-                    flash(
-                        "Contact must contain only digits.",
-                        "error"
+            if not disaster:
+
+                flash(
+                    "Selected disaster does not exist.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "requests.edit_request",
+                        request_id=request_id
                     )
-
-                    return redirect(
-                        url_for(
-                            "requests.edit_request",
-                            request_id=request_id
-                        )
-                    )
-
-                if len(contact) < 7 or len(contact) > 15:
-
-                    flash(
-                        "Contact must contain between 7 and 15 digits.",
-                        "error"
-                    )
-
-                    return redirect(
-                        url_for(
-                            "requests.edit_request",
-                            request_id=request_id
-                        )
-                    )
+                )
 
             # -------------------------------------------------
             # REQUEST TYPE VALIDATION
@@ -645,6 +752,72 @@ def edit_request(request_id):
 
                 flash(
                     "Invalid request type selected.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "requests.edit_request",
+                        request_id=request_id
+                    )
+                )
+
+            # -------------------------------------------------
+            # RESOURCE NAME VALIDATION
+            # -------------------------------------------------
+
+            if len(resource_name) < 2:
+
+                flash(
+                    "Resource name must contain at least 2 characters.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "requests.edit_request",
+                        request_id=request_id
+                    )
+                )
+
+            if len(resource_name) > 150:
+
+                flash(
+                    "Resource name cannot exceed 150 characters.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "requests.edit_request",
+                        request_id=request_id
+                    )
+                )
+
+            # -------------------------------------------------
+            # QUANTITY VALIDATION
+            # -------------------------------------------------
+
+            if not quantity_requested.isdigit():
+
+                flash(
+                    "Quantity must be a valid positive number.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "requests.edit_request",
+                        request_id=request_id
+                    )
+                )
+
+            quantity_requested = int(quantity_requested)
+
+            if quantity_requested <= 0:
+
+                flash(
+                    "Quantity must be greater than 0.",
                     "error"
                 )
 
@@ -746,22 +919,24 @@ def edit_request(request_id):
             # -------------------------------------------------
 
             cursor.execute("""
-                UPDATE relief_requests
+                UPDATE resource_requests
                 SET
-                    requester_name = %s,
-                    contact = %s,
-                    request_type = %s,
-                    description = %s,
-                    location = %s,
+                    disaster_id = %s,
+                    resource_type = %s,
+                    resource_name = %s,
+                    quantity_requested = %s,
+                    request_location = %s,
+                    reason = %s,
                     priority = %s,
                     status = %s
                 WHERE request_id = %s
             """, (
-                requester_name,
-                contact or None,
+                disaster_id,
                 request_type,
-                description or None,
+                resource_name,
+                quantity_requested,
                 location,
+                description or None,
                 priority,
                 status,
                 request_id
@@ -842,7 +1017,7 @@ def delete_request(request_id):
 
         cursor.execute("""
             SELECT request_id
-            FROM relief_requests
+            FROM resource_requests
             WHERE request_id = %s
         """, (request_id,))
 
@@ -864,7 +1039,7 @@ def delete_request(request_id):
         # -------------------------------------------------
 
         cursor.execute("""
-            DELETE FROM relief_requests
+            DELETE FROM resource_requests
             WHERE request_id = %s
         """, (request_id,))
 
