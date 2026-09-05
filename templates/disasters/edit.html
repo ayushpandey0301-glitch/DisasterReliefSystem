@@ -1,0 +1,519 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Disaster | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- ============================= -->
+    <!-- SIDEBAR -->
+    <!-- ============================= -->
+
+    <aside class="sidebar">
+
+        <!-- BRAND -->
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <div>
+                <h2>DRRMS</h2>
+
+                <span>
+                    Disaster Relief
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="sidebar-nav">
+
+            <!-- DASHBOARD -->
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <!-- DISASTERS -->
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span>Disasters</span>
+
+            </a>
+
+
+            <!-- RESOURCES -->
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+
+                <span>Resources</span>
+
+            </a>
+
+
+            <!-- SHELTERS -->
+
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-house-medical"></i>
+
+                <span>Shelters</span>
+
+            </a>
+
+
+            <!-- VEHICLES -->
+
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-truck"></i>
+
+                <span>Vehicles</span>
+
+            </a>
+
+
+            <!-- VOLUNTEERS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-users"></i>
+
+                <span>Volunteers</span>
+
+            </a>
+
+
+            <!-- RELIEF REQUESTS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-clipboard-list"></i>
+
+                <span>Relief Requests</span>
+
+            </a>
+
+
+            <!-- REPORTS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+                <span>Reports</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <!-- SETTINGS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-gear"></i>
+
+                <span>Settings</span>
+
+            </a>
+
+
+            <!-- LOGOUT -->
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ============================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================= -->
+
+    <main class="dashboard-main">
+
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Edit Disaster
+                </h1>
+
+                <p>
+                    Update disaster information.
+                </p>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+
+                    {{ session["full_name"][0] | upper }}
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ session["full_name"] }}
+                    </strong>
+
+                    <span>
+                        {{ session["role"] | title }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ============================= -->
+        <!-- EDIT FORM -->
+        <!-- ============================= -->
+
+        <section class="dashboard-card"
+                 style="margin-top: 25px;">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+                        Disaster Information
+                    </h3>
+
+                    <p>
+                        Modify the details of this disaster.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form method="POST"
+                  style="margin-top: 25px;">
+
+                <!-- CSRF PROTECTION -->
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+
+                <!-- ============================= -->
+                <!-- DISASTER NAME -->
+                <!-- ============================= -->
+
+                <div style="margin-bottom: 18px;">
+
+                    <label>
+                        Disaster Name
+                    </label>
+
+                    <input type="text"
+                           name="disaster_name"
+                           value="{{ disaster.disaster_name }}"
+                           required
+                           style="width: 100%; padding: 11px; margin-top: 7px; box-sizing: border-box;">
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- DISASTER TYPE -->
+                <!-- ============================= -->
+
+                <div style="margin-bottom: 18px;">
+
+                    <label>
+                        Disaster Type
+                    </label>
+
+                    <select name="disaster_type"
+                            required
+                            style="width: 100%; padding: 11px; margin-top: 7px; box-sizing: border-box;">
+
+                        <option value="Flood"
+                            {% if disaster.disaster_type == "Flood" %}selected{% endif %}>
+                            Flood
+                        </option>
+
+                        <option value="Earthquake"
+                            {% if disaster.disaster_type == "Earthquake" %}selected{% endif %}>
+                            Earthquake
+                        </option>
+
+                        <option value="Cyclone"
+                            {% if disaster.disaster_type == "Cyclone" %}selected{% endif %}>
+                            Cyclone
+                        </option>
+
+                        <option value="Landslide"
+                            {% if disaster.disaster_type == "Landslide" %}selected{% endif %}>
+                            Landslide
+                        </option>
+
+                        <option value="Fire"
+                            {% if disaster.disaster_type == "Fire" %}selected{% endif %}>
+                            Fire
+                        </option>
+
+                        <option value="Drought"
+                            {% if disaster.disaster_type == "Drought" %}selected{% endif %}>
+                            Drought
+                        </option>
+
+                        <option value="Other"
+                            {% if disaster.disaster_type == "Other" %}selected{% endif %}>
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- DESCRIPTION -->
+                <!-- ============================= -->
+
+                <div style="margin-bottom: 18px;">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea name="description"
+                              rows="5"
+                              required
+                              style="width: 100%; padding: 11px; margin-top: 7px; box-sizing: border-box;">{{ disaster.description }}</textarea>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- LOCATION -->
+                <!-- ============================= -->
+
+                <div style="margin-bottom: 18px;">
+
+                    <label>
+                        Location
+                    </label>
+
+                    <input type="text"
+                           name="location"
+                           value="{{ disaster.location }}"
+                           required
+                           style="width: 100%; padding: 11px; margin-top: 7px; box-sizing: border-box;">
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- SEVERITY -->
+                <!-- ============================= -->
+
+                <div style="margin-bottom: 18px;">
+
+                    <label>
+                        Severity
+                    </label>
+
+                    <select name="severity"
+                            required
+                            style="width: 100%; padding: 11px; margin-top: 7px; box-sizing: border-box;">
+
+                        <option value="Low"
+                            {% if disaster.severity == "Low" %}selected{% endif %}>
+                            Low
+                        </option>
+
+                        <option value="Medium"
+                            {% if disaster.severity == "Medium" %}selected{% endif %}>
+                            Medium
+                        </option>
+
+                        <option value="High"
+                            {% if disaster.severity == "High" %}selected{% endif %}>
+                            High
+                        </option>
+
+                        <option value="Critical"
+                            {% if disaster.severity == "Critical" %}selected{% endif %}>
+                            Critical
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- START DATE -->
+                <!-- ============================= -->
+
+                <div style="margin-bottom: 18px;">
+
+                    <label>
+                        Start Date
+                    </label>
+
+                    <input type="date"
+                           name="start_date"
+                           value="{{ disaster.start_date }}"
+                           required
+                           style="width: 100%; padding: 11px; margin-top: 7px; box-sizing: border-box;">
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- END DATE -->
+                <!-- ============================= -->
+
+                <div style="margin-bottom: 18px;">
+
+                    <label>
+                        End Date
+                    </label>
+
+                    <input type="date"
+                           name="end_date"
+                           value="{{ disaster.end_date or '' }}"
+                           style="width: 100%; padding: 11px; margin-top: 7px; box-sizing: border-box;">
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- STATUS -->
+                <!-- ============================= -->
+
+                <div style="margin-bottom: 25px;">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select name="status"
+                            required
+                            style="width: 100%; padding: 11px; margin-top: 7px; box-sizing: border-box;">
+
+                        <option value="Active"
+                            {% if disaster.status == "Active" %}selected{% endif %}>
+                            Active
+                        </option>
+
+                        <option value="Resolved"
+                            {% if disaster.status == "Resolved" %}selected{% endif %}>
+                            Resolved
+                        </option>
+
+                        <option value="Monitoring"
+                            {% if disaster.status == "Monitoring" %}selected{% endif %}>
+                            Monitoring
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- BUTTONS -->
+                <!-- ============================= -->
+
+                <div style="display: flex; gap: 12px;">
+
+                    <button type="submit"
+                            class="quick-action"
+                            style="border: none; cursor: pointer; padding: 11px 20px;">
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        Save Changes
+
+                    </button>
+
+
+                    <a href="{{ url_for('disaster.disaster_details', disaster_id=disaster.disaster_id) }}"
+                       class="quick-action"
+                       style="padding: 11px 20px; text-decoration: none;">
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+{% endblock %}

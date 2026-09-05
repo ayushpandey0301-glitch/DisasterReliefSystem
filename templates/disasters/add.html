@@ -1,0 +1,567 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Disaster | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <div>
+                <h2>DRRMS</h2>
+                <span>Disaster Relief</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Disasters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Resources</span>
+
+            </a>
+
+
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-house-medical"></i>
+                <span>Shelters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-truck"></i>
+                <span>Vehicles</span>
+
+            </a>
+
+
+            <a href="{{ url_for('volunteers.volunteer_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-users"></i>
+                <span>Volunteers</span>
+
+            </a>
+
+
+            <a href="{{ url_for('requests.request_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Relief Requests</span>
+
+            </a>
+
+
+            <a href="{{ url_for('reports.reports_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Reports</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+
+            </a>
+
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="dashboard-main">
+
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Report Disaster
+                </h1>
+
+                <p>
+                    Add a new disaster to the relief management system.
+                </p>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+
+                    {{ session["full_name"][0] | upper }}
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ session["full_name"] }}
+                    </strong>
+
+                    <span>
+                        {{ session["role"] | title }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- FORM CARD -->
+
+        <section class="dashboard-card"
+                 style="margin-top: 25px;">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+                        Disaster Information
+                    </h3>
+
+                    <p>
+                        Enter the details of the disaster.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <form method="POST"
+                  action="{{ url_for('disaster.add_disaster') }}"
+                  style="padding: 20px 0;"
+                  id="disasterForm">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+
+                <!-- DISASTER NAME -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="disaster_name">
+                        Disaster Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="disaster_name"
+                        name="disaster_name"
+                        placeholder="Enter disaster name"
+                        minlength="3"
+                        maxlength="150"
+                        required
+                        autocomplete="off"
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                </div>
+
+
+                <!-- DISASTER TYPE -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="disaster_type">
+                        Disaster Type
+                    </label>
+
+                    <select
+                        id="disaster_type"
+                        name="disaster_type"
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                        <option value="">
+                            Select disaster type
+                        </option>
+
+                        <option value="Flood">
+                            Flood
+                        </option>
+
+                        <option value="Earthquake">
+                            Earthquake
+                        </option>
+
+                        <option value="Cyclone">
+                            Cyclone
+                        </option>
+
+                        <option value="Landslide">
+                            Landslide
+                        </option>
+
+                        <option value="Fire">
+                            Fire
+                        </option>
+
+                        <option value="Drought">
+                            Drought
+                        </option>
+
+                        <option value="Tsunami">
+                            Tsunami
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="5"
+                        minlength="10"
+                        maxlength="1000"
+                        placeholder="Describe the disaster..."
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="location">
+                        Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        placeholder="Enter affected location"
+                        minlength="2"
+                        maxlength="255"
+                        required
+                        autocomplete="off"
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                </div>
+
+
+                <!-- SEVERITY -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="severity">
+                        Severity
+                    </label>
+
+                    <select
+                        id="severity"
+                        name="severity"
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                        <option value="">
+                            Select severity
+                        </option>
+
+                        <option value="Low">
+                            Low
+                        </option>
+
+                        <option value="Medium">
+                            Medium
+                        </option>
+
+                        <option value="High">
+                            High
+                        </option>
+
+                        <option value="Critical">
+                            Critical
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- START DATE -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="start_date">
+                        Start Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="start_date"
+                        name="start_date"
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                </div>
+
+
+                <!-- END DATE -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="end_date">
+                        End Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="end_date"
+                        name="end_date"
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                    <small id="dateError"
+                           style="display: none; color: #DC2626; margin-top: 6px;">
+                        End date cannot be before the start date.
+                    </small>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div style="margin-bottom: 25px;">
+
+                    <label for="status">
+                        Status
+                    </label>
+
+                    <select
+                        id="status"
+                        name="status"
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                        <option value="Active">
+                            Active
+                        </option>
+
+                        <option value="Resolved">
+                            Resolved
+                        </option>
+
+                        <option value="Closed">
+                            Closed
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div style="display: flex; gap: 15px;">
+
+                    <button
+                        type="submit"
+                        class="add-btn"
+                        style="padding: 12px 24px; cursor: pointer; border: none; border-radius: 8px;"
+                    >
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add Disaster
+
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('disaster.disaster_list') }}"
+                        class="cancel-btn"
+                        style="padding: 12px 24px;"
+                    >
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- DATE VALIDATION -->
+
+<script>
+
+    const disasterForm =
+        document.getElementById("disasterForm");
+
+    const startDate =
+        document.getElementById("start_date");
+
+    const endDate =
+        document.getElementById("end_date");
+
+    const dateError =
+        document.getElementById("dateError");
+
+
+    function validateDates() {
+
+        if (
+            startDate.value &&
+            endDate.value &&
+            endDate.value < startDate.value
+        ) {
+
+            endDate.setCustomValidity(
+                "End date cannot be before the start date."
+            );
+
+            dateError.style.display = "block";
+
+            return false;
+
+        }
+
+        endDate.setCustomValidity("");
+
+        dateError.style.display = "none";
+
+        return true;
+    }
+
+
+    startDate.addEventListener(
+        "change",
+        validateDates
+    );
+
+
+    endDate.addEventListener(
+        "change",
+        validateDates
+    );
+
+
+    disasterForm.addEventListener(
+        "submit",
+        function(event) {
+
+            if (!validateDates()) {
+
+                event.preventDefault();
+
+            }
+
+        }
+    );
+
+</script>
+
+{% endblock %}

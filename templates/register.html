@@ -1,0 +1,410 @@
+{% extends "base.html" %}
+
+{% block title %}
+Register | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/auth.css') }}">
+
+<style>
+
+    .password-hint {
+        font-size: 12px;
+        color: #6B7280;
+        margin-top: 6px;
+        line-height: 1.5;
+    }
+
+    .password-match {
+        font-size: 12px;
+        margin-top: 6px;
+        display: none;
+    }
+
+    .password-match.success {
+        color: #16A34A;
+        display: block;
+    }
+
+    .password-match.error {
+        color: #DC2626;
+        display: block;
+    }
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="login-page">
+
+<div class="login-container">
+
+    <!-- LEFT SIDE -->
+
+    <div class="login-info">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <div>
+                <h2>DRRMS</h2>
+                <span>Disaster Relief Management</span>
+            </div>
+
+        </div>
+
+
+        <div class="info-content">
+
+            <h1>
+                Join the<br>
+                Relief Team.
+            </h1>
+
+            <p>
+                Become a volunteer and help coordinate
+                resources, emergency tasks and disaster
+                relief operations.
+            </p>
+
+        </div>
+
+
+        <div class="info-footer">
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+            Secure Emergency Response Platform
+
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT SIDE -->
+
+    <div class="login-form-section">
+
+        <div class="login-form">
+
+            <div class="form-header">
+
+                <h2>Create Account</h2>
+
+                <p>
+                    Register as a disaster relief volunteer.
+                </p>
+
+            </div>
+
+
+            <form action="{{ url_for('auth.register') }}"
+                  method="POST"
+                  id="registerForm">
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+
+                <!-- FULL NAME -->
+
+                <div class="form-group">
+
+                    <label for="full_name">
+                        Full Name
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-regular fa-user"></i>
+
+                        <input
+                            type="text"
+                            id="full_name"
+                            name="full_name"
+                            placeholder="Enter your full name"
+                            minlength="2"
+                            maxlength="100"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-regular fa-envelope"></i>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            maxlength="100"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-phone"></i>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            placeholder="Enter your phone number"
+                            minlength="7"
+                            maxlength="15"
+                            pattern="[0-9]{7,15}"
+                            inputmode="numeric"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create a password"
+                            minlength="8"
+                            maxlength="255"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="password-hint">
+                        Password must be at least 8 characters long.
+                    </div>
+
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="confirm_password">
+                        Confirm Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <input
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            placeholder="Confirm your password"
+                            minlength="8"
+                            maxlength="255"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                    </div>
+
+                    <div
+                        id="passwordMatch"
+                        class="password-match">
+                    </div>
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <button
+                    type="submit"
+                    class="login-btn">
+
+                    <span>Create Account</span>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </form>
+
+
+            <div class="login-footer">
+
+                <p>
+
+                    Already have an account?
+
+                    <a href="{{ url_for('auth.login') }}">
+                        Sign In
+                    </a>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- PASSWORD VALIDATION SCRIPT -->
+<!-- ========================= -->
+
+<script>
+
+const passwordInput =
+    document.getElementById("password");
+
+const confirmPasswordInput =
+    document.getElementById("confirm_password");
+
+const passwordMatch =
+    document.getElementById("passwordMatch");
+
+
+function checkPasswordMatch() {
+
+    const password =
+        passwordInput.value;
+
+    const confirmPassword =
+        confirmPasswordInput.value;
+
+
+    if (confirmPassword === "") {
+
+        passwordMatch.textContent = "";
+
+        passwordMatch.className =
+            "password-match";
+
+        return;
+    }
+
+
+    if (password === confirmPassword) {
+
+        passwordMatch.textContent =
+            "Passwords match.";
+
+        passwordMatch.className =
+            "password-match success";
+
+    }
+
+    else {
+
+        passwordMatch.textContent =
+            "Passwords do not match.";
+
+        passwordMatch.className =
+            "password-match error";
+
+    }
+
+}
+
+
+passwordInput.addEventListener(
+    "input",
+    checkPasswordMatch
+);
+
+
+confirmPasswordInput.addEventListener(
+    "input",
+    checkPasswordMatch
+);
+
+
+document.getElementById("registerForm")
+    .addEventListener("submit", function(event) {
+
+        if (
+            passwordInput.value.length < 8
+        ) {
+
+            event.preventDefault();
+
+            passwordInput.focus();
+
+            return;
+        }
+
+
+        if (
+            passwordInput.value !==
+            confirmPasswordInput.value
+        ) {
+
+            event.preventDefault();
+
+            confirmPasswordInput.focus();
+
+            passwordMatch.textContent =
+                "Passwords do not match.";
+
+            passwordMatch.className =
+                "password-match error";
+
+        }
+
+    });
+
+</script>
+
+{% endblock %}

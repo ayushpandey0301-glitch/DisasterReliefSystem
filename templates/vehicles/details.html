@@ -1,0 +1,1172 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ vehicle.vehicle_number }} | Vehicle Details
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<style>
+
+    /* =========================================
+       VEHICLE DETAILS PAGE
+       ========================================= */
+
+    .vehicle-details-page {
+        width: 100%;
+    }
+
+
+    /* =========================================
+       DETAILS WRAPPER
+       ========================================= */
+
+    .vehicle-details-wrapper {
+        margin-top: 25px;
+    }
+
+
+    /* =========================================
+       TOP ACTIONS
+       ========================================= */
+
+    .vehicle-details-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+
+    .back-to-vehicles {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 9px;
+        background: #ffffff;
+        border: 1px solid #e5e5e5;
+        color: #333333;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+
+    .back-to-vehicles:hover {
+        background: #f5f5f5;
+    }
+
+
+    /* =========================================
+       MAIN DETAILS CARD
+       ========================================= */
+
+    .vehicle-details-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 30px;
+        border: 1px solid #eeeeee;
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.06);
+    }
+
+
+    /* =========================================
+       VEHICLE HERO
+       ========================================= */
+
+    .vehicle-details-hero {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #eeeeee;
+        margin-bottom: 25px;
+    }
+
+
+    .vehicle-large-icon {
+        width: 75px;
+        height: 75px;
+        min-width: 75px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f1f1;
+        color: #333333;
+        font-size: 30px;
+    }
+
+
+    .vehicle-details-hero h2 {
+        margin: 0;
+        font-size: 26px;
+        color: #222222;
+    }
+
+
+    .vehicle-details-hero p {
+        margin: 6px 0 0;
+        color: #777777;
+        font-size: 14px;
+    }
+
+
+    /* =========================================
+       STATUS
+       ========================================= */
+
+    .details-status {
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: 20px;
+        background: #f1f1f1;
+        color: #333333;
+        font-size: 13px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+
+    .details-status i {
+        font-size: 8px;
+    }
+
+
+    /* =========================================
+       INFORMATION GRID
+       ========================================= */
+
+    .vehicle-information-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+
+    /* =========================================
+       INFORMATION BOX
+       ========================================= */
+
+    .vehicle-information-box {
+        padding: 20px;
+        border: 1px solid #eeeeee;
+        border-radius: 12px;
+        background: #fafafa;
+    }
+
+
+    .vehicle-information-box.full-width {
+        grid-column: 1 / -1;
+    }
+
+
+    .information-label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #888888;
+        font-weight: 700;
+    }
+
+
+    .information-value {
+        display: block;
+        font-size: 16px;
+        font-weight: 600;
+        color: #222222;
+    }
+
+
+    .information-value i {
+        margin-right: 7px;
+        color: #777777;
+    }
+
+
+    /* =========================================
+       FOOTER ACTIONS
+       ========================================= */
+
+    .vehicle-details-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eeeeee;
+    }
+
+
+    .details-action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 11px 18px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s ease;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+
+    .edit-vehicle-btn {
+        background: #222222;
+        color: #ffffff;
+        border: none;
+    }
+
+
+    .edit-vehicle-btn:hover {
+        background: #000000;
+    }
+
+
+    .delete-vehicle-btn {
+        background: #ffffff;
+        color: #dc2626;
+        border: 1px solid #e5e5e5;
+    }
+
+
+    .delete-vehicle-btn:hover {
+        background: #fff5f5;
+    }
+
+
+    /* =========================================
+       DELETE CONFIRMATION MODAL
+       ========================================= */
+
+    .delete-modal-overlay {
+        display: none;
+
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background: rgba(0, 0, 0, 0.55);
+
+        align-items: center;
+        justify-content: center;
+
+        z-index: 99999;
+
+        padding: 20px;
+
+        box-sizing: border-box;
+    }
+
+
+    .delete-modal-overlay.show {
+        display: flex;
+    }
+
+
+    .delete-modal {
+        width: 100%;
+        max-width: 430px;
+
+        background: #ffffff;
+
+        border-radius: 18px;
+
+        padding: 30px;
+
+        box-shadow:
+            0 20px 60px rgba(0, 0, 0, 0.20);
+
+        text-align: center;
+
+        animation: deleteModalAppear 0.2s ease;
+    }
+
+
+    @keyframes deleteModalAppear {
+
+        from {
+            opacity: 0;
+            transform:
+                translateY(10px)
+                scale(0.97);
+        }
+
+        to {
+            opacity: 1;
+            transform:
+                translateY(0)
+                scale(1);
+        }
+
+    }
+
+
+    .delete-modal-icon {
+        width: 65px;
+        height: 65px;
+
+        margin: 0 auto 18px;
+
+        border-radius: 50%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #fff1f1;
+        color: #dc2626;
+
+        font-size: 25px;
+    }
+
+
+    .delete-modal h3 {
+        margin: 0 0 10px;
+        font-size: 21px;
+        color: #222222;
+    }
+
+
+    .delete-modal p {
+        margin: 0;
+
+        font-size: 14px;
+
+        line-height: 1.6;
+
+        color: #777777;
+    }
+
+
+    .delete-modal-vehicle {
+        margin-top: 12px;
+
+        font-weight: 700;
+
+        color: #333333;
+    }
+
+
+    .delete-modal-actions {
+        display: flex;
+
+        justify-content: center;
+
+        gap: 12px;
+
+        margin-top: 25px;
+    }
+
+
+    .delete-modal-btn {
+        min-width: 120px;
+
+        padding: 11px 18px;
+
+        border-radius: 9px;
+
+        font-family: inherit;
+
+        font-size: 14px;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+        transition: 0.2s ease;
+    }
+
+
+    .cancel-delete-btn {
+        background: #f1f1f1;
+
+        color: #333333;
+
+        border: 1px solid #e5e5e5;
+    }
+
+
+    .cancel-delete-btn:hover {
+        background: #e5e5e5;
+    }
+
+
+    .confirm-delete-btn {
+        background: #dc2626;
+
+        color: #ffffff;
+
+        border: 1px solid #dc2626;
+    }
+
+
+    .confirm-delete-btn:hover {
+        background: #b91c1c;
+    }
+
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+
+    @media (max-width: 700px) {
+
+        .vehicle-details-top {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+
+        .vehicle-details-card {
+            padding: 20px;
+        }
+
+
+        .vehicle-details-hero {
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+
+        .details-status {
+            margin-left: 0;
+        }
+
+
+        .vehicle-information-grid {
+            grid-template-columns: 1fr;
+        }
+
+
+        .vehicle-information-box.full-width {
+            grid-column: auto;
+        }
+
+
+        .vehicle-details-actions {
+            flex-direction: column;
+        }
+
+
+        .details-action-btn {
+            width: 100%;
+        }
+
+    }
+
+
+    @media (max-width: 500px) {
+
+        .delete-modal {
+            padding: 25px 20px;
+        }
+
+
+        .delete-modal-actions {
+            flex-direction: column;
+        }
+
+
+        .delete-modal-btn {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+    <!-- =========================================
+         SIDEBAR
+         ========================================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+
+                <i class="fa-solid fa-hand-holding-heart"></i>
+
+            </div>
+
+
+            <div>
+
+                <h2>DRRMS</h2>
+
+                <span>
+                    Disaster Relief
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span>Disasters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+
+                <span>Resources</span>
+
+            </a>
+
+
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-house-medical"></i>
+
+                <span>Shelters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-truck"></i>
+
+                <span>Vehicles</span>
+
+            </a>
+
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-users"></i>
+
+                <span>Volunteers</span>
+
+            </a>
+
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-clipboard-list"></i>
+
+                <span>Relief Requests</span>
+
+            </a>
+
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+                <span>Reports</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-gear"></i>
+
+                <span>Settings</span>
+
+            </a>
+
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         MAIN CONTENT
+         ========================================= -->
+
+    <main class="dashboard-main">
+
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Vehicle Details
+                </h1>
+
+                <p>
+                    View complete information about this vehicle.
+                </p>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+
+                    {{ session["full_name"][0] | upper }}
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        {{ session["full_name"] }}
+                    </strong>
+
+                    <span>
+                        {{ session["role"] | title }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================================
+             VEHICLE DETAILS
+             ========================================= -->
+
+        <div class="vehicle-details-page">
+
+            <div class="vehicle-details-wrapper">
+
+
+                <!-- BACK BUTTON -->
+
+                <div class="vehicle-details-top">
+
+                    <a href="{{ url_for('vehicles.vehicle_list') }}"
+                       class="back-to-vehicles">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        Back to Vehicles
+
+                    </a>
+
+                </div>
+
+
+                <!-- DETAILS CARD -->
+
+                <section class="vehicle-details-card">
+
+
+                    <!-- VEHICLE HERO -->
+
+                    <div class="vehicle-details-hero">
+
+                        <div class="vehicle-large-icon">
+
+                            <i class="fa-solid fa-truck"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2>
+                                {{ vehicle.vehicle_number }}
+                            </h2>
+
+                            <p>
+                                {{ vehicle.vehicle_type }}
+                            </p>
+
+                        </div>
+
+
+                        <span class="details-status">
+
+                            <i class="fa-solid fa-circle"></i>
+
+                            {{ vehicle.status or "Available" }}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- =================================
+                         VEHICLE INFORMATION
+                         ================================= -->
+
+                    <div class="vehicle-information-grid">
+
+
+                        <!-- VEHICLE NUMBER -->
+
+                        <div class="vehicle-information-box">
+
+                            <span class="information-label">
+                                Vehicle Number
+                            </span>
+
+                            <span class="information-value">
+
+                                {{ vehicle.vehicle_number }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- VEHICLE TYPE -->
+
+                        <div class="vehicle-information-box">
+
+                            <span class="information-label">
+                                Vehicle Type
+                            </span>
+
+                            <span class="information-value">
+
+                                {{ vehicle.vehicle_type }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- CAPACITY -->
+
+                        <div class="vehicle-information-box">
+
+                            <span class="information-label">
+                                Capacity
+                            </span>
+
+                            <span class="information-value">
+
+                                {{ vehicle.capacity or "Not specified" }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- DRIVER NAME -->
+
+                        <div class="vehicle-information-box">
+
+                            <span class="information-label">
+                                Driver Name
+                            </span>
+
+                            <span class="information-value">
+
+                                {{ vehicle.driver_name or "Not Assigned" }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- DRIVER CONTACT -->
+
+                        <div class="vehicle-information-box">
+
+                            <span class="information-label">
+                                Driver Contact
+                            </span>
+
+                            <span class="information-value">
+
+                                {% if vehicle.driver_contact %}
+
+                                    <i class="fa-solid fa-phone"></i>
+
+                                    {{ vehicle.driver_contact }}
+
+                                {% else %}
+
+                                    Not Available
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- LOCATION -->
+
+                        <div class="vehicle-information-box">
+
+                            <span class="information-label">
+                                Current Location
+                            </span>
+
+                            <span class="information-value">
+
+                                {% if vehicle.location %}
+
+                                    <i class="fa-solid fa-location-dot"></i>
+
+                                    {{ vehicle.location }}
+
+                                {% else %}
+
+                                    Not Specified
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- STATUS -->
+
+                        <div class="vehicle-information-box">
+
+                            <span class="information-label">
+                                Vehicle Status
+                            </span>
+
+                            <span class="information-value">
+
+                                {{ vehicle.status or "Available" }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- VEHICLE ID -->
+
+                        <div class="vehicle-information-box">
+
+                            <span class="information-label">
+                                Vehicle ID
+                            </span>
+
+                            <span class="information-value">
+
+                                #{{ vehicle.vehicle_id }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- CREATED DATE -->
+
+                        <div class="vehicle-information-box full-width">
+
+                            <span class="information-label">
+                                Added On
+                            </span>
+
+                            <span class="information-value">
+
+                                {% if vehicle.created_at %}
+
+                                    {{ vehicle.created_at }}
+
+                                {% else %}
+
+                                    Not Available
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =================================
+                         ACTION BUTTONS
+                         ================================= -->
+
+                    <div class="vehicle-details-actions">
+
+
+                        <!-- EDIT VEHICLE -->
+
+                        <a href="{{ url_for(
+                            'vehicles.edit_vehicle',
+                            vehicle_id=vehicle.vehicle_id
+                        ) }}"
+                           class="details-action-btn edit-vehicle-btn">
+
+                            <i class="fa-solid fa-pen"></i>
+
+                            Edit Vehicle
+
+                        </a>
+
+
+                        <!-- DELETE VEHICLE -->
+
+                        <form method="POST"
+                              action="{{ url_for(
+                                  'vehicles.delete_vehicle',
+                                  vehicle_id=vehicle.vehicle_id
+                              ) }}"
+                              id="deleteVehicleForm"
+                              style="display: inline;">
+
+                            <button type="button"
+                                    class="details-action-btn delete-vehicle-btn"
+                                    onclick="openDeleteModal()">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                                Delete Vehicle
+
+                            </button>
+
+                        </form>
+
+
+                    </div>
+
+
+                </section>
+
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+    <!-- =========================================
+         DELETE CONFIRMATION MODAL
+         ========================================= -->
+
+    <div class="delete-modal-overlay"
+         id="deleteVehicleModal">
+
+        <div class="delete-modal">
+
+
+            <div class="delete-modal-icon">
+
+                <i class="fa-solid fa-trash"></i>
+
+            </div>
+
+
+            <h3>
+                Delete Vehicle?
+            </h3>
+
+
+            <p>
+
+                Are you sure you want to delete this vehicle?
+
+                This action cannot be undone.
+
+            </p>
+
+
+            <div class="delete-modal-vehicle">
+
+                {{ vehicle.vehicle_number }}
+
+            </div>
+
+
+            <div class="delete-modal-actions">
+
+
+                <button type="button"
+                        class="delete-modal-btn cancel-delete-btn"
+                        onclick="closeDeleteModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button type="button"
+                        class="delete-modal-btn confirm-delete-btn"
+                        onclick="confirmDeleteVehicle()">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete Vehicle
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         DELETE MODAL JAVASCRIPT
+         ========================================= -->
+
+    <script>
+
+        function openDeleteModal() {
+
+            const modal =
+                document.getElementById("deleteVehicleModal");
+
+            if (modal) {
+
+                modal.classList.add("show");
+
+            }
+
+        }
+
+
+        function closeDeleteModal() {
+
+            const modal =
+                document.getElementById("deleteVehicleModal");
+
+            if (modal) {
+
+                modal.classList.remove("show");
+
+            }
+
+        }
+
+
+        function confirmDeleteVehicle() {
+
+            const form =
+                document.getElementById("deleteVehicleForm");
+
+            if (form) {
+
+                form.submit();
+
+            }
+
+        }
+
+
+        /* =========================================
+           CLOSE WHEN CLICKING OUTSIDE
+           ========================================= */
+
+        const deleteModal =
+            document.getElementById("deleteVehicleModal");
+
+
+        if (deleteModal) {
+
+            deleteModal.addEventListener(
+                "click",
+                function(event) {
+
+                    if (event.target === deleteModal) {
+
+                        closeDeleteModal();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =========================================
+           CLOSE WITH ESC KEY
+           ========================================= */
+
+        document.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (event.key === "Escape") {
+
+                    closeDeleteModal();
+
+                }
+
+            }
+        );
+
+    </script>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,650 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit {{ shelter.shelter_name }} | DRRMS
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<style>
+
+    .edit-wrapper {
+        margin-top: 25px;
+        max-width: 1000px;
+    }
+
+    .edit-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 30px;
+        border: 1px solid #eeeeee;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .edit-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .edit-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 14px;
+        background: #f1f1f1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .edit-header h2 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .edit-header p {
+        margin: 5px 0 0;
+        opacity: 0.6;
+        font-size: 14px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 14px;
+        border: 1px solid #dddddd;
+        border-radius: 9px;
+        font-size: 14px;
+        font-family: inherit;
+        background: #ffffff;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #222222;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .form-hint {
+        font-size: 12px;
+        opacity: 0.55;
+    }
+
+    .edit-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eeeeee;
+    }
+
+    .action-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .form-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 11px 18px;
+        border-radius: 9px;
+        border: none;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .cancel-btn {
+        background: #ffffff;
+        border: 1px solid #dddddd;
+        color: #222222;
+    }
+
+    .save-btn {
+        background: #222222;
+        color: #ffffff;
+    }
+
+    .form-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    @media (max-width: 700px) {
+
+        .edit-card {
+            padding: 20px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full-width {
+            grid-column: auto;
+        }
+
+        .edit-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .action-group {
+            flex-direction: column;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+    <!-- =========================================
+         SIDEBAR
+         ========================================= -->
+
+    <aside class="sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <div>
+
+                <h2>DRRMS</h2>
+
+                <span>
+                    Disaster Relief
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="sidebar-nav">
+
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span>Disasters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+
+                <span>Resources</span>
+
+            </a>
+
+
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-house-medical"></i>
+
+                <span>Shelters</span>
+
+            </a>
+
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-truck"></i>
+
+                <span>Vehicles</span>
+
+            </a>
+
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-users"></i>
+
+                <span>Volunteers</span>
+
+            </a>
+
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-clipboard-list"></i>
+
+                <span>Relief Requests</span>
+
+            </a>
+
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+                <span>Reports</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-gear"></i>
+
+                <span>Settings</span>
+
+            </a>
+
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         MAIN CONTENT
+         ========================================= -->
+
+    <main class="dashboard-main">
+
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Edit Shelter
+                </h1>
+
+                <p>
+                    Update emergency shelter information.
+                </p>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+
+                    {{ session["full_name"][0] | upper }}
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ session["full_name"] }}
+                    </strong>
+
+                    <span>
+                        {{ session["role"] | title }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================================
+             EDIT FORM
+             ========================================= -->
+
+        <div class="edit-wrapper">
+
+            <section class="edit-card">
+
+
+                <!-- FORM HEADER -->
+
+                <div class="edit-header">
+
+                    <div class="edit-icon">
+
+                        <i class="fa-solid fa-pen-to-square"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            {{ shelter.shelter_name }}
+                        </h2>
+
+                        <p>
+                            Shelter ID #{{ shelter.shelter_id }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FORM -->
+
+                <form
+                    method="POST"
+                    action="{{ url_for('shelters.edit_shelter', shelter_id=shelter.shelter_id) }}">
+
+                    
+                    <!-- CSRF PROTECTION -->
+
+                    <input type="hidden"
+                           name="csrf_token"
+                           value="{{ csrf_token() }}">
+
+
+                    <div class="form-grid">
+
+
+                        <!-- SHELTER NAME -->
+
+                        <div class="form-group">
+
+                            <label for="shelter_name">
+                                Shelter Name *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="shelter_name"
+                                name="shelter_name"
+                                value="{{ shelter.shelter_name }}"
+                                required>
+
+                        </div>
+
+
+                        <!-- LOCATION -->
+
+                        <div class="form-group">
+
+                            <label for="location">
+                                Location *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="location"
+                                name="location"
+                                value="{{ shelter.location }}"
+                                required>
+
+                        </div>
+
+
+                        <!-- CAPACITY -->
+
+                        <div class="form-group">
+
+                            <label for="capacity">
+                                Total Capacity *
+                            </label>
+
+                            <input
+                                type="number"
+                                id="capacity"
+                                name="capacity"
+                                value="{{ shelter.capacity }}"
+                                min="1"
+                                required>
+
+                            <span class="form-hint">
+                                Maximum number of people the shelter can accommodate.
+                            </span>
+
+                        </div>
+
+
+                        <!-- CURRENT OCCUPANCY -->
+
+                        <div class="form-group">
+
+                            <label for="current_occupancy">
+                                Current Occupancy
+                            </label>
+
+                            <input
+                                type="number"
+                                id="current_occupancy"
+                                name="current_occupancy"
+                                value="{{ shelter.current_occupancy or 0 }}"
+                                min="0">
+
+                        </div>
+
+
+                        <!-- CONTACT -->
+
+                        <div class="form-group">
+
+                            <label for="contact_number">
+                                Contact Number
+                            </label>
+
+                            <input
+                                type="text"
+                                id="contact_number"
+                                name="contact_number"
+                                value="{{ shelter.contact_number or '' }}"
+                                placeholder="Enter contact number">
+
+                        </div>
+
+
+                        <!-- STATUS -->
+
+                        <div class="form-group">
+
+                            <label for="status">
+                                Shelter Status
+                            </label>
+
+                            <select
+                                id="status"
+                                name="status">
+
+                                <option value="Available"
+                                    {% if shelter.status == "Available" %}
+                                        selected
+                                    {% endif %}>
+                                    Available
+                                </option>
+
+                                <option value="Full"
+                                    {% if shelter.status == "Full" %}
+                                        selected
+                                    {% endif %}>
+                                    Full
+                                </option>
+
+                                <option value="Closed"
+                                    {% if shelter.status == "Closed" %}
+                                        selected
+                                    {% endif %}>
+                                    Closed
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- DISASTER ID -->
+
+                        <div class="form-group">
+
+                            <label for="disaster_id">
+                                Disaster ID
+                            </label>
+
+                            <input
+                                type="number"
+                                id="disaster_id"
+                                name="disaster_id"
+                                value="{{ shelter.disaster_id or '' }}"
+                                min="1"
+                                placeholder="Optional">
+
+                        </div>
+
+
+                        <!-- FACILITIES -->
+
+                        <div class="form-group full-width">
+
+                            <label for="facilities">
+                                Facilities & Services
+                            </label>
+
+                            <textarea
+                                id="facilities"
+                                name="facilities"
+                                placeholder="Example: Food, drinking water, medical aid, beds, toilets...">{{ shelter.facilities or '' }}</textarea>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ACTIONS -->
+
+                    <div class="edit-actions">
+
+
+                        <a
+                            href="{{ url_for('shelters.shelter_details', shelter_id=shelter.shelter_id) }}"
+                            class="form-btn cancel-btn">
+
+                            <i class="fa-solid fa-arrow-left"></i>
+
+                            Cancel
+
+                        </a>
+
+
+                        <div class="action-group">
+
+                            <button
+                                type="submit"
+                                class="form-btn save-btn">
+
+                                <i class="fa-solid fa-floppy-disk"></i>
+
+                                Save Changes
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                </form>
+
+            </section>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+{% endblock %}

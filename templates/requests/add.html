@@ -1,0 +1,461 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Relief Request | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<style>
+
+    /* =========================================
+       ADD REQUEST PAGE
+       ========================================= */
+
+    .request-form-page {
+        width: 100%;
+    }
+
+
+    /* =========================================
+       HEADER
+       ========================================= */
+
+    .request-form-header {
+        margin-bottom: 18px;
+    }
+
+    .request-form-header h1 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .request-form-header p {
+        margin: 4px 0 0;
+        color: #777;
+        font-size: 13px;
+    }
+
+
+    /* =========================================
+       FORM CONTAINER
+       ========================================= */
+
+    .request-form-container {
+        width: 92%;
+        max-width: 850px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 10px;
+        padding: 22px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    }
+
+
+    /* =========================================
+       FORM GRID
+       ========================================= */
+
+    .request-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+
+    /* =========================================
+       LABELS
+       ========================================= */
+
+    .form-group label {
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .required {
+        color: #d32f2f;
+    }
+
+
+    /* =========================================
+       INPUTS
+       ========================================= */
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 11px;
+        border: 1px solid #ddd;
+        border-radius: 7px;
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        background: white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #111;
+    }
+
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+
+    /* =========================================
+       FORM HINT
+       ========================================= */
+
+    .form-hint {
+        margin-top: 5px;
+        font-size: 11px;
+        color: #888;
+    }
+
+
+    /* =========================================
+       BUTTONS
+       ========================================= */
+
+    .form-actions {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 5px;
+        padding-top: 16px;
+        border-top: 1px solid #eee;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 9px 16px;
+        border-radius: 7px;
+        border: none;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-cancel {
+        background: #f1f1f1;
+        color: #333;
+    }
+
+    .btn-submit {
+        background: #111;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+
+    @media (max-width: 700px) {
+
+        .request-form {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full-width {
+            grid-column: auto;
+        }
+
+        .form-actions {
+            grid-column: auto;
+        }
+
+        .request-form-container {
+            width: 90%;
+            padding: 18px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="request-form-page">
+
+<div class="request-form-header">
+
+    <h1>Add Relief Request</h1>
+
+    <p>
+        Create a new relief request for disaster response.
+    </p>
+
+</div>
+
+
+<div class="request-form-container">
+
+    <form method="POST"
+          action="{{ url_for('requests.add_request') }}"
+          class="request-form">
+
+        <!-- CSRF PROTECTION -->
+
+        <input type="hidden"
+               name="csrf_token"
+               value="{{ csrf_token() }}">
+
+
+        <!-- REQUESTER NAME -->
+
+        <div class="form-group">
+
+            <label for="requester_name">
+                Requester Name
+                <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="requester_name"
+                name="requester_name"
+                placeholder="Enter requester name"
+                required
+            >
+
+        </div>
+
+
+        <!-- CONTACT -->
+
+        <div class="form-group">
+
+            <label for="contact">
+                Contact Number
+            </label>
+
+            <input
+                type="text"
+                id="contact"
+                name="contact"
+                placeholder="Enter contact number"
+            >
+
+        </div>
+
+
+        <!-- REQUEST TYPE -->
+
+        <div class="form-group">
+
+            <label for="request_type">
+                Request Type
+                <span class="required">*</span>
+            </label>
+
+            <select
+                id="request_type"
+                name="request_type"
+                required
+            >
+
+                <option value="">
+                    Select request type
+                </option>
+
+                <option value="Food">
+                    Food
+                </option>
+
+                <option value="Water">
+                    Water
+                </option>
+
+                <option value="Medicine">
+                    Medicine
+                </option>
+
+                <option value="Clothing">
+                    Clothing
+                </option>
+
+                <option value="Shelter">
+                    Shelter
+                </option>
+
+                <option value="Rescue">
+                    Rescue
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="form-group">
+
+            <label for="location">
+                Location
+                <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="location"
+                name="location"
+                placeholder="Enter request location"
+                required
+            >
+
+        </div>
+
+
+        <!-- PRIORITY -->
+
+        <div class="form-group">
+
+            <label for="priority">
+                Priority
+            </label>
+
+            <select
+                id="priority"
+                name="priority"
+            >
+
+                <option value="Low">
+                    Low
+                </option>
+
+                <option value="Medium" selected>
+                    Medium
+                </option>
+
+                <option value="High">
+                    High
+                </option>
+
+                <option value="Critical">
+                    Critical
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="form-group">
+
+            <label for="status">
+                Status
+            </label>
+
+            <select
+                id="status"
+                name="status"
+            >
+
+                <option value="Pending" selected>
+                    Pending
+                </option>
+
+                <option value="In Progress">
+                    In Progress
+                </option>
+
+                <option value="Resolved">
+                    Resolved
+                </option>
+
+                <option value="Rejected">
+                    Rejected
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="form-group full-width">
+
+            <label for="description">
+                Description
+            </label>
+
+            <textarea
+                id="description"
+                name="description"
+                placeholder="Describe the relief required..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div class="form-actions">
+
+            <a href="{{ url_for('requests.request_list') }}"
+               class="btn btn-cancel">
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Cancel
+
+            </a>
+
+            <button
+                type="submit"
+                class="btn btn-submit">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Request
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+</div>
+
+{% endblock %}

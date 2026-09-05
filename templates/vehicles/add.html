@@ -1,0 +1,675 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Vehicle | Disaster Relief Management System
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<style>
+
+    /* =========================================
+       ADD VEHICLE PAGE
+       ========================================= */
+
+    .vehicle-page {
+
+        min-height: 100vh;
+
+        padding: 30px;
+
+        background: #f5f7fb;
+
+    }
+
+
+    /* =========================================
+       PAGE HEADER
+       ========================================= */
+
+    .vehicle-page-header {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        margin-bottom: 25px;
+
+    }
+
+
+    .vehicle-page-header h1 {
+
+        margin: 0;
+
+        font-size: 28px;
+
+        font-weight: 700;
+
+        color: #1f2937;
+
+    }
+
+
+    .vehicle-page-header p {
+
+        margin-top: 6px;
+
+        color: #6b7280;
+
+        font-size: 14px;
+
+    }
+
+
+    /* =========================================
+       BACK BUTTON
+       ========================================= */
+
+    .back-btn {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        padding: 10px 16px;
+
+        border-radius: 8px;
+
+        text-decoration: none;
+
+        background: #ffffff;
+
+        color: #374151;
+
+        border: 1px solid #e5e7eb;
+
+        font-size: 14px;
+
+        font-weight: 600;
+
+        transition: 0.2s;
+
+    }
+
+
+    .back-btn:hover {
+
+        background: #f3f4f6;
+
+    }
+
+
+    /* =========================================
+       FORM CARD
+       ========================================= */
+
+    .vehicle-form-card {
+
+        background: #ffffff;
+
+        border-radius: 12px;
+
+        padding: 30px;
+
+        border: 1px solid #e5e7eb;
+
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+        max-width: 900px;
+
+    }
+
+
+    .vehicle-form-card h2 {
+
+        margin-top: 0;
+
+        margin-bottom: 5px;
+
+        font-size: 20px;
+
+        color: #1f2937;
+
+    }
+
+
+    .vehicle-form-card .form-description {
+
+        margin-bottom: 25px;
+
+        color: #6b7280;
+
+        font-size: 14px;
+
+    }
+
+
+    /* =========================================
+       FORM GRID
+       ========================================= */
+
+    .vehicle-form-grid {
+
+        display: grid;
+
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 20px;
+
+    }
+
+
+    .form-group {
+
+        display: flex;
+
+        flex-direction: column;
+
+    }
+
+
+    .form-group.full-width {
+
+        grid-column: 1 / -1;
+
+    }
+
+
+    .form-group label {
+
+        margin-bottom: 8px;
+
+        font-size: 14px;
+
+        font-weight: 600;
+
+        color: #374151;
+
+    }
+
+
+    .form-group label span {
+
+        color: #dc2626;
+
+    }
+
+
+    .form-group input,
+
+    .form-group select {
+
+        width: 100%;
+
+        box-sizing: border-box;
+
+        padding: 12px 14px;
+
+        border: 1px solid #d1d5db;
+
+        border-radius: 8px;
+
+        background: #ffffff;
+
+        color: #111827;
+
+        font-size: 14px;
+
+        outline: none;
+
+        transition: 0.2s;
+
+    }
+
+
+    .form-group input:focus,
+
+    .form-group select:focus {
+
+        border-color: #2563eb;
+
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+
+    }
+
+
+    .form-group input::placeholder {
+
+        color: #9ca3af;
+
+    }
+
+
+    /* =========================================
+       FORM FOOTER
+       ========================================= */
+
+    .form-footer {
+
+        display: flex;
+
+        justify-content: flex-end;
+
+        gap: 12px;
+
+        margin-top: 30px;
+
+        padding-top: 20px;
+
+        border-top: 1px solid #e5e7eb;
+
+    }
+
+
+    .cancel-btn,
+
+    .save-btn {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        padding: 11px 20px;
+
+        border-radius: 8px;
+
+        font-size: 14px;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+        text-decoration: none;
+
+        transition: 0.2s;
+
+    }
+
+
+    .cancel-btn {
+
+        background: #ffffff;
+
+        color: #374151;
+
+        border: 1px solid #d1d5db;
+
+    }
+
+
+    .cancel-btn:hover {
+
+        background: #f3f4f6;
+
+    }
+
+
+    .save-btn {
+
+        background: #2563eb;
+
+        color: #ffffff;
+
+        border: none;
+
+    }
+
+
+    .save-btn:hover {
+
+        background: #1d4ed8;
+
+    }
+
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+
+    @media (max-width: 700px) {
+
+        .vehicle-page {
+
+            padding: 20px;
+
+        }
+
+
+        .vehicle-page-header {
+
+            align-items: flex-start;
+
+            gap: 15px;
+
+            flex-direction: column;
+
+        }
+
+
+        .vehicle-form-grid {
+
+            grid-template-columns: 1fr;
+
+        }
+
+
+        .form-group.full-width {
+
+            grid-column: auto;
+
+        }
+
+
+        .form-footer {
+
+            flex-direction: column;
+
+        }
+
+
+        .cancel-btn,
+
+        .save-btn {
+
+            width: 100%;
+
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="vehicle-page">
+
+
+    <!-- =========================================
+         PAGE HEADER
+         ========================================= -->
+
+    <div class="vehicle-page-header">
+
+        <div>
+
+            <h1>
+                Add Vehicle
+            </h1>
+
+            <p>
+                Add a new vehicle to the disaster relief fleet.
+            </p>
+
+        </div>
+
+
+        <a href="{{ url_for('vehicles.vehicle_list') }}"
+           class="back-btn">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Vehicles
+
+        </a>
+
+    </div>
+
+
+
+    <!-- =========================================
+         FORM CARD
+         ========================================= -->
+
+    <div class="vehicle-form-card">
+
+        <h2>
+            Vehicle Information
+        </h2>
+
+        <p class="form-description">
+            Enter the details of the vehicle below.
+        </p>
+
+
+        <!-- =========================================
+             VEHICLE FORM
+             ========================================= -->
+
+        <form method="POST"
+              action="{{ url_for('vehicles.add_vehicle') }}">
+
+
+            <!-- CSRF PROTECTION -->
+
+            <input type="hidden"
+                   name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+
+            <div class="vehicle-form-grid">
+
+
+                <!-- VEHICLE NUMBER -->
+
+                <div class="form-group">
+
+                    <label for="vehicle_number">
+                        Vehicle Number
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="vehicle_number"
+                        name="vehicle_number"
+                        placeholder="e.g. MH-01-AB-1234"
+                        required>
+
+                </div>
+
+
+
+                <!-- VEHICLE TYPE -->
+
+                <div class="form-group">
+
+                    <label for="vehicle_type">
+                        Vehicle Type
+                        <span>*</span>
+                    </label>
+
+                    <select
+                        id="vehicle_type"
+                        name="vehicle_type"
+                        required>
+
+                        <option value="">
+                            Select vehicle type
+                        </option>
+
+                        <option value="Ambulance">
+                            Ambulance
+                        </option>
+
+                        <option value="Truck">
+                            Truck
+                        </option>
+
+                        <option value="Van">
+                            Van
+                        </option>
+
+                        <option value="Rescue Vehicle">
+                            Rescue Vehicle
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- CAPACITY -->
+
+                <div class="form-group">
+
+                    <label for="capacity">
+                        Capacity
+                    </label>
+
+                    <input
+                        type="text"
+                        id="capacity"
+                        name="capacity"
+                        placeholder="e.g. 5 persons / 2 tons">
+
+                </div>
+
+
+
+                <!-- DRIVER NAME -->
+
+                <div class="form-group">
+
+                    <label for="driver_name">
+                        Driver Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="driver_name"
+                        name="driver_name"
+                        placeholder="Enter driver name">
+
+                </div>
+
+
+
+                <!-- DRIVER CONTACT -->
+
+                <div class="form-group">
+
+                    <label for="driver_contact">
+                        Driver Contact
+                    </label>
+
+                    <input
+                        type="text"
+                        id="driver_contact"
+                        name="driver_contact"
+                        placeholder="Enter contact number">
+
+                </div>
+
+
+
+                <!-- LOCATION -->
+
+                <div class="form-group">
+
+                    <label for="location">
+                        Current Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        placeholder="e.g. Mumbai Relief Center">
+
+                </div>
+
+
+
+                <!-- STATUS -->
+
+                <div class="form-group full-width">
+
+                    <label for="status">
+                        Vehicle Status
+                    </label>
+
+                    <select
+                        id="status"
+                        name="status">
+
+                        <option value="Available" selected>
+                            Available
+                        </option>
+
+                        <option value="In Use">
+                            In Use
+                        </option>
+
+                        <option value="Maintenance">
+                            Maintenance
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================================
+                 FORM BUTTONS
+                 ========================================= -->
+
+            <div class="form-footer">
+
+
+                <a href="{{ url_for('vehicles.vehicle_list') }}"
+                   class="cancel-btn">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="save-btn">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Add Vehicle
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

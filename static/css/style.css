@@ -1,0 +1,218 @@
+:root {
+    /* ============================= */
+    /* GLOBAL COLOR SYSTEM */
+    /* ============================= */
+
+    --primary: #2563EB;
+    --primary-hover: #1D4ED8;
+    --primary-light: #DBEAFE;
+
+    --secondary: #0F3D56;
+
+    --accent: #F59E0B;
+
+    --danger: #DC2626;
+    --danger-light: #FEE2E2;
+
+    --success: #16A34A;
+    --success-light: #DCFCE7;
+
+    --warning: #F59E0B;
+    --warning-light: #FEF3C7;
+
+    --background: #F5F7FA;
+    --white: #FFFFFF;
+
+    --text: #1F2937;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+
+    --sidebar: #111827;
+    --sidebar-hover: #1F2937;
+    --sidebar-text: #CBD5E1;
+}
+
+
+/* ============================= */
+/* RESET */
+/* ============================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* ============================= */
+/* BODY */
+/* ============================= */
+
+html {
+    scroll-behavior: auto;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    overflow-x: hidden;
+}
+
+
+/* ============================= */
+/* HEADINGS */
+/* ============================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Poppins', sans-serif;
+}
+
+
+/* ============================= */
+/* FORM ELEMENTS */
+/* ============================= */
+
+button,
+input,
+select,
+textarea {
+    font-family: 'Inter', sans-serif;
+}
+
+
+/* ============================= */
+/* GLOBAL BUTTON STYLE */
+/* ============================= */
+
+.btn-primary,
+.add-btn,
+.add-disaster-btn,
+.add-resource-btn,
+.add-shelter-btn,
+.add-vehicle-btn,
+.add-volunteer-btn,
+.request-resource-btn,
+.save-btn,
+.submit-btn {
+    background: var(--primary) !important;
+    color: var(--white) !important;
+}
+
+
+.btn-primary:hover,
+.add-btn:hover,
+.add-disaster-btn:hover,
+.add-resource-btn:hover,
+.add-shelter-btn:hover,
+.add-vehicle-btn:hover,
+.add-volunteer-btn:hover,
+.request-resource-btn:hover,
+.save-btn:hover,
+.submit-btn:hover {
+    background: var(--primary-hover) !important;
+    color: var(--white) !important;
+}
+
+
+/* ============================= */
+/* GLOBAL LINK / BUTTON TRANSITION */
+/* Removes page movement effect */
+/* ============================= */
+
+a,
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* ============================= */
+/* PREVENT UNWANTED CLICK MOVEMENT */
+/* ============================= */
+
+.nav-item,
+.add-btn,
+.add-disaster-btn,
+.add-resource-btn,
+.add-shelter-btn,
+.add-vehicle-btn,
+.add-volunteer-btn,
+.request-action-btn,
+.quick-action,
+.save-btn,
+.submit-btn,
+.cancel-btn,
+.back-btn {
+    transform: none !important;
+}
+
+
+/* ============================= */
+/* CONSISTENT FOCUS COLOR */
+/* ============================= */
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary) !important;
+    outline: none;
+}
+
+
+/* ========================================================= */
+/* GLOBAL USER PROFILE / AVATAR */
+/* ========================================================= */
+
+/*
+   Keeps the logged-in user's initial consistent
+   across Dashboard, Disasters, Resources, Shelters,
+   Vehicles, Volunteers, Requests, Reports and Settings.
+*/
+
+.user-avatar,
+.profile-avatar,
+.user-icon,
+.profile-icon,
+.avatar {
+    background: var(--primary) !important;
+    background-color: var(--primary) !important;
+    color: var(--white) !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+}
+
+
+/* ============================= */
+/* AVATAR HOVER */
+/* ============================= */
+
+.user-avatar:hover,
+.profile-avatar:hover,
+.user-icon:hover,
+.profile-icon:hover,
+.avatar:hover {
+    background: var(--primary-hover) !important;
+    color: var(--white) !important;
+}
+
+
+/* ============================= */
+/* USER INITIAL */
+/* ============================= */
+
+.user-avatar span,
+.profile-avatar span,
+.user-icon span,
+.profile-icon span,
+.avatar span {
+    color: var(--white) !important;
+}

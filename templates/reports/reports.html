@@ -1,0 +1,886 @@
+{% extends "base.html" %}
+
+{% block title %}
+Reports & Statistics | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<style>
+
+    /* =========================================
+       REPORTS PAGE
+       ========================================= */
+
+    html {
+        scrollbar-gutter: stable;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .reports-page {
+        min-height: 100vh;
+        display: flex;
+        background: #f5f7fb;
+    }
+
+
+    /* =========================================
+       MAIN CONTENT
+       ========================================= */
+
+    .reports-main {
+        flex: 1;
+        min-width: 0;
+        padding: 35px 40px;
+    }
+
+
+    /* =========================================
+       HEADER
+       ========================================= */
+
+    .reports-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .reports-header h1 {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: #111827;
+        letter-spacing: -0.3px;
+    }
+
+    .reports-header p {
+        margin: 7px 0 0;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+
+    /* =========================================
+       STATISTICS GRID
+       ========================================= */
+
+    .reports-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+
+    /* =========================================
+       STATISTICS CARD
+       ========================================= */
+
+    .report-stat-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.04);
+        transition: 0.2s ease;
+    }
+
+    .report-stat-card:hover {
+        transform: translateY(-2px);
+        border-color: #bfdbfe;
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.08);
+    }
+
+
+    /* =========================================
+       STATISTICS ICON
+       ========================================= */
+
+    .report-stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #dbeafe;
+        flex-shrink: 0;
+    }
+
+
+    .report-stat-card span {
+        color: #6b7280;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+
+    .report-stat-card h2 {
+        margin: 5px 0 0;
+        font-size: 25px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+
+    /* =========================================
+       REPORT GRID
+       ========================================= */
+
+    .reports-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+
+    /* =========================================
+       REPORT CARD
+       ========================================= */
+
+    .report-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 24px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.04);
+        transition: 0.2s ease;
+    }
+
+    .report-card:hover {
+        border-color: #dbeafe;
+        box-shadow: 0 8px 22px rgba(37, 99, 235, 0.06);
+    }
+
+
+    /* =========================================
+       REPORT CARD HEADER
+       ========================================= */
+
+    .report-card-header {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eef0f3;
+    }
+
+
+    .report-card-header h3 {
+        margin: 0;
+        color: #111827;
+        font-family: "Poppins", sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+
+    .report-card-header p {
+        margin: 5px 0 0;
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+
+    /* =========================================
+       STATISTIC ROW
+       ========================================= */
+
+    .report-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 13px 12px;
+        border-bottom: 1px solid #f0f1f3;
+        border-radius: 8px;
+        transition: 0.2s ease;
+    }
+
+    .report-row:hover {
+        background: #f8faff;
+    }
+
+
+    .report-row:last-child {
+        border-bottom: none;
+    }
+
+
+    .report-row-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #374151;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+
+    .report-row-left i {
+        width: 20px;
+        text-align: center;
+        color: #2563eb;
+    }
+
+
+    .report-row-value {
+        min-width: 36px;
+        text-align: center;
+        padding: 5px 10px;
+        border-radius: 7px;
+        background: #eff6ff;
+        color: #2563eb;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+
+    /* =========================================
+       EMPTY STATE
+       ========================================= */
+
+    .report-empty {
+        text-align: center;
+        padding: 25px 10px;
+        color: #9ca3af;
+        font-size: 13px;
+    }
+
+
+    /* =========================================
+       FULL WIDTH CARD
+       ========================================= */
+
+    .report-card.full-width {
+        grid-column: 1 / -1;
+    }
+
+
+    /* =========================================
+       SIDEBAR STABILITY
+       ========================================= */
+
+    .reports-page .sidebar {
+        flex-shrink: 0;
+    }
+
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+
+    @media (max-width: 1100px) {
+
+        .reports-stats {
+            grid-template-columns: 1fr 1fr;
+        }
+
+    }
+
+
+    @media (max-width: 800px) {
+
+        .reports-main {
+            padding: 25px;
+        }
+
+        .reports-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .report-card.full-width {
+            grid-column: auto;
+        }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+        .reports-main {
+            padding: 20px 15px;
+        }
+
+        .reports-header {
+            align-items: flex-start;
+            gap: 15px;
+            flex-direction: column;
+        }
+
+        .reports-header h1 {
+            font-size: 24px;
+        }
+
+        .reports-stats {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .report-stat-card {
+            padding: 18px;
+        }
+
+        .report-card {
+            padding: 18px;
+        }
+
+        .report-card-header h3 {
+            font-size: 16px;
+        }
+
+        .report-row {
+            padding: 12px 8px;
+        }
+
+    }
+
+
+    @media (max-width: 420px) {
+
+        .reports-stat-card {
+            gap: 12px;
+        }
+
+        .report-stat-icon {
+            width: 44px;
+            height: 44px;
+            font-size: 17px;
+        }
+
+        .report-stat-card h2 {
+            font-size: 22px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="reports-page">
+
+
+    <!-- ========================================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <div>
+                <h2>DRRMS</h2>
+                <span>Disaster Relief System</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-house-crack"></i>
+
+                <span>Disasters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+
+                <span>Resources</span>
+
+            </a>
+
+
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-house"></i>
+
+                <span>Shelters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-truck"></i>
+
+                <span>Vehicles</span>
+
+            </a>
+
+
+            <a href="{{ url_for('volunteers.volunteer_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-people-group"></i>
+
+                <span>Volunteers</span>
+
+            </a>
+
+
+            <a href="{{ url_for('requests.request_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-hand-holding-heart"></i>
+
+                <span>Relief Requests</span>
+
+            </a>
+
+
+            <a href="{{ url_for('reports.reports_home') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+                <span>Reports</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ========================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================================= -->
+
+    <main class="reports-main">
+
+
+        <!-- HEADER -->
+
+        <div class="reports-header">
+
+            <div>
+
+                <h1>Reports & Statistics</h1>
+
+                <p>
+                    Overview of disaster relief activities and system data.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- STATISTICS -->
+        <!-- ========================================= -->
+
+        <div class="reports-stats">
+
+
+            <!-- DISASTERS -->
+
+            <div class="report-stat-card">
+
+                <div class="report-stat-icon">
+
+                    <i class="fa-solid fa-house-crack"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Total Disasters</span>
+
+                    <h2>
+                        {{ total_disasters }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ACTIVE DISASTERS -->
+
+            <div class="report-stat-card">
+
+                <div class="report-stat-icon">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Active Disasters</span>
+
+                    <h2>
+                        {{ active_disasters }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RESOURCES -->
+
+            <div class="report-stat-card">
+
+                <div class="report-stat-icon">
+
+                    <i class="fa-solid fa-boxes-stacked"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Total Resources</span>
+
+                    <h2>
+                        {{ total_resources }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SHELTERS -->
+
+            <div class="report-stat-card">
+
+                <div class="report-stat-icon">
+
+                    <i class="fa-solid fa-house"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Total Shelters</span>
+
+                    <h2>
+                        {{ total_shelters }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- VEHICLES -->
+
+            <div class="report-stat-card">
+
+                <div class="report-stat-icon">
+
+                    <i class="fa-solid fa-truck"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Total Vehicles</span>
+
+                    <h2>
+                        {{ total_vehicles }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- VOLUNTEERS -->
+
+            <div class="report-stat-card">
+
+                <div class="report-stat-icon">
+
+                    <i class="fa-solid fa-people-group"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Total Volunteers</span>
+
+                    <h2>
+                        {{ total_volunteers }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RELIEF REQUESTS -->
+
+            <div class="report-stat-card">
+
+                <div class="report-stat-icon">
+
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+
+                </div>
+
+                <div>
+
+                    <span>Total Relief Requests</span>
+
+                    <h2>
+                        {{ total_requests }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ========================================= -->
+        <!-- REPORT DETAILS -->
+        <!-- ========================================= -->
+
+        <div class="reports-grid">
+
+
+            <!-- ===================================== -->
+            <!-- REQUEST STATUS -->
+            <!-- ===================================== -->
+
+            <div class="report-card">
+
+                <div class="report-card-header">
+
+                    <h3>
+                        Relief Requests by Status
+                    </h3>
+
+                    <p>
+                        Current status of submitted requests.
+                    </p>
+
+                </div>
+
+
+                {% if requests_by_status %}
+
+                    {% for item in requests_by_status %}
+
+                        <div class="report-row">
+
+                            <div class="report-row-left">
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                <span>
+                                    {{ item.status }}
+                                </span>
+
+                            </div>
+
+                            <div class="report-row-value">
+
+                                {{ item.total }}
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="report-empty">
+                        No relief request data available.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- ===================================== -->
+            <!-- REQUEST PRIORITY -->
+            <!-- ===================================== -->
+
+            <div class="report-card">
+
+                <div class="report-card-header">
+
+                    <h3>
+                        Relief Requests by Priority
+                    </h3>
+
+                    <p>
+                        Requests grouped according to urgency.
+                    </p>
+
+                </div>
+
+
+                {% if requests_by_priority %}
+
+                    {% for item in requests_by_priority %}
+
+                        <div class="report-row">
+
+                            <div class="report-row-left">
+
+                                <i class="fa-solid fa-flag"></i>
+
+                                <span>
+                                    {{ item.priority }}
+                                </span>
+
+                            </div>
+
+                            <div class="report-row-value">
+
+                                {{ item.total }}
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="report-empty">
+                        No relief request data available.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- ===================================== -->
+            <!-- DISASTER SEVERITY -->
+            <!-- ===================================== -->
+
+            <div class="report-card full-width">
+
+                <div class="report-card-header">
+
+                    <h3>
+                        Disasters by Severity
+                    </h3>
+
+                    <p>
+                        Distribution of disasters according to severity.
+                    </p>
+
+                </div>
+
+
+                {% if disasters_by_severity %}
+
+                    {% for item in disasters_by_severity %}
+
+                        <div class="report-row">
+
+                            <div class="report-row-left">
+
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                                <span>
+                                    {{ item.severity }}
+                                </span>
+
+                            </div>
+
+                            <div class="report-row-value">
+
+                                {{ item.total }}
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="report-empty">
+                        No disaster data available.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+</div>
+
+{% endblock %}

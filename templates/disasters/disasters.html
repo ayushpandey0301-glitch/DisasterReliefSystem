@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+
+{% block title %}
+Disasters | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <div>
+                <h2>DRRMS</h2>
+                <span>Disaster Relief</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Disasters</span>
+
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Resources</span>
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-house-medical"></i>
+                <span>Shelters</span>
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-truck"></i>
+                <span>Vehicles</span>
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-users"></i>
+                <span>Volunteers</span>
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Relief Requests</span>
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="dashboard-main">
+
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Disaster Management
+                </h1>
+
+                <p>
+                    Monitor and manage disaster incidents.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <a href="{{ url_for('disaster.add_disaster') }}"
+                   class="btn btn-primary">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    Add Disaster
+
+                </a>
+
+            </div>
+
+        </header>
+
+
+        <!-- DISASTER TABLE -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+                        Disaster Records
+                    </h3>
+
+                    <p>
+                        All recorded disaster incidents
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if disasters %}
+
+            <div style="overflow-x:auto;">
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Disaster</th>
+
+                            <th>Type</th>
+
+                            <th>Location</th>
+
+                            <th>Severity</th>
+
+                            <th>Status</th>
+
+                            <th>Start Date</th>
+
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for disaster in disasters %}
+
+                        <tr>
+
+                            <td>
+                                {{ disaster.disaster_id }}
+                            </td>
+
+
+                            <td>
+
+                                <strong>
+                                    {{ disaster.disaster_name }}
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+                                {{ disaster.disaster_type }}
+                            </td>
+
+
+                            <td>
+                                {{ disaster.location }}
+                            </td>
+
+
+                            <td>
+
+                                <span>
+                                    {{ disaster.severity }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span>
+                                    {{ disaster.status }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+                                {{ disaster.start_date }}
+                            </td>
+
+
+                            <td>
+
+                                <a
+                                    href="#"
+                                    class="btn btn-sm btn-primary">
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                </a>
+
+
+                                <form
+                                    action="{{ url_for('disaster.delete_disaster', disaster_id=disaster.disaster_id) }}"
+                                    method="POST"
+                                    style="display:inline;">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Are you sure you want to delete this disaster?');">
+
+                                        <i class="fa-solid fa-trash"></i>
+
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+                <i class="fa-solid fa-cloud"></i>
+
+                <h4>
+                    No disasters recorded
+                </h4>
+
+                <p>
+                    Click "Add Disaster" to create your first disaster record.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+    </main>
+
+</div>
+
+{% endblock %}
+

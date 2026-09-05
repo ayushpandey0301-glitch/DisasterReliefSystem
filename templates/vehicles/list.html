@@ -1,0 +1,1777 @@
+{% extends "base.html" %}
+
+{% block title %}
+Vehicles | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<style>
+
+    /* =========================================
+       VEHICLE LIST PAGE
+       ========================================= */
+
+    .vehicle-page {
+        width: 100%;
+    }
+
+
+    /* =========================================
+       USER PROFILE
+       SAME STYLE AS DASHBOARD & DISASTERS
+       ========================================= */
+
+    .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        padding: 9px 14px 9px 9px;
+
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 14px;
+
+        box-shadow:
+            0 4px 15px rgba(15, 23, 42, 0.05);
+
+        min-width: 180px;
+
+        flex-shrink: 0;
+    }
+
+
+    .user-avatar {
+        width: 42px;
+        height: 42px;
+
+        flex-shrink: 0;
+
+        border-radius: 50%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #2563eb;
+
+        color: #ffffff;
+
+        font-size: 16px;
+
+        font-weight: 700;
+    }
+
+
+    .user-profile strong {
+        display: block;
+
+        font-size: 14px;
+
+        font-weight: 700;
+
+        color: #1e293b;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        max-width: 130px;
+    }
+
+
+    .user-profile span {
+        display: block;
+
+        margin-top: 3px;
+
+        font-size: 12px;
+
+        color: #64748b;
+    }
+
+
+    /* =========================================
+       VEHICLE CARD
+       ========================================= */
+
+    .vehicle-card {
+        background: #ffffff;
+
+        border-radius: 16px;
+
+        padding: 30px;
+
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.06);
+
+        border: 1px solid #eeeeee;
+
+        margin-top: 25px;
+    }
+
+
+    /* =========================================
+       CARD HEADER
+       ========================================= */
+
+    .vehicle-card-header {
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        gap: 20px;
+
+        margin-bottom: 20px;
+    }
+
+
+    .vehicle-card-header h3 {
+        margin: 0;
+
+        font-size: 20px;
+
+        color: #222222;
+    }
+
+
+    .vehicle-card-header p {
+        margin: 6px 0 0;
+
+        font-size: 14px;
+
+        color: #777777;
+    }
+
+
+    /* =========================================
+       ADD VEHICLE BUTTON
+       ========================================= */
+
+    .add-vehicle-btn {
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        padding: 11px 18px;
+
+        border-radius: 9px;
+
+        background: #2563eb;
+
+        color: #ffffff;
+
+        text-decoration: none;
+
+        font-size: 14px;
+
+        font-weight: 600;
+
+        transition: 0.2s ease;
+
+        white-space: nowrap;
+    }
+
+
+    .add-vehicle-btn:hover {
+        background: #1d4ed8;
+
+        color: #ffffff;
+
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 5px 15px rgba(37, 99, 235, 0.20);
+    }
+
+
+    /* =========================================
+       SEARCH & FILTERS
+       ========================================= */
+
+    .vehicle-filters {
+        display: grid;
+
+        grid-template-columns:
+            minmax(240px, 1fr)
+            220px
+            220px
+            auto;
+
+        gap: 15px;
+
+        align-items: end;
+
+        margin-bottom: 20px;
+
+        padding: 18px;
+
+        background: #f8faff;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 12px;
+    }
+
+
+    .filter-group {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+
+    .filter-group label {
+        font-size: 12px;
+
+        font-weight: 700;
+
+        color: #4b5563;
+    }
+
+
+    .filter-input,
+    .filter-select {
+        width: 100%;
+
+        height: 42px;
+
+        padding: 0 12px;
+
+        border: 1px solid #d9dee8;
+
+        border-radius: 8px;
+
+        background: #ffffff;
+
+        color: #333333;
+
+        font-size: 13px;
+
+        outline: none;
+
+        transition: 0.2s ease;
+
+        box-sizing: border-box;
+    }
+
+
+    .filter-input:focus,
+    .filter-select:focus {
+        border-color: #2563eb;
+
+        box-shadow:
+            0 0 0 3px rgba(37, 99, 235, 0.10);
+    }
+
+
+    .clear-filters-btn {
+        height: 42px;
+
+        padding: 0 17px;
+
+        border: 1px solid #d9dee8;
+
+        border-radius: 8px;
+
+        background: #ffffff;
+
+        color: #374151;
+
+        font-size: 13px;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+        transition: 0.2s ease;
+
+        white-space: nowrap;
+    }
+
+
+    .clear-filters-btn:hover {
+        background: #eff6ff;
+
+        border-color: #bfdbfe;
+
+        color: #2563eb;
+    }
+
+
+    .filter-result {
+        grid-column: 1 / -1;
+
+        margin-top: -2px;
+
+        font-size: 13px;
+
+        color: #777777;
+    }
+
+
+    /* =========================================
+       TABLE WRAPPER
+       ========================================= */
+
+    .vehicle-table-wrapper {
+        width: 100%;
+
+        overflow-x: auto;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 12px;
+    }
+
+
+    /* =========================================
+       TABLE
+       ========================================= */
+
+    .vehicle-table {
+        width: 100%;
+
+        border-collapse: collapse;
+
+        min-width: 1000px;
+    }
+
+
+    /* =========================================
+       TABLE HEADER
+       ========================================= */
+
+    .vehicle-table thead {
+        background: #f8faff;
+    }
+
+
+    .vehicle-table th {
+        padding: 15px;
+
+        text-align: left;
+
+        font-size: 12px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.5px;
+
+        color: #64748b;
+
+        font-weight: 700;
+
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+
+    /* =========================================
+       TABLE BODY
+       ========================================= */
+
+    .vehicle-table td {
+        padding: 16px 15px;
+
+        border-bottom: 1px solid #eeeeee;
+
+        font-size: 14px;
+
+        color: #444444;
+
+        vertical-align: middle;
+    }
+
+
+    .vehicle-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+
+    .vehicle-table tbody tr {
+        transition: 0.2s ease;
+    }
+
+
+    .vehicle-table tbody tr:hover {
+        background: #f8faff;
+    }
+
+
+    /* =========================================
+       CLICKABLE VEHICLE
+       ========================================= */
+
+    .vehicle-details-link {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        color: inherit;
+
+        text-decoration: none;
+
+        cursor: pointer;
+    }
+
+
+    .vehicle-details-link:hover .vehicle-number {
+        color: #1d4ed8;
+
+        text-decoration: underline;
+    }
+
+
+    /* =========================================
+       VEHICLE NUMBER
+       ========================================= */
+
+    .vehicle-number-wrapper {
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+    }
+
+
+    .vehicle-small-icon {
+        width: 40px;
+
+        height: 40px;
+
+        min-width: 40px;
+
+        border-radius: 10px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        background: #eff6ff;
+
+        color: #2563eb;
+
+        transition: 0.2s ease;
+    }
+
+
+    .vehicle-details-link:hover .vehicle-small-icon {
+        background: #dbeafe;
+
+        color: #1d4ed8;
+    }
+
+
+    .vehicle-number {
+        color: #2563eb;
+
+        font-weight: 700;
+
+        font-size: 15px;
+
+        transition: 0.2s ease;
+    }
+
+
+    .vehicle-id {
+        display: block;
+
+        margin-top: 3px;
+
+        font-size: 12px;
+
+        color: #999999;
+    }
+
+
+    /* =========================================
+       VEHICLE TYPE
+       ========================================= */
+
+    .vehicle-type {
+        font-weight: 600;
+
+        color: #334155;
+    }
+
+
+    /* =========================================
+       DRIVER
+       ========================================= */
+
+    .driver-wrapper {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 3px;
+    }
+
+
+    .driver-name {
+        font-weight: 600;
+
+        color: #333333;
+    }
+
+
+    .driver-contact {
+        font-size: 12px;
+
+        color: #888888;
+    }
+
+
+    /* =========================================
+       LOCATION
+       ========================================= */
+
+    .vehicle-location {
+        display: flex;
+
+        align-items: center;
+
+        gap: 7px;
+    }
+
+
+    .vehicle-location i {
+        color: #2563eb;
+    }
+
+
+    /* =========================================
+       CAPACITY
+       ========================================= */
+
+    .vehicle-capacity {
+        font-weight: 600;
+
+        color: #333333;
+    }
+
+
+    /* =========================================
+       STATUS
+       ========================================= */
+
+    .vehicle-status {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        padding: 7px 11px;
+
+        border-radius: 20px;
+
+        background: #eff6ff;
+
+        color: #2563eb;
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        white-space: nowrap;
+    }
+
+
+    .vehicle-status i {
+        font-size: 7px;
+
+        color: #2563eb;
+    }
+
+
+    /* =========================================
+       NO FILTER RESULTS
+       ========================================= */
+
+    .no-filter-results {
+        display: none;
+
+        padding: 55px 20px;
+
+        text-align: center;
+
+        border: 1px dashed #bfdbfe;
+
+        border-radius: 14px;
+
+        background: #f8faff;
+    }
+
+
+    .no-filter-icon {
+        width: 60px;
+
+        height: 60px;
+
+        margin: 0 auto 16px;
+
+        border-radius: 50%;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        background: #eff6ff;
+
+        color: #2563eb;
+
+        font-size: 23px;
+    }
+
+
+    .no-filter-results h4 {
+        margin: 0;
+
+        font-size: 18px;
+
+        color: #222222;
+    }
+
+
+    .no-filter-results p {
+        margin: 8px 0 0;
+
+        font-size: 14px;
+
+        color: #777777;
+    }
+
+
+    /* =========================================
+       EMPTY STATE
+       ========================================= */
+
+    .empty-vehicle-state {
+        padding: 70px 20px;
+
+        text-align: center;
+
+        border: 1px dashed #bfdbfe;
+
+        border-radius: 14px;
+
+        background: #f8faff;
+    }
+
+
+    .empty-vehicle-icon {
+        width: 65px;
+
+        height: 65px;
+
+        margin: 0 auto 18px;
+
+        border-radius: 50%;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        background: #eff6ff;
+
+        color: #2563eb;
+
+        font-size: 25px;
+    }
+
+
+    .empty-vehicle-state h4 {
+        margin: 0;
+
+        font-size: 19px;
+
+        color: #222222;
+    }
+
+
+    .empty-vehicle-state p {
+        margin: 8px 0 0;
+
+        font-size: 14px;
+
+        color: #777777;
+    }
+
+
+    .empty-add-btn {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        margin-top: 20px;
+
+        padding: 10px 17px;
+
+        border-radius: 9px;
+
+        background: #2563eb;
+
+        color: #ffffff;
+
+        text-decoration: none;
+
+        font-size: 13px;
+
+        font-weight: 600;
+
+        transition: 0.2s ease;
+    }
+
+
+    .empty-add-btn:hover {
+        background: #1d4ed8;
+
+        color: #ffffff;
+
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 5px 15px rgba(37, 99, 235, 0.20);
+    }
+
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+
+    @media (max-width: 1100px) {
+
+        .vehicle-filters {
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+        }
+
+        .clear-filters-btn {
+
+            width: 100%;
+
+        }
+
+    }
+
+
+    @media (max-width: 900px) {
+
+        .vehicle-card {
+            padding: 20px;
+        }
+
+
+        .vehicle-card-header {
+            align-items: flex-start;
+
+            flex-direction: column;
+        }
+
+
+        .add-vehicle-btn {
+            width: 100%;
+        }
+
+
+        .user-profile {
+            min-width: 0;
+        }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+        .vehicle-card {
+            padding: 15px;
+        }
+
+
+        .vehicle-filters {
+
+            grid-template-columns: 1fr;
+
+            gap: 12px;
+
+        }
+
+
+        .filter-result {
+
+            grid-column: auto;
+
+        }
+
+
+        .user-profile {
+            padding: 7px 10px 7px 7px;
+
+            gap: 9px;
+        }
+
+
+        .user-avatar {
+            width: 38px;
+
+            height: 38px;
+
+            font-size: 15px;
+        }
+
+
+        .user-profile strong {
+            max-width: 100px;
+
+            font-size: 13px;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+    <!-- =========================================
+         SIDEBAR
+         ========================================= -->
+
+    <aside class="sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+
+                <i class="fa-solid fa-hand-holding-heart"></i>
+
+            </div>
+
+
+            <div>
+
+                <h2>DRRMS</h2>
+
+                <span>
+                    Disaster Relief
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             NAVIGATION
+             ===================================== -->
+
+        <nav class="sidebar-nav">
+
+
+            <!-- DASHBOARD -->
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <!-- DISASTERS -->
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span>
+                    Disasters
+                </span>
+
+            </a>
+
+
+            <!-- RESOURCES -->
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+
+                <span>
+                    Resources
+                </span>
+
+            </a>
+
+
+            <!-- SHELTERS -->
+
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-house-medical"></i>
+
+                <span>
+                    Shelters
+
+                </span>
+
+            </a>
+
+
+            <!-- VEHICLES -->
+
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-truck"></i>
+
+                <span>
+                    Vehicles
+                </span>
+
+            </a>
+
+
+            <!-- VOLUNTEERS -->
+
+            <a href="{{ url_for('volunteers.volunteer_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-users"></i>
+
+                <span>
+                    Volunteers
+                </span>
+
+            </a>
+
+
+            <!-- RELIEF REQUESTS -->
+
+            <a href="{{ url_for('requests.request_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-clipboard-list"></i>
+
+                <span>
+                    Relief Requests
+                </span>
+
+            </a>
+
+
+            <!-- REPORTS -->
+
+            <a href="{{ url_for('reports.reports_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+                <span>
+                    Reports
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+        <!-- =====================================
+             SIDEBAR BOTTOM
+             ===================================== -->
+
+        <div class="sidebar-bottom">
+
+
+            <!-- SETTINGS -->
+
+            <a href="{{ url_for('settings.settings_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-gear"></i>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+
+            <!-- LOGOUT -->
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         MAIN CONTENT
+         ========================================= -->
+
+    <main class="dashboard-main">
+
+
+        <!-- =====================================
+             HEADER
+             ===================================== -->
+
+        <header class="dashboard-header">
+
+
+            <div>
+
+                <h1>
+                    Vehicle Management
+                </h1>
+
+                <p>
+                    Monitor and manage emergency response vehicles.
+                </p>
+
+            </div>
+
+
+            <!-- USER PROFILE -->
+
+            <div class="user-profile">
+
+
+                <div class="user-avatar">
+
+                    {{ session["full_name"][0] | upper }}
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        {{ session["full_name"] }}
+                    </strong>
+
+                    <span>
+                        {{ session["role"] | title }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================================
+             VEHICLE CONTENT
+             ========================================= -->
+
+        <div class="vehicle-page">
+
+
+            <section class="vehicle-card">
+
+
+                <!-- =================================
+                     CARD HEADER
+                     ================================= -->
+
+                <div class="vehicle-card-header">
+
+
+                    <div>
+
+                        <h3>
+                            Vehicle Inventory
+                        </h3>
+
+                        <p>
+                            All registered emergency response vehicles
+                        </p>
+
+                    </div>
+
+
+                    <!-- ADD VEHICLE -->
+
+                    <a href="{{ url_for('vehicles.add_vehicle') }}"
+                       class="add-vehicle-btn">
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add Vehicle
+
+                    </a>
+
+
+                </div>
+
+
+                <!-- =================================
+                     VEHICLE DATA
+                     ================================= -->
+
+                {% if vehicles %}
+
+
+                    <!-- =================================
+                         SEARCH & FILTERS
+                         ================================= -->
+
+                    <div class="vehicle-filters">
+
+
+                        <!-- SEARCH -->
+
+                        <div class="filter-group">
+
+                            <label for="vehicleSearch">
+                                Search Vehicle
+                            </label>
+
+                            <input
+                                type="text"
+                                id="vehicleSearch"
+                                class="filter-input"
+                                placeholder="Search by number, driver or location..."
+                                autocomplete="off">
+
+                        </div>
+
+
+                        <!-- VEHICLE TYPE -->
+
+                        <div class="filter-group">
+
+                            <label for="vehicleTypeFilter">
+                                Vehicle Type
+                            </label>
+
+                            <select
+                                id="vehicleTypeFilter"
+                                class="filter-select">
+
+                                <option value="">
+                                    All Types
+                                </option>
+
+                                <option value="ambulance">
+                                    Ambulance
+                                </option>
+
+                                <option value="truck">
+                                    Truck
+                                </option>
+
+                                <option value="van">
+                                    Van
+                                </option>
+
+                                <option value="rescue vehicle">
+                                    Rescue Vehicle
+                                </option>
+
+                                <option value="other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- STATUS -->
+
+                        <div class="filter-group">
+
+                            <label for="vehicleStatusFilter">
+                                Vehicle Status
+                            </label>
+
+                            <select
+                                id="vehicleStatusFilter"
+                                class="filter-select">
+
+                                <option value="">
+                                    All Statuses
+                                </option>
+
+                                <option value="available">
+                                    Available
+                                </option>
+
+                                <option value="in use">
+                                    In Use
+                                </option>
+
+                                <option value="maintenance">
+                                    Maintenance
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- CLEAR -->
+
+                        <button
+                            type="button"
+                            class="clear-filters-btn"
+                            onclick="clearVehicleFilters()">
+
+                            <i class="fa-solid fa-rotate-left"></i>
+
+                            Clear
+
+                        </button>
+
+
+                        <!-- RESULT COUNT -->
+
+                        <div
+                            class="filter-result"
+                            id="vehicleFilterResult">
+
+                            Showing {{ vehicles | length }} vehicle record(s).
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =================================
+                         VEHICLE TABLE
+                         ================================= -->
+
+                    <div
+                        class="vehicle-table-wrapper"
+                        id="vehicleTableWrapper">
+
+
+                        <table
+                            class="vehicle-table"
+                            id="vehicleTable">
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Vehicle
+                                    </th>
+
+                                    <th>
+                                        Type
+                                    </th>
+
+                                    <th>
+                                        Driver
+                                    </th>
+
+                                    <th>
+                                        Contact
+                                    </th>
+
+                                    <th>
+                                        Capacity
+                                    </th>
+
+                                    <th>
+                                        Location
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="vehicleTableBody">
+
+
+                                {% for vehicle in vehicles %}
+
+
+                                    <tr
+                                        class="vehicle-row"
+
+                                        data-number="{{ vehicle.vehicle_number | lower }}"
+
+                                        data-type="{{ vehicle.vehicle_type | lower }}"
+
+                                        data-driver="{{ vehicle.driver_name | lower }}"
+
+                                        data-location="{{ vehicle.location | lower }}"
+
+                                        data-status="{{ vehicle.status | lower }}">
+
+
+                                        <!-- VEHICLE -->
+
+                                        <td>
+
+                                            <a
+                                                href="{{ url_for('vehicles.vehicle_details', vehicle_id=vehicle.vehicle_id) }}"
+                                                class="vehicle-details-link">
+
+                                                <div class="vehicle-number-wrapper">
+
+
+                                                    <div class="vehicle-small-icon">
+
+                                                        <i class="fa-solid fa-truck"></i>
+
+                                                    </div>
+
+
+                                                    <div>
+
+                                                        <div class="vehicle-number">
+
+                                                            {{ vehicle.vehicle_number }}
+
+                                                        </div>
+
+
+                                                        <span class="vehicle-id">
+
+                                                            ID #{{ vehicle.vehicle_id }}
+
+                                                        </span>
+
+                                                    </div>
+
+
+                                                </div>
+
+                                            </a>
+
+                                        </td>
+
+
+                                        <!-- TYPE -->
+
+                                        <td>
+
+                                            <span class="vehicle-type">
+
+                                                {{ vehicle.vehicle_type }}
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- DRIVER -->
+
+                                        <td>
+
+                                            <div class="driver-wrapper">
+
+                                                <span class="driver-name">
+
+                                                    {{ vehicle.driver_name or "Not Assigned" }}
+
+                                                </span>
+
+
+                                                <span class="driver-contact">
+
+                                                    {% if vehicle.driver_contact %}
+
+                                                        {{ vehicle.driver_contact }}
+
+                                                    {% endif %}
+
+                                                </span>
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- CONTACT -->
+
+                                        <td>
+
+                                            {{ vehicle.driver_contact or "N/A" }}
+
+                                        </td>
+
+
+                                        <!-- CAPACITY -->
+
+                                        <td>
+
+                                            <span class="vehicle-capacity">
+
+                                                {{ vehicle.capacity or "N/A" }}
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- LOCATION -->
+
+                                        <td>
+
+                                            <div class="vehicle-location">
+
+                                                <i class="fa-solid fa-location-dot"></i>
+
+                                                <span>
+
+                                                    {{ vehicle.location or "Not specified" }}
+
+                                                </span>
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- STATUS -->
+
+                                        <td>
+
+                                            <span class="vehicle-status">
+
+                                                <i class="fa-solid fa-circle"></i>
+
+                                                {{ vehicle.status or "Available" }}
+
+                                            </span>
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                    <!-- =================================
+                         NO FILTER RESULTS
+                         ================================= -->
+
+                    <div
+                        class="no-filter-results"
+                        id="noFilterResults">
+
+
+                        <div class="no-filter-icon">
+
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                        </div>
+
+
+                        <h4>
+                            No Vehicles Found
+                        </h4>
+
+
+                        <p>
+                            No vehicle matches your current search or filter.
+                        </p>
+
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <!-- =================================
+                         EMPTY STATE
+                         ================================= -->
+
+                    <div class="empty-vehicle-state">
+
+
+                        <div class="empty-vehicle-icon">
+
+                            <i class="fa-solid fa-truck"></i>
+
+                        </div>
+
+
+                        <h4>
+                            No Vehicles Available
+                        </h4>
+
+
+                        <p>
+                            There are currently no vehicles recorded.
+                        </p>
+
+
+                        <a
+                            href="{{ url_for('vehicles.add_vehicle') }}"
+                            class="empty-add-btn">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                            Add Your First Vehicle
+
+                        </a>
+
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </section>
+
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+<!-- =========================================
+     VEHICLE SEARCH & FILTER JAVASCRIPT
+     ========================================= -->
+
+{% if vehicles %}
+
+<script>
+
+    const vehicleSearch =
+        document.getElementById("vehicleSearch");
+
+
+    const vehicleTypeFilter =
+        document.getElementById("vehicleTypeFilter");
+
+
+    const vehicleStatusFilter =
+        document.getElementById("vehicleStatusFilter");
+
+
+    const vehicleRows =
+        document.querySelectorAll(".vehicle-row");
+
+
+    const vehicleFilterResult =
+        document.getElementById("vehicleFilterResult");
+
+
+    const noFilterResults =
+        document.getElementById("noFilterResults");
+
+
+    function filterVehicles() {
+
+        const searchValue =
+            vehicleSearch.value
+                .trim()
+                .toLowerCase();
+
+
+        const typeValue =
+            vehicleTypeFilter.value
+                .trim()
+                .toLowerCase();
+
+
+        const statusValue =
+            vehicleStatusFilter.value
+                .trim()
+                .toLowerCase();
+
+
+        let visibleCount = 0;
+
+
+        vehicleRows.forEach(function(row) {
+
+            const number =
+                row.getAttribute("data-number") || "";
+
+
+            const type =
+                row.getAttribute("data-type") || "";
+
+
+            const driver =
+                row.getAttribute("data-driver") || "";
+
+
+            const location =
+                row.getAttribute("data-location") || "";
+
+
+            const status =
+                row.getAttribute("data-status") || "";
+
+
+            const matchesSearch =
+                number.includes(searchValue) ||
+                driver.includes(searchValue) ||
+                location.includes(searchValue);
+
+
+            const matchesType =
+                !typeValue ||
+                type === typeValue;
+
+
+            const matchesStatus =
+                !statusValue ||
+                status === statusValue;
+
+
+            if (
+                matchesSearch &&
+                matchesType &&
+                matchesStatus
+            ) {
+
+                row.style.display = "";
+
+                visibleCount++;
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+
+        vehicleFilterResult.textContent =
+            "Showing " +
+            visibleCount +
+            " vehicle record(s).";
+
+
+        if (visibleCount === 0) {
+
+            noFilterResults.style.display = "block";
+
+        } else {
+
+            noFilterResults.style.display = "none";
+
+        }
+
+    }
+
+
+    function clearVehicleFilters() {
+
+        vehicleSearch.value = "";
+
+        vehicleTypeFilter.value = "";
+
+        vehicleStatusFilter.value = "";
+
+        filterVehicles();
+
+    }
+
+
+    vehicleSearch.addEventListener(
+        "input",
+        filterVehicles
+    );
+
+
+    vehicleTypeFilter.addEventListener(
+        "change",
+        filterVehicles
+    );
+
+
+    vehicleStatusFilter.addEventListener(
+        "change",
+        filterVehicles
+    );
+
+</script>
+
+{% endif %}
+
+{% endblock %}

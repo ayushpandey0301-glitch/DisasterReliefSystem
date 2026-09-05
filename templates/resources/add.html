@@ -1,0 +1,440 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Resource | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <div>
+                <h2>DRRMS</h2>
+                <span>Disaster Relief</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Disasters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Resources</span>
+
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-house-medical"></i>
+                <span>Shelters</span>
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-truck"></i>
+                <span>Vehicles</span>
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-users"></i>
+                <span>Volunteers</span>
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Relief Requests</span>
+            </a>
+
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="dashboard-main">
+
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Add Resource
+                </h1>
+
+                <p>
+                    Add a new relief resource to the inventory.
+                </p>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+
+                    {{ session["full_name"][0] | upper }}
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ session["full_name"] }}
+                    </strong>
+
+                    <span>
+                        {{ session["role"] | title }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- FORM CARD -->
+
+        <section class="dashboard-card"
+                 style="margin-top: 25px;">
+
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+                        Resource Information
+                    </h3>
+
+                    <p>
+                        Enter the details of the resource.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <form method="POST"
+                  action="{{ url_for('resource.add_resource') }}"
+                  style="padding: 20px 0;">
+
+                <!-- CSRF PROTECTION -->
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+
+                <!-- RESOURCE NAME -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="resource_name">
+                        Resource Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="resource_name"
+                        name="resource_name"
+                        placeholder="Enter resource name"
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                </div>
+
+
+                <!-- RESOURCE TYPE -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="resource_type">
+                        Resource Type
+                    </label>
+
+                    <select
+                        id="resource_type"
+                        name="resource_type"
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                        <option value="">
+                            Select resource type
+                        </option>
+
+                        <option value="Food">
+                            Food
+                        </option>
+
+                        <option value="Water">
+                            Water
+                        </option>
+
+                        <option value="Medicine">
+                            Medicine
+                        </option>
+
+                        <option value="Clothing">
+                            Clothing
+                        </option>
+
+                        <option value="Shelter Equipment">
+                            Shelter Equipment
+                        </option>
+
+                        <option value="Emergency Equipment">
+                            Emergency Equipment
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- QUANTITY -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="quantity">
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="quantity"
+                        name="quantity"
+                        min="0"
+                        placeholder="Enter quantity"
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                </div>
+
+
+                <!-- UNIT -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="unit">
+                        Unit
+                    </label>
+
+                    <input
+                        type="text"
+                        id="unit"
+                        name="unit"
+                        placeholder="Example: Bottles, Packets, Boxes, Kg"
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="location">
+                        Storage Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        placeholder="Enter storage location"
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                </div>
+
+
+                <!-- MINIMUM STOCK -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="minimum_stock">
+                        Minimum Stock Level
+                    </label>
+
+                    <input
+                        type="number"
+                        id="minimum_stock"
+                        name="minimum_stock"
+                        min="0"
+                        value="0"
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                </div>
+
+
+                <!-- EXPIRY DATE -->
+
+                <div style="margin-bottom: 20px;">
+
+                    <label for="expiry_date">
+                        Expiry Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="expiry_date"
+                        name="expiry_date"
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div style="margin-bottom: 25px;">
+
+                    <label for="status">
+                        Status
+                    </label>
+
+                    <select
+                        id="status"
+                        name="status"
+                        required
+                        style="width: 100%; padding: 12px; margin-top: 8px; box-sizing: border-box;"
+                    >
+
+                        <option value="Available">
+                            Available
+                        </option>
+
+                        <option value="Low Stock">
+                            Low Stock
+                        </option>
+
+                        <option value="Out of Stock">
+                            Out of Stock
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div style="display: flex; gap: 15px;">
+
+                    <button
+                        type="submit"
+                        style="padding: 12px 24px; cursor: pointer;">
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add Resource
+
+                    </button>
+
+
+                    <a href="{{ url_for('resource.resource_list') }}"
+                       style="padding: 12px 24px;">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+
+        </section>
+
+
+    </main>
+
+</div>
+
+{% endblock %}

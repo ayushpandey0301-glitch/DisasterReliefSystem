@@ -1,0 +1,479 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Resource | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+    <!-- ========================================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <div>
+                <h2>DRRMS</h2>
+                <span>Disaster Relief</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            <!-- DASHBOARD -->
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <!-- DISASTERS -->
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Disasters</span>
+
+            </a>
+
+
+            <!-- RESOURCES -->
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Resources</span>
+
+            </a>
+
+
+            <!-- SHELTERS -->
+
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-house-medical"></i>
+                <span>Shelters</span>
+
+            </a>
+
+
+            <!-- VEHICLES -->
+
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-truck"></i>
+                <span>Vehicles</span>
+
+            </a>
+
+
+            <!-- VOLUNTEERS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-users"></i>
+                <span>Volunteers</span>
+
+            </a>
+
+
+            <!-- RELIEF REQUESTS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Relief Requests</span>
+
+            </a>
+
+
+            <!-- REPORTS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Reports</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- ========================================= -->
+        <!-- SIDEBAR BOTTOM -->
+        <!-- ========================================= -->
+
+        <div class="sidebar-bottom">
+
+            <!-- SETTINGS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+
+            </a>
+
+
+            <!-- LOGOUT -->
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ========================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================================= -->
+
+    <main class="dashboard-main">
+
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Edit Resource
+                </h1>
+
+                <p>
+                    Update resource information.
+                </p>
+
+            </div>
+
+
+            <!-- USER PROFILE -->
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+
+                    {{ session["full_name"][0] | upper }}
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ session["full_name"] }}
+                    </strong>
+
+                    <span>
+                        {{ session["role"] | title }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ========================================= -->
+        <!-- EDIT FORM -->
+        <!-- ========================================= -->
+
+        <section class="dashboard-card"
+                 style="margin-top: 25px;">
+
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+                        Resource Information
+                    </h3>
+
+                    <p>
+                        Modify the details below and save your changes.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form method="POST"
+                  style="margin-top: 25px;">
+
+                <!-- CSRF PROTECTION -->
+
+                <input type="hidden"
+                       name="csrf_token"
+                       value="{{ csrf_token() }}">
+
+
+                <!-- RESOURCE NAME -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Resource Name
+                    </label>
+
+                    <input type="text"
+                           name="resource_name"
+                           class="form-control"
+                           value="{{ resource.resource_name }}"
+                           required>
+
+                </div>
+
+
+                <!-- RESOURCE TYPE -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Resource Type
+                    </label>
+
+                    <select name="resource_type"
+                            class="form-select"
+                            required>
+
+                        <option value="Food"
+                            {% if resource.resource_type == "Food" %}selected{% endif %}>
+                            Food
+                        </option>
+
+                        <option value="Water"
+                            {% if resource.resource_type == "Water" %}selected{% endif %}>
+                            Water
+                        </option>
+
+                        <option value="Medicine"
+                            {% if resource.resource_type == "Medicine" %}selected{% endif %}>
+                            Medicine
+                        </option>
+
+                        <option value="Clothing"
+                            {% if resource.resource_type == "Clothing" %}selected{% endif %}>
+                            Clothing
+                        </option>
+
+                        <option value="Shelter Equipment"
+                            {% if resource.resource_type == "Shelter Equipment" %}selected{% endif %}>
+                            Shelter Equipment
+                        </option>
+
+                        <option value="Emergency Equipment"
+                            {% if resource.resource_type == "Emergency Equipment" %}selected{% endif %}>
+                            Emergency Equipment
+                        </option>
+
+                        <option value="Other"
+                            {% if resource.resource_type == "Other" %}selected{% endif %}>
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- QUANTITY -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Quantity
+                    </label>
+
+                    <input type="number"
+                           name="quantity"
+                           class="form-control"
+                           value="{{ resource.quantity }}"
+                           min="0"
+                           required>
+
+                </div>
+
+
+                <!-- UNIT -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Unit
+                    </label>
+
+                    <input type="text"
+                           name="unit"
+                           class="form-control"
+                           value="{{ resource.unit }}"
+                           required>
+
+                </div>
+
+
+                <!-- LOCATION -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Location
+                    </label>
+
+                    <input type="text"
+                           name="location"
+                           class="form-control"
+                           value="{{ resource.location }}"
+                           required>
+
+                </div>
+
+
+                <!-- MINIMUM STOCK -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Minimum Stock
+                    </label>
+
+                    <input type="number"
+                           name="minimum_stock"
+                           class="form-control"
+                           value="{{ resource.minimum_stock }}"
+                           min="0">
+
+                </div>
+
+
+                <!-- EXPIRY DATE -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Expiry Date
+                    </label>
+
+                    <input type="date"
+                           name="expiry_date"
+                           class="form-control"
+                           value="{{ resource.expiry_date }}">
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Status
+                    </label>
+
+                    <select name="status"
+                            class="form-select">
+
+                        <option value="Available"
+                            {% if resource.status == "Available" %}selected{% endif %}>
+                            Available
+                        </option>
+
+                        <option value="Low Stock"
+                            {% if resource.status == "Low Stock" %}selected{% endif %}>
+                            Low Stock
+                        </option>
+
+                        <option value="Out of Stock"
+                            {% if resource.status == "Out of Stock" %}selected{% endif %}>
+                            Out of Stock
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div style="margin-top: 25px;">
+
+                    <button type="submit"
+                            class="quick-action"
+                            style="border: none; padding: 10px 20px; cursor: pointer;">
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        <span>
+                            Save Changes
+                        </span>
+
+                    </button>
+
+
+                    <a href="{{ url_for('resource.resource_details', resource_id=resource.resource_id) }}"
+                       class="quick-action"
+                       style="padding: 10px 20px; margin-left: 10px;">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        <span>
+                            Cancel
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+{% endblock %}

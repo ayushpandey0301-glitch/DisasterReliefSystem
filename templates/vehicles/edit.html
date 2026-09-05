@@ -1,0 +1,910 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit {{ vehicle.vehicle_number }} | Vehicle
+{% endblock %}
+
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<style>
+
+    /* =========================================
+       EDIT VEHICLE PAGE
+       ========================================= */
+
+    .edit-vehicle-page {
+        width: 100%;
+    }
+
+
+    /* =========================================
+       FORM WRAPPER
+       ========================================= */
+
+    .edit-vehicle-wrapper {
+        margin-top: 25px;
+    }
+
+
+    /* =========================================
+       TOP ACTION
+       ========================================= */
+
+    .edit-vehicle-top {
+        margin-bottom: 25px;
+    }
+
+
+    .back-to-details {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        padding: 10px 16px;
+
+        border-radius: 9px;
+
+        background: #ffffff;
+
+        border: 1px solid #e5e5e5;
+
+        color: #333333;
+
+        text-decoration: none;
+
+        font-size: 14px;
+
+        font-weight: 600;
+
+        transition: 0.2s ease;
+    }
+
+
+    .back-to-details:hover {
+        background: #f5f5f5;
+    }
+
+
+    /* =========================================
+       EDIT CARD
+       ========================================= */
+
+    .edit-vehicle-card {
+        background: #ffffff;
+
+        border-radius: 16px;
+
+        padding: 30px;
+
+        border: 1px solid #eeeeee;
+
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.06);
+    }
+
+
+    /* =========================================
+       CARD HEADER
+       ========================================= */
+
+    .edit-card-header {
+        display: flex;
+
+        align-items: center;
+
+        gap: 15px;
+
+        padding-bottom: 25px;
+
+        margin-bottom: 25px;
+
+        border-bottom: 1px solid #eeeeee;
+    }
+
+
+    .edit-icon {
+        width: 55px;
+
+        height: 55px;
+
+        border-radius: 12px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        background: #f1f1f1;
+
+        color: #333333;
+
+        font-size: 22px;
+    }
+
+
+    .edit-card-header h2 {
+        margin: 0;
+
+        font-size: 22px;
+
+        color: #222222;
+    }
+
+
+    .edit-card-header p {
+        margin: 5px 0 0;
+
+        font-size: 13px;
+
+        color: #777777;
+    }
+
+
+    /* =========================================
+       FORM GRID
+       ========================================= */
+
+    .vehicle-edit-form {
+        width: 100%;
+    }
+
+
+    .vehicle-edit-grid {
+        display: grid;
+
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 20px;
+    }
+
+
+    /* =========================================
+       FORM GROUP
+       ========================================= */
+
+    .vehicle-edit-group {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+
+    .vehicle-edit-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+
+    .vehicle-edit-group label {
+        font-size: 13px;
+
+        font-weight: 700;
+
+        color: #444444;
+    }
+
+
+    .vehicle-edit-group input,
+    .vehicle-edit-group select {
+        width: 100%;
+
+        box-sizing: border-box;
+
+        padding: 13px 14px;
+
+        border: 1px solid #dddddd;
+
+        border-radius: 9px;
+
+        background: #ffffff;
+
+        color: #222222;
+
+        font-size: 14px;
+
+        outline: none;
+
+        transition: 0.2s ease;
+    }
+
+
+    .vehicle-edit-group input:focus,
+    .vehicle-edit-group select:focus {
+        border-color: #333333;
+
+        box-shadow:
+            0 0 0 3px rgba(0, 0, 0, 0.05);
+    }
+
+
+    /* =========================================
+       FORM ACTIONS
+       ========================================= */
+
+    .vehicle-edit-actions {
+        display: flex;
+
+        justify-content: flex-end;
+
+        gap: 12px;
+
+        margin-top: 30px;
+
+        padding-top: 22px;
+
+        border-top: 1px solid #eeeeee;
+    }
+
+
+    .vehicle-edit-btn {
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        padding: 12px 20px;
+
+        border-radius: 9px;
+
+        border: none;
+
+        text-decoration: none;
+
+        font-size: 14px;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+        transition: 0.2s ease;
+    }
+
+
+    .cancel-edit-btn {
+        background: #f1f1f1;
+
+        color: #333333;
+    }
+
+
+    .cancel-edit-btn:hover {
+        background: #e5e5e5;
+    }
+
+
+    .save-edit-btn {
+        background: #222222;
+
+        color: #ffffff;
+    }
+
+
+    .save-edit-btn:hover {
+        background: #000000;
+    }
+
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+
+    @media (max-width: 700px) {
+
+        .vehicle-edit-grid {
+            grid-template-columns: 1fr;
+        }
+
+
+        .vehicle-edit-group.full-width {
+            grid-column: auto;
+        }
+
+
+        .edit-vehicle-card {
+            padding: 20px;
+        }
+
+
+        .vehicle-edit-actions {
+            flex-direction: column;
+        }
+
+
+        .vehicle-edit-btn {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+    <!-- =========================================
+         SIDEBAR
+         ========================================= -->
+
+    <aside class="sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+
+                <i class="fa-solid fa-hand-holding-heart"></i>
+
+            </div>
+
+
+            <div>
+
+                <h2>DRRMS</h2>
+
+                <span>
+                    Disaster Relief
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="sidebar-nav">
+
+
+            <!-- DASHBOARD -->
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <!-- DISASTERS -->
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span>
+                    Disasters
+                </span>
+
+            </a>
+
+
+            <!-- RESOURCES -->
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+
+                <span>
+                    Resources
+                </span>
+
+            </a>
+
+
+            <!-- SHELTERS -->
+
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-house-medical"></i>
+
+                <span>
+                    Shelters
+                </span>
+
+            </a>
+
+
+            <!-- VEHICLES -->
+
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-truck"></i>
+
+                <span>
+                    Vehicles
+                </span>
+
+            </a>
+
+
+            <!-- VOLUNTEERS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-users"></i>
+
+                <span>
+                    Volunteers
+                </span>
+
+            </a>
+
+
+            <!-- RELIEF REQUESTS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-clipboard-list"></i>
+
+                <span>
+                    Relief Requests
+                </span>
+
+            </a>
+
+
+            <!-- REPORTS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+                <span>
+                    Reports
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+
+            <!-- SETTINGS -->
+
+            <a href="#"
+               class="nav-item">
+
+                <i class="fa-solid fa-gear"></i>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+
+            <!-- LOGOUT -->
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         MAIN CONTENT
+         ========================================= -->
+
+    <main class="dashboard-main">
+
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Edit Vehicle
+                </h1>
+
+                <p>
+                    Update vehicle information and status.
+                </p>
+
+            </div>
+
+
+            <!-- USER PROFILE -->
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+
+                    {{ session["full_name"][0] | upper }}
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        {{ session["full_name"] }}
+                    </strong>
+
+                    <span>
+                        {{ session["role"] | title }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================================
+             EDIT VEHICLE
+             ========================================= -->
+
+        <div class="edit-vehicle-page">
+
+
+            <div class="edit-vehicle-wrapper">
+
+
+                <!-- BACK BUTTON -->
+
+                <div class="edit-vehicle-top">
+
+                    <a href="{{ url_for(
+                        'vehicles.vehicle_details',
+                        vehicle_id=vehicle.vehicle_id
+                    ) }}"
+                       class="back-to-details">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        Back to Vehicle Details
+
+                    </a>
+
+                </div>
+
+
+                <!-- EDIT CARD -->
+
+                <section class="edit-vehicle-card">
+
+
+                    <!-- CARD HEADER -->
+
+                    <div class="edit-card-header">
+
+
+                        <div class="edit-icon">
+
+                            <i class="fa-solid fa-pen-to-square"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2>
+                                {{ vehicle.vehicle_number }}
+                            </h2>
+
+                            <p>
+                                Edit the details of this vehicle.
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =================================
+                         EDIT FORM
+                         ================================= -->
+
+                    <form method="POST"
+                          action="{{ url_for(
+                              'vehicles.edit_vehicle',
+                              vehicle_id=vehicle.vehicle_id
+                          ) }}"
+                          class="vehicle-edit-form">
+
+
+                        <!-- CSRF PROTECTION -->
+
+                        <input type="hidden"
+                               name="csrf_token"
+                               value="{{ csrf_token() }}">
+
+
+                        <div class="vehicle-edit-grid">
+
+
+                            <!-- VEHICLE NUMBER -->
+
+                            <div class="vehicle-edit-group">
+
+                                <label for="vehicle_number">
+                                    Vehicle Number
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="vehicle_number"
+                                    name="vehicle_number"
+                                    value="{{ vehicle.vehicle_number }}"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- VEHICLE TYPE -->
+
+                            <div class="vehicle-edit-group">
+
+                                <label for="vehicle_type">
+                                    Vehicle Type
+                                </label>
+
+                                <select
+                                    id="vehicle_type"
+                                    name="vehicle_type"
+                                    required
+                                >
+
+                                    <option value="Ambulance"
+                                        {% if vehicle.vehicle_type == "Ambulance" %}
+                                            selected
+                                        {% endif %}>
+                                        Ambulance
+                                    </option>
+
+
+                                    <option value="Truck"
+                                        {% if vehicle.vehicle_type == "Truck" %}
+                                            selected
+                                        {% endif %}>
+                                        Truck
+                                    </option>
+
+
+                                    <option value="Van"
+                                        {% if vehicle.vehicle_type == "Van" %}
+                                            selected
+                                        {% endif %}>
+                                        Van
+                                    </option>
+
+
+                                    <option value="Rescue Vehicle"
+                                        {% if vehicle.vehicle_type == "Rescue Vehicle" %}
+                                            selected
+                                        {% endif %}>
+                                        Rescue Vehicle
+                                    </option>
+
+
+                                    <option value="Other"
+                                        {% if vehicle.vehicle_type == "Other" %}
+                                            selected
+                                        {% endif %}>
+                                        Other
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- CAPACITY -->
+
+                            <div class="vehicle-edit-group">
+
+                                <label for="capacity">
+                                    Capacity
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="capacity"
+                                    name="capacity"
+                                    value="{{ vehicle.capacity or '' }}"
+                                    placeholder="Example: 5 people / 2 tons"
+                                >
+
+                            </div>
+
+
+                            <!-- DRIVER NAME -->
+
+                            <div class="vehicle-edit-group">
+
+                                <label for="driver_name">
+                                    Driver Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="driver_name"
+                                    name="driver_name"
+                                    value="{{ vehicle.driver_name or '' }}"
+                                >
+
+                            </div>
+
+
+                            <!-- DRIVER CONTACT -->
+
+                            <div class="vehicle-edit-group">
+
+                                <label for="driver_contact">
+                                    Driver Contact
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="driver_contact"
+                                    name="driver_contact"
+                                    value="{{ vehicle.driver_contact or '' }}"
+                                >
+
+                            </div>
+
+
+                            <!-- LOCATION -->
+
+                            <div class="vehicle-edit-group">
+
+                                <label for="location">
+                                    Current Location
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="location"
+                                    name="location"
+                                    value="{{ vehicle.location or '' }}"
+                                >
+
+                            </div>
+
+
+                            <!-- STATUS -->
+
+                            <div class="vehicle-edit-group full-width">
+
+                                <label for="status">
+                                    Vehicle Status
+                                </label>
+
+                                <select
+                                    id="status"
+                                    name="status"
+                                    required
+                                >
+
+                                    <option value="Available"
+                                        {% if vehicle.status == "Available" %}
+                                            selected
+                                        {% endif %}>
+                                        Available
+                                    </option>
+
+
+                                    <option value="In Use"
+                                        {% if vehicle.status == "In Use" %}
+                                            selected
+                                        {% endif %}>
+                                        In Use
+                                    </option>
+
+
+                                    <option value="Maintenance"
+                                        {% if vehicle.status == "Maintenance" %}
+                                            selected
+                                        {% endif %}>
+                                        Maintenance
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- =================================
+                             FORM BUTTONS
+                             ================================= -->
+
+                        <div class="vehicle-edit-actions">
+
+
+                            <!-- CANCEL -->
+
+                            <a href="{{ url_for(
+                                'vehicles.vehicle_details',
+                                vehicle_id=vehicle.vehicle_id
+                            ) }}"
+                               class="vehicle-edit-btn cancel-edit-btn">
+
+                                <i class="fa-solid fa-xmark"></i>
+
+                                Cancel
+
+                            </a>
+
+
+                            <!-- SAVE CHANGES -->
+
+                            <button type="submit"
+                                    class="vehicle-edit-btn save-edit-btn">
+
+                                <i class="fa-solid fa-floppy-disk"></i>
+
+                                Save Changes
+
+                            </button>
+
+
+                        </div>
+
+
+                    </form>
+
+
+                </section>
+
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+{% endblock %}

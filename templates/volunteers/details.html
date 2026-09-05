@@ -1,0 +1,513 @@
+{% extends "base.html" %}
+
+{% block title %}
+Volunteer Details | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<style>
+
+.volunteer-details-page {
+    max-width: 850px;
+}
+
+.volunteer-details-header {
+    margin-bottom: 25px;
+}
+
+.volunteer-details-header h1 {
+    margin: 0;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 30px;
+
+    color: #111827;
+}
+
+.volunteer-details-header p {
+    margin-top: 6px;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+.volunteer-details-card {
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+
+.volunteer-profile {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    padding-bottom: 25px;
+
+    margin-bottom: 25px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.volunteer-avatar {
+    width: 65px;
+    height: 65px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    font-size: 25px;
+}
+
+.volunteer-profile h2 {
+    margin: 0;
+
+    font-family: "Poppins", sans-serif;
+
+    color: #111827;
+}
+
+.volunteer-profile p {
+    margin: 4px 0 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+.details-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+}
+
+.detail-item {
+    padding: 16px;
+
+    background: #f9fafb;
+
+    border-radius: 8px;
+}
+
+.detail-label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 12px;
+
+    text-transform: uppercase;
+
+    font-weight: 700;
+
+    color: #6b7280;
+}
+
+.detail-value {
+    color: #111827;
+
+    font-size: 15px;
+
+    font-weight: 500;
+}
+
+
+.status-badge {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.status-active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-inactive {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
+.details-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.back-btn,
+.edit-btn {
+    padding: 10px 18px;
+
+    border-radius: 7px;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.back-btn {
+    background: #f3f4f6;
+
+    color: #374151;
+}
+
+.edit-btn {
+    background: #111827;
+
+    color: white;
+}
+
+.edit-btn:hover {
+    color: white;
+    background: #1f2937;
+}
+
+
+@media (max-width: 700px) {
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .volunteer-details-card {
+        padding: 20px;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
+
+            <div>
+                <h2>DRRMS</h2>
+                <span>Disaster Relief</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-gauge"></i>
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Disasters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Resources</span>
+
+            </a>
+
+
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-house"></i>
+                <span>Shelters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-truck"></i>
+                <span>Vehicles</span>
+
+            </a>
+
+
+            <a href="{{ url_for('volunteers.volunteer_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-users"></i>
+                <span>Volunteers</span>
+
+            </a>
+
+
+            <a href="#" class="nav-item">
+
+                <i class="fa-solid fa-handshake"></i>
+                <span>Requests</span>
+
+            </a>
+
+
+            <a href="#" class="nav-item">
+
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Reports</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+        <div class="volunteer-details-page">
+
+
+            <div class="volunteer-details-header">
+
+                <h1>Volunteer Details</h1>
+
+                <p>
+                    View information about this volunteer.
+                </p>
+
+            </div>
+
+
+            <div class="volunteer-details-card">
+
+
+                <div class="volunteer-profile">
+
+                    <div class="volunteer-avatar">
+
+                        <i class="fa-solid fa-user"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            {{ volunteer.full_name }}
+                        </h2>
+
+                        <p>
+                            Volunteer ID #{{ volunteer.user_id }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="details-grid">
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Full Name
+                        </span>
+
+                        <span class="detail-value">
+                            {{ volunteer.full_name }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Email
+                        </span>
+
+                        <span class="detail-value">
+                            {{ volunteer.email }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Phone
+                        </span>
+
+                        <span class="detail-value">
+                            {{ volunteer.phone or 'Not provided' }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Status
+                        </span>
+
+                        <span class="detail-value">
+
+                            {% if volunteer.status == 'active' %}
+
+                            <span class="status-badge status-active">
+                                Active
+                            </span>
+
+                            {% else %}
+
+                            <span class="status-badge status-inactive">
+                                Inactive
+                            </span>
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Registered On
+                        </span>
+
+                        <span class="detail-value">
+
+                            {% if volunteer.created_at %}
+
+                                {{ volunteer.created_at.strftime('%d %B %Y') }}
+
+                            {% else %}
+
+                                Not available
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="details-actions">
+
+                    <a href="{{ url_for('volunteers.volunteer_list') }}"
+                       class="back-btn">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        Back
+
+                    </a>
+
+
+                    <a href="{{ url_for(
+                        'volunteers.edit_volunteer',
+                        user_id=volunteer.user_id
+                    ) }}"
+                       class="edit-btn">
+
+                        <i class="fa-solid fa-pen-to-square"></i>
+
+                        Edit Volunteer
+
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}

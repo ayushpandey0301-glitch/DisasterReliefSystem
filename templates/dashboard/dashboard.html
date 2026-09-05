@@ -1,0 +1,1839 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard | Disaster Relief Management System
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<style>
+
+/* =========================================
+   DASHBOARD HEADER POLISH
+   ========================================= */
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 750;
+    letter-spacing: -0.5px;
+}
+
+.dashboard-header p {
+    margin: 7px 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* =========================================
+   USER PROFILE
+   ========================================= */
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 9px 14px 9px 9px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+
+    min-width: 180px;
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.user-profile strong {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #1e293b;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+}
+
+.user-profile span {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 12px;
+    color: #64748b;
+}
+
+
+/* =========================================
+   STATISTICS CARD POLISH
+   ========================================= */
+
+.dashboard-stats {
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    position: relative;
+
+    overflow: hidden;
+
+    border: 1px solid #e5e7eb !important;
+
+    border-radius: 16px !important;
+
+    background: #ffffff;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.stat-card::after {
+    content: "";
+
+    position: absolute;
+
+    right: -25px;
+    bottom: -35px;
+
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+
+    background: rgba(37, 99, 235, 0.035);
+
+    pointer-events: none;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+
+    border-color: #dbe3ef !important;
+
+    box-shadow:
+        0 12px 28px rgba(15, 23, 42, 0.09);
+}
+
+.stat-card h2 {
+    font-size: 27px;
+    font-weight: 750;
+
+    margin-top: 5px;
+}
+
+.stat-card > div:last-child span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+
+/* =========================================
+   STAT ICON POLISH
+   ========================================= */
+
+.stat-icon {
+    width: 50px !important;
+    height: 50px !important;
+
+    border-radius: 14px !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 19px !important;
+
+    flex-shrink: 0;
+
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.05);
+}
+
+
+/* =========================================
+   DASHBOARD CARDS
+   ========================================= */
+
+.dashboard-card {
+    border: 1px solid #e5e7eb !important;
+
+    border-radius: 16px !important;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 4px 18px rgba(15, 23, 42, 0.04);
+
+    overflow: hidden;
+}
+
+.dashboard-card .card-header {
+    padding: 22px 24px;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.dashboard-card .card-header h3 {
+    margin: 0;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    color: #1e293b;
+}
+
+.dashboard-card .card-header p {
+    margin: 5px 0 0;
+
+    font-size: 13px;
+
+    color: #64748b;
+}
+
+.dashboard-card .card-header > a {
+    font-size: 13px;
+    font-weight: 650;
+
+    color: #2563eb;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+.dashboard-card .card-header > a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   EMPTY DISASTER STATE
+   ========================================= */
+
+.empty-state {
+    min-height: 210px;
+
+    padding: 35px 25px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    color: #64748b;
+}
+
+.empty-state i {
+    width: 62px;
+    height: 62px;
+
+    margin-bottom: 15px;
+
+    border-radius: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    font-size: 24px;
+}
+
+.empty-state h4 {
+    margin: 0 0 7px;
+
+    color: #334155;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.empty-state p {
+    margin: 0;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   QUICK ACTIONS
+   ========================================= */
+
+.quick-actions {
+    padding: 22px 24px;
+
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.quick-action {
+    min-height: 74px;
+
+    padding: 14px;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    color: #334155;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.quick-action:hover {
+    transform: translateY(-2px);
+
+    border-color: #bfdbfe;
+
+    background: #f8fbff;
+
+    box-shadow:
+        0 7px 18px rgba(37, 99, 235, 0.08);
+
+    color: #1d4ed8;
+}
+
+.quick-action i {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    font-size: 16px;
+}
+
+.quick-action span {
+    font-size: 13px;
+    font-weight: 650;
+}
+
+
+/* =========================================
+   RECENT RELIEF REQUESTS
+   ========================================= */
+
+.recent-requests-card {
+    margin-top: 25px;
+}
+
+.requests-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+
+    box-sizing: border-box;
+}
+
+.requests-table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.requests-table th,
+.requests-table td {
+    padding: 14px 16px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #eeeeee;
+
+    white-space: nowrap;
+}
+
+.requests-table th {
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color: #64748b;
+
+    background: #f8fafc;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.3px;
+}
+
+.requests-table td {
+    font-size: 14px;
+
+    color: #334155;
+
+    background: #ffffff;
+}
+
+.requests-table tbody tr {
+    transition: background 0.15s ease;
+}
+
+.requests-table tbody tr:hover td {
+    background: #f8fafc;
+}
+
+.requests-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.request-name {
+    font-weight: 650;
+    color: #1e293b;
+}
+
+
+/* =========================================
+   BADGES
+   ========================================= */
+
+.dashboard-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.1px;
+}
+
+
+/* PRIORITY */
+
+.priority-low {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.priority-medium {
+    background: #fff8e1;
+    color: #f57f17;
+}
+
+.priority-high {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.priority-critical {
+    background: #ffebee;
+    color: #c62828;
+}
+
+
+/* STATUS */
+
+.status-pending {
+    background: #fff8e1;
+    color: #f57f17;
+}
+
+.status-progress {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.status-resolved {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-rejected {
+    background: #ffebee;
+    color: #c62828;
+}
+
+
+/* =========================================
+   REQUEST ACTIONS
+   ========================================= */
+
+.request-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.request-view-btn,
+.request-delete-btn {
+    width: 36px;
+    height: 36px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+
+    text-decoration: none;
+
+    box-sizing: border-box;
+}
+
+.request-view-btn {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.request-view-btn:hover {
+    background: #e2e8f0;
+
+    transform: translateY(-1px);
+}
+
+.request-delete-btn {
+    background: #fff1f2;
+    color: #dc2626;
+}
+
+.request-delete-btn:hover {
+    background: #ffe4e6;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   EMPTY REQUEST STATE
+   ========================================= */
+
+.request-empty-state {
+    padding: 50px 20px;
+
+    text-align: center;
+
+    color: #777777;
+}
+
+.request-empty-state i {
+    width: 60px;
+    height: 60px;
+
+    margin: 0 auto 14px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f8fafc;
+
+    font-size: 25px;
+
+    color: #cbd5e1;
+}
+
+.request-empty-state h4 {
+    margin: 0 0 6px;
+
+    color: #475569;
+
+    font-size: 16px;
+}
+
+.request-empty-state p {
+    margin: 0;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   DELETE MODAL
+   ========================================= */
+
+.delete-modal-overlay {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99999;
+
+    background: rgba(15, 23, 42, 0.58);
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    backdrop-filter: blur(3px);
+}
+
+.delete-modal-overlay.show {
+    display: flex;
+}
+
+.delete-modal {
+    width: 100%;
+    max-width: 430px;
+
+    background: #ffffff;
+
+    border-radius: 18px;
+
+    padding: 32px;
+
+    text-align: center;
+
+    box-sizing: border-box;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.20);
+
+    animation: deleteModalShow 0.20s ease;
+}
+
+@keyframes deleteModalShow {
+
+    from {
+        opacity: 0;
+        transform: scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+.delete-modal-icon {
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    background: #fff1f2;
+    color: #dc2626;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 26px;
+}
+
+.delete-modal h3 {
+    margin: 0 0 10px;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    color: #222222;
+}
+
+.delete-modal p {
+    margin: 0;
+
+    color: #666666;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+.delete-modal-buttons {
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 26px;
+}
+
+.delete-cancel-btn,
+.delete-confirm-btn {
+    flex: 1;
+
+    min-height: 44px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.delete-cancel-btn {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.delete-cancel-btn:hover {
+    background: #e2e8f0;
+
+    transform: translateY(-1px);
+}
+
+.delete-confirm-btn {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.delete-confirm-btn:hover {
+    background: #b91c1c;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   RESPONSIVE DASHBOARD
+   ========================================= */
+
+@media (max-width: 900px) {
+
+    .dashboard-header {
+        align-items: flex-start;
+    }
+
+    .dashboard-header h1 {
+        font-size: 26px;
+    }
+
+    .user-profile {
+        min-width: auto;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .dashboard-header {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 18px;
+    }
+
+    .user-profile {
+        width: 100%;
+
+        max-width: none;
+    }
+
+    .user-profile strong {
+        max-width: none;
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-card .card-header {
+        padding: 19px 18px;
+    }
+
+    .quick-actions {
+        padding: 18px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .dashboard-header h1 {
+        font-size: 23px;
+    }
+
+    .dashboard-header p {
+        font-size: 13px;
+    }
+
+    .stat-card {
+        border-radius: 14px !important;
+    }
+
+    .requests-table th,
+    .requests-table td {
+        padding: 12px 13px;
+    }
+
+    .delete-modal {
+        padding: 25px 20px;
+    }
+
+    .delete-modal-buttons {
+        flex-direction: column;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+
+<!-- ============================= -->
+<!-- SIDEBAR -->
+<!-- ============================= -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-brand">
+
+        <div class="brand-icon">
+            <i class="fa-solid fa-hand-holding-heart"></i>
+        </div>
+
+        <div>
+            <h2>DRRMS</h2>
+            <span>Disaster Relief</span>
+        </div>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+
+        <!-- DASHBOARD -->
+
+        <a href="{{ url_for('dashboard.dashboard_home') }}"
+           class="nav-item active">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <!-- DISASTERS -->
+
+        <a href="{{ url_for('disaster.disaster_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+            <span>
+                Disasters
+            </span>
+
+        </a>
+
+
+        <!-- RESOURCES -->
+
+        <a href="{{ url_for('resource.resource_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-boxes-stacked"></i>
+
+            <span>
+                Resources
+            </span>
+
+        </a>
+
+
+        <!-- SHELTERS -->
+
+        <a href="{{ url_for('shelters.shelter_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-house-medical"></i>
+
+            <span>
+                Shelters
+            </span>
+
+        </a>
+
+
+        <!-- VEHICLES -->
+
+        <a href="{{ url_for('vehicles.vehicle_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-truck"></i>
+
+            <span>
+                Vehicles
+            </span>
+
+        </a>
+
+
+        <!-- VOLUNTEERS -->
+
+        <a href="{{ url_for('volunteers.volunteer_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>
+                Volunteers
+            </span>
+
+        </a>
+
+
+        <!-- RELIEF REQUESTS -->
+
+        <a href="{{ url_for('requests.request_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-clipboard-list"></i>
+
+            <span>
+                Relief Requests
+            </span>
+
+        </a>
+
+
+        <!-- REPORTS -->
+
+        <a href="{{ url_for('reports.reports_home') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-chart-pie"></i>
+
+            <span>
+                Reports
+            </span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- ============================= -->
+    <!-- SIDEBAR BOTTOM -->
+    <!-- ============================= -->
+
+    <div class="sidebar-bottom">
+
+
+        <!-- SETTINGS -->
+
+        <a href="{{ url_for('settings.settings_home') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-gear"></i>
+
+            <span>
+                Settings
+            </span>
+
+        </a>
+
+
+        <!-- LOGOUT -->
+
+        <a href="{{ url_for('auth.logout') }}"
+           class="nav-item logout">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>
+                Logout
+            </span>
+
+        </a>
+
+    </div>
+
+</aside>
+
+
+
+<!-- ============================= -->
+<!-- MAIN CONTENT -->
+<!-- ============================= -->
+
+<main class="dashboard-main">
+
+
+<!-- ============================= -->
+<!-- HEADER -->
+<!-- ============================= -->
+
+<header class="dashboard-header">
+
+    <div>
+
+        <h1>
+            Disaster Relief Dashboard
+        </h1>
+
+        <p>
+            Monitor disasters, resources, shelters and vehicles.
+        </p>
+
+    </div>
+
+
+    <!-- USER PROFILE -->
+
+    <div class="user-profile">
+
+        <div class="user-avatar">
+
+            {{ session["full_name"][0] | upper }}
+
+        </div>
+
+        <div>
+
+            <strong>
+                {{ session["full_name"] }}
+            </strong>
+
+            <span>
+                {{ session["role"] | title }}
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- ============================= -->
+<!-- STATISTICS -->
+<!-- ============================= -->
+
+<section class="dashboard-stats">
+
+
+    <!-- ACTIVE DISASTERS -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon disaster">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Active Disasters
+            </span>
+
+            <h2>
+                {{ active_disasters }}
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESOURCES -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon resource">
+
+            <i class="fa-solid fa-boxes-stacked"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Resources
+            </span>
+
+            <h2>
+                {{ total_resources }}
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <!-- SHELTERS -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon shelter">
+
+            <i class="fa-solid fa-house-medical"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Shelters
+            </span>
+
+            <h2>
+                {{ total_shelters }}
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <!-- VOLUNTEERS -->
+
+    <a href="{{ url_for('volunteers.volunteer_list') }}"
+       class="stat-card"
+       style="text-decoration: none; color: inherit;">
+
+        <div class="stat-icon volunteer">
+
+            <i class="fa-solid fa-users"></i>
+
+        </div>
+
+        <div>
+
+            <span>
+                Volunteers
+            </span>
+
+            <h2>
+                {{ total_volunteers }}
+            </h2>
+
+        </div>
+
+    </a>
+
+</section>
+
+
+
+<!-- ============================= -->
+<!-- DASHBOARD GRID -->
+<!-- ============================= -->
+
+<section class="dashboard-grid">
+
+
+    <!-- RECENT DISASTERS -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+                    Recent Disasters
+                </h3>
+
+                <p>
+                    Latest reported disaster incidents
+                </p>
+
+            </div>
+
+            <a href="{{ url_for('disaster.disaster_list') }}">
+                View All
+            </a>
+
+        </div>
+
+
+        <div class="empty-state">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+            <h4>
+                Disaster Monitoring
+            </h4>
+
+            <p>
+                View and manage reported disasters.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+                    Quick Actions
+                </h3>
+
+                <p>
+                    Frequently used operations
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-actions">
+
+
+            <!-- REPORT DISASTER -->
+
+            <a href="{{ url_for('disaster.add_disaster') }}"
+               class="quick-action">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span>
+                    Report Disaster
+                </span>
+
+            </a>
+
+
+            <!-- ADD RESOURCE -->
+
+            <a href="{{ url_for('resource.add_resource') }}"
+               class="quick-action">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+
+                <span>
+                    Add Resource
+                </span>
+
+            </a>
+
+
+            <!-- ADD SHELTER -->
+
+            <a href="{{ url_for('shelters.add_shelter') }}"
+               class="quick-action">
+
+                <i class="fa-solid fa-house-medical"></i>
+
+                <span>
+                    Add Shelter
+                </span>
+
+            </a>
+
+
+            <!-- VIEW VEHICLES -->
+
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="quick-action">
+
+                <i class="fa-solid fa-truck"></i>
+
+                <span>
+                    Vehicles
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================= -->
+<!-- RECENT RELIEF REQUESTS -->
+<!-- ============================= -->
+
+<section class="dashboard-card recent-requests-card">
+
+
+    <div class="card-header">
+
+        <div>
+
+            <h3>
+                Recent Relief Requests
+            </h3>
+
+            <p>
+                Latest requests received from affected people
+            </p>
+
+        </div>
+
+
+        <a href="{{ url_for('requests.request_list') }}">
+            View All
+        </a>
+
+    </div>
+
+
+    {% if recent_requests %}
+
+
+        <div class="requests-table-wrapper">
+
+            <table class="requests-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Requester
+                        </th>
+
+                        <th>
+                            Type
+                        </th>
+
+                        <th>
+                            Location
+                        </th>
+
+                        <th>
+                            Priority
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for relief_request in recent_requests %}
+
+
+                        <tr>
+
+
+                            <!-- REQUESTER -->
+
+                            <td>
+
+                                <span class="request-name">
+                                    {{ relief_request.requester_name }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- TYPE -->
+
+                            <td>
+                                {{ relief_request.request_type }}
+                            </td>
+
+
+                            <!-- LOCATION -->
+
+                            <td>
+                                {{ relief_request.location }}
+                            </td>
+
+
+                            <!-- PRIORITY -->
+
+                            <td>
+
+                                {% if relief_request.priority == "Low" %}
+
+                                    <span class="dashboard-badge priority-low">
+                                        Low
+                                    </span>
+
+                                {% elif relief_request.priority == "Medium" %}
+
+                                    <span class="dashboard-badge priority-medium">
+                                        Medium
+                                    </span>
+
+                                {% elif relief_request.priority == "High" %}
+
+                                    <span class="dashboard-badge priority-high">
+                                        High
+                                    </span>
+
+                                {% elif relief_request.priority == "Critical" %}
+
+                                    <span class="dashboard-badge priority-critical">
+                                        Critical
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="dashboard-badge">
+                                        {{ relief_request.priority }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                {% if relief_request.status == "Pending" %}
+
+                                    <span class="dashboard-badge status-pending">
+                                        Pending
+                                    </span>
+
+                                {% elif relief_request.status == "In Progress" %}
+
+                                    <span class="dashboard-badge status-progress">
+                                        In Progress
+                                    </span>
+
+                                {% elif relief_request.status == "Resolved" %}
+
+                                    <span class="dashboard-badge status-resolved">
+                                        Resolved
+                                    </span>
+
+                                {% elif relief_request.status == "Rejected" %}
+
+                                    <span class="dashboard-badge status-rejected">
+                                        Rejected
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="dashboard-badge">
+                                        {{ relief_request.status }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <div class="request-actions">
+
+
+                                    <!-- VIEW -->
+
+                                    <a href="{{ url_for('requests.request_details', request_id=relief_request.request_id) }}"
+                                       class="request-view-btn"
+                                       title="View Request">
+
+                                        <i class="fa-solid fa-eye"></i>
+
+                                    </a>
+
+
+                                    <!-- DELETE -->
+
+                                    <form method="POST"
+                                          action="{{ url_for('requests.delete_request', request_id=relief_request.request_id) }}"
+                                          class="dashboard-delete-form">
+
+                                        <input type="hidden"
+                                               name="csrf_token"
+                                               value="{{ csrf_token() }}">
+
+                                        <button type="button"
+                                                class="request-delete-btn"
+                                                title="Delete Request"
+                                                onclick="openDeleteModal(this); return false;">
+
+                                            <i class="fa-solid fa-trash"></i>
+
+                                        </button>
+
+                                    </form>
+
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    {% else %}
+
+
+        <div class="request-empty-state">
+
+            <i class="fa-solid fa-clipboard-list"></i>
+
+            <h4>
+                No Relief Requests
+            </h4>
+
+            <p>
+                There are currently no relief requests.
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+</section>
+
+
+</main>
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- DELETE CONFIRMATION MODAL -->
+<!-- ========================================= -->
+
+<div class="delete-modal-overlay"
+     id="deleteModalOverlay">
+
+
+    <div class="delete-modal"
+         onclick="event.stopPropagation()">
+
+
+        <div class="delete-modal-icon">
+
+            <i class="fa-solid fa-trash"></i>
+
+        </div>
+
+
+        <h3>
+            Delete Relief Request?
+        </h3>
+
+
+        <p>
+            Are you sure you want to delete this relief request?
+            This action cannot be undone.
+        </p>
+
+
+        <div class="delete-modal-buttons">
+
+
+            <!-- CANCEL -->
+
+            <button type="button"
+                    class="delete-cancel-btn"
+                    onclick="closeDeleteModal()">
+
+                Cancel
+
+            </button>
+
+
+            <!-- CONFIRM DELETE -->
+
+            <button type="button"
+                    class="delete-confirm-btn"
+                    onclick="confirmDelete()">
+
+                <i class="fa-solid fa-trash"></i>
+
+                Delete Request
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================================= -->
+<!-- DELETE MODAL JAVASCRIPT -->
+<!-- ========================================= -->
+
+<script>
+
+/*
+=========================================================
+DELETE MODAL
+=========================================================
+*/
+
+let deleteForm = null;
+
+
+/* =========================================
+   OPEN DELETE MODAL
+   ========================================= */
+
+function openDeleteModal(button) {
+
+    if (!button) {
+        return false;
+    }
+
+    const form = button.closest(
+        ".dashboard-delete-form"
+    );
+
+    if (!form) {
+        return false;
+    }
+
+    deleteForm = form;
+
+    const modal =
+        document.getElementById(
+            "deleteModalOverlay"
+        );
+
+    if (!modal) {
+        return false;
+    }
+
+    modal.classList.add("show");
+
+    document.body.style.overflow = "hidden";
+
+    return false;
+}
+
+
+/* =========================================
+   CLOSE DELETE MODAL
+   ========================================= */
+
+function closeDeleteModal() {
+
+    const modal =
+        document.getElementById(
+            "deleteModalOverlay"
+        );
+
+    if (!modal) {
+        return;
+    }
+
+    modal.classList.remove("show");
+
+    document.body.style.overflow = "";
+
+    deleteForm = null;
+}
+
+
+/* =========================================
+   CONFIRM DELETE
+   ========================================= */
+
+function confirmDelete() {
+
+    if (!deleteForm) {
+        return;
+    }
+
+    const formToSubmit = deleteForm;
+
+    /*
+    Directly call the native HTML form submit.
+
+    This bypasses submit event handlers and prevents
+    any old browser confirm() handler from running.
+    */
+
+    HTMLFormElement.prototype.submit.call(
+        formToSubmit
+    );
+
+}
+
+
+/* =========================================
+   CLICK OUTSIDE MODAL
+   ========================================= */
+
+const deleteModalOverlay =
+    document.getElementById(
+        "deleteModalOverlay"
+    );
+
+
+if (deleteModalOverlay) {
+
+    deleteModalOverlay.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target ===
+                deleteModalOverlay
+            ) {
+
+                closeDeleteModal();
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   ESCAPE KEY
+   ========================================= */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Escape" &&
+            deleteModalOverlay &&
+            deleteModalOverlay.classList.contains("show")
+        ) {
+
+            closeDeleteModal();
+
+        }
+
+    }
+);
+
+</script>
+
+{% endblock %}
