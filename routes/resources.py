@@ -545,10 +545,6 @@ def edit_resource(resource_id):
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
-        # -------------------------------------------------
-        # GET EXISTING RESOURCE
-        # -------------------------------------------------
-
         cursor.execute("""
             SELECT
                 resource_id,
@@ -578,10 +574,6 @@ def edit_resource(resource_id):
                 url_for("resource.resource_list")
             )
 
-
-        # -------------------------------------------------
-        # UPDATE RESOURCE
-        # -------------------------------------------------
 
         if request.method == "POST":
 
@@ -673,6 +665,58 @@ def edit_resource(resource_id):
 
                 flash(
                     "Resource name cannot exceed 150 characters.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "resource.edit_resource",
+                        resource_id=resource_id
+                    )
+                )
+
+
+            # =============================================
+            # UNIT VALIDATION
+            # =============================================
+
+            if len(unit) > 50:
+
+                flash(
+                    "Unit cannot exceed 50 characters.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "resource.edit_resource",
+                        resource_id=resource_id
+                    )
+                )
+
+
+            # =============================================
+            # LOCATION VALIDATION
+            # =============================================
+
+            if len(location) < 2:
+
+                flash(
+                    "Location must contain at least 2 characters.",
+                    "error"
+                )
+
+                return redirect(
+                    url_for(
+                        "resource.edit_resource",
+                        resource_id=resource_id
+                    )
+                )
+
+            if len(location) > 255:
+
+                flash(
+                    "Location cannot exceed 255 characters.",
                     "error"
                 )
 
@@ -897,9 +941,7 @@ def edit_resource(resource_id):
         )
 
         return redirect(
-            url_for(
-                "resource.resource_list"
-            )
+            url_for("resource.resource_list")
         )
 
 
@@ -913,7 +955,8 @@ def edit_resource(resource_id):
 
 
 # =========================================================
-# DELETE RESOURCE - ADMIN ONLY
+# DELETE RESOURCE
+# ADMIN ONLY
 # =========================================================
 
 @resource.route(
@@ -923,7 +966,7 @@ def edit_resource(resource_id):
 def delete_resource(resource_id):
 
     # -------------------------------------------------
-    # LOGIN CHECK
+    # CHECK LOGIN
     # -------------------------------------------------
 
     if "user_id" not in session:
@@ -938,43 +981,106 @@ def delete_resource(resource_id):
         )
 
 
-    # -------------------------------------------------
-    # ADMIN CHECK
-    # -------------------------------------------------
-
-    if session.get("role") != "admin":
-
-        flash(
-            "Only administrators are allowed to delete resources.",
-            "error"
-        )
-
-        return redirect(
-            url_for("resource.resource_list")
-        )
-
-
     connection = None
     cursor = None
 
     try:
 
         connection = get_db_connection()
-        cursor = connection.cursor()
+
+        cursor = connection.cursor(
+            dictionary=True
+        )
+
+
+        # -------------------------------------------------
+        # CHECK CURRENT USER FROM DATABASE
+        # -------------------------------------------------
+
+        cursor.execute("""
+            SELECT
+                user_id,
+                role,
+                status
+            FROM users
+            WHERE user_id = %s
+        """, (
+            session["user_id"],
+        ))
+
+        user = cursor.fetchone()
+
+
+        # -------------------------------------------------
+        # USER EXISTS CHECK
+        # -------------------------------------------------
+
+        if not user:
+
+            flash(
+                "User account not found.",
+                "error"
+            )
+
+            session.clear()
+
+            return redirect(
+                url_for("auth.login")
+            )
+
+
+        # -------------------------------------------------
+        # USER STATUS CHECK
+        # -------------------------------------------------
+
+        if user["status"] != "active":
+
+            flash(
+                "Your account is not active.",
+                "error"
+            )
+
+            session.clear()
+
+            return redirect(
+                url_for("auth.login")
+            )
+
+
+        # -------------------------------------------------
+        # ADMIN ONLY SECURITY
+        # -------------------------------------------------
+
+        if user["role"] != "admin":
+
+            print(
+                "DELETE RESOURCE BLOCKED | USER ID:",
+                user["user_id"],
+                "| ROLE:",
+                user["role"]
+            )
+
+            flash(
+                "Access denied. Only the admin can delete resources.",
+                "error"
+            )
+
+            return redirect(
+                url_for("resource.resource_list")
+            )
 
 
         # -------------------------------------------------
         # CHECK RESOURCE EXISTS
         # -------------------------------------------------
 
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT resource_id
             FROM resources
             WHERE resource_id = %s
-            """,
-            (resource_id,)
-        )
+        """, (
+            resource_id,
+        ))
 
         resource_record = cursor.fetchone()
 
@@ -995,15 +1101,20 @@ def delete_resource(resource_id):
         # DELETE RESOURCE
         # -------------------------------------------------
 
-        cursor.execute(
-            """
+        cursor.execute("""
             DELETE FROM resources
             WHERE resource_id = %s
-            """,
-            (resource_id,)
-        )
+        """, (
+            resource_id,
+        ))
 
         connection.commit()
+
+
+        print(
+            "RESOURCE DELETED | ADMIN USER ID:",
+            user["user_id"]
+        )
 
 
         flash(
@@ -1011,11 +1122,14 @@ def delete_resource(resource_id):
             "success"
         )
 
+        return redirect(
+            url_for("resource.resource_list")
+        )
+
 
     except Exception as e:
 
         if connection:
-
             connection.rollback()
 
 
@@ -1030,18 +1144,15 @@ def delete_resource(resource_id):
             "error"
         )
 
+        return redirect(
+            url_for("resource.resource_list")
+        )
+
 
     finally:
 
         if cursor:
-
             cursor.close()
 
         if connection:
-
             connection.close()
-
-
-    return redirect(
-        url_for("resource.resource_list")
-    )
