@@ -182,10 +182,6 @@ def add_resource():
 
     if request.method == "POST":
 
-        # -------------------------------------------------
-        # GET FORM DATA SAFELY
-        # -------------------------------------------------
-
         resource_name = request.form.get(
             "resource_name",
             ""
@@ -227,9 +223,9 @@ def add_resource():
         ).strip()
 
 
-        # -------------------------------------------------
+        # =================================================
         # REQUIRED FIELD VALIDATION
-        # -------------------------------------------------
+        # =================================================
 
         if (
             not resource_name
@@ -249,9 +245,9 @@ def add_resource():
             )
 
 
-        # -------------------------------------------------
+        # =================================================
         # RESOURCE NAME VALIDATION
-        # -------------------------------------------------
+        # =================================================
 
         if len(resource_name) < 2:
 
@@ -263,7 +259,6 @@ def add_resource():
             return redirect(
                 url_for("resource.add_resource")
             )
-
 
         if len(resource_name) > 150:
 
@@ -277,21 +272,9 @@ def add_resource():
             )
 
 
-        # -------------------------------------------------
+        # =================================================
         # UNIT VALIDATION
-        # -------------------------------------------------
-
-        if len(unit) < 1:
-
-            flash(
-                "Unit is required.",
-                "error"
-            )
-
-            return redirect(
-                url_for("resource.add_resource")
-            )
-
+        # =================================================
 
         if len(unit) > 50:
 
@@ -305,9 +288,9 @@ def add_resource():
             )
 
 
-        # -------------------------------------------------
+        # =================================================
         # LOCATION VALIDATION
-        # -------------------------------------------------
+        # =================================================
 
         if len(location) < 2:
 
@@ -319,7 +302,6 @@ def add_resource():
             return redirect(
                 url_for("resource.add_resource")
             )
-
 
         if len(location) > 255:
 
@@ -333,9 +315,9 @@ def add_resource():
             )
 
 
-        # -------------------------------------------------
+        # =================================================
         # RESOURCE TYPE VALIDATION
-        # -------------------------------------------------
+        # =================================================
 
         if resource_type not in VALID_RESOURCE_TYPES:
 
@@ -349,9 +331,9 @@ def add_resource():
             )
 
 
-        # -------------------------------------------------
+        # =================================================
         # QUANTITY VALIDATION
-        # -------------------------------------------------
+        # =================================================
 
         try:
 
@@ -368,7 +350,6 @@ def add_resource():
                 url_for("resource.add_resource")
             )
 
-
         if quantity_value < 0:
 
             flash(
@@ -381,11 +362,12 @@ def add_resource():
             )
 
 
-        # -------------------------------------------------
+        # =================================================
         # MINIMUM STOCK VALIDATION
-        # -------------------------------------------------
+        # =================================================
 
         if minimum_stock == "":
+
             minimum_stock_value = 0
 
         else:
@@ -405,7 +387,6 @@ def add_resource():
                     url_for("resource.add_resource")
                 )
 
-
         if minimum_stock_value < 0:
 
             flash(
@@ -418,9 +399,9 @@ def add_resource():
             )
 
 
-        # -------------------------------------------------
+        # =================================================
         # STATUS VALIDATION
-        # -------------------------------------------------
+        # =================================================
 
         if status not in VALID_STATUSES:
 
@@ -434,9 +415,9 @@ def add_resource():
             )
 
 
-        # -------------------------------------------------
+        # =================================================
         # EXPIRY DATE VALIDATION
-        # -------------------------------------------------
+        # =================================================
 
         if expiry_date:
 
@@ -459,9 +440,9 @@ def add_resource():
                 )
 
 
-        # -------------------------------------------------
+        # =================================================
         # DATABASE INSERT
-        # -------------------------------------------------
+        # =================================================
 
         connection = None
         cursor = None
@@ -645,9 +626,9 @@ def edit_resource(resource_id):
             ).strip()
 
 
-            # -------------------------------------------------
+            # =============================================
             # REQUIRED FIELD VALIDATION
-            # -------------------------------------------------
+            # =============================================
 
             if (
                 not resource_name
@@ -670,9 +651,9 @@ def edit_resource(resource_id):
                 )
 
 
-            # -------------------------------------------------
+            # =============================================
             # RESOURCE NAME VALIDATION
-            # -------------------------------------------------
+            # =============================================
 
             if len(resource_name) < 2:
 
@@ -687,7 +668,6 @@ def edit_resource(resource_id):
                         resource_id=resource_id
                     )
                 )
-
 
             if len(resource_name) > 150:
 
@@ -704,77 +684,9 @@ def edit_resource(resource_id):
                 )
 
 
-            # -------------------------------------------------
-            # UNIT VALIDATION
-            # -------------------------------------------------
-
-            if len(unit) < 1:
-
-                flash(
-                    "Unit is required.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for(
-                        "resource.edit_resource",
-                        resource_id=resource_id
-                    )
-                )
-
-
-            if len(unit) > 50:
-
-                flash(
-                    "Unit cannot exceed 50 characters.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for(
-                        "resource.edit_resource",
-                        resource_id=resource_id
-                    )
-                )
-
-
-            # -------------------------------------------------
-            # LOCATION VALIDATION
-            # -------------------------------------------------
-
-            if len(location) < 2:
-
-                flash(
-                    "Location must contain at least 2 characters.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for(
-                        "resource.edit_resource",
-                        resource_id=resource_id
-                    )
-                )
-
-
-            if len(location) > 255:
-
-                flash(
-                    "Location cannot exceed 255 characters.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for(
-                        "resource.edit_resource",
-                        resource_id=resource_id
-                    )
-                )
-
-
-            # -------------------------------------------------
+            # =============================================
             # RESOURCE TYPE VALIDATION
-            # -------------------------------------------------
+            # =============================================
 
             if resource_type not in VALID_RESOURCE_TYPES:
 
@@ -791,9 +703,9 @@ def edit_resource(resource_id):
                 )
 
 
-            # -------------------------------------------------
+            # =============================================
             # QUANTITY VALIDATION
-            # -------------------------------------------------
+            # =============================================
 
             try:
 
@@ -813,7 +725,6 @@ def edit_resource(resource_id):
                     )
                 )
 
-
             if quantity_value < 0:
 
                 flash(
@@ -829,18 +740,21 @@ def edit_resource(resource_id):
                 )
 
 
-            # -------------------------------------------------
+            # =============================================
             # MINIMUM STOCK VALIDATION
-            # -------------------------------------------------
+            # =============================================
 
             if minimum_stock == "":
+
                 minimum_stock_value = 0
 
             else:
 
                 try:
 
-                    minimum_stock_value = int(minimum_stock)
+                    minimum_stock_value = int(
+                        minimum_stock
+                    )
 
                 except ValueError:
 
@@ -855,7 +769,6 @@ def edit_resource(resource_id):
                             resource_id=resource_id
                         )
                     )
-
 
             if minimum_stock_value < 0:
 
@@ -872,9 +785,9 @@ def edit_resource(resource_id):
                 )
 
 
-            # -------------------------------------------------
+            # =============================================
             # STATUS VALIDATION
-            # -------------------------------------------------
+            # =============================================
 
             if status not in VALID_STATUSES:
 
@@ -891,9 +804,9 @@ def edit_resource(resource_id):
                 )
 
 
-            # -------------------------------------------------
+            # =============================================
             # EXPIRY DATE VALIDATION
-            # -------------------------------------------------
+            # =============================================
 
             if expiry_date:
 
@@ -919,9 +832,9 @@ def edit_resource(resource_id):
                     )
 
 
-            # -------------------------------------------------
+            # =============================================
             # DATABASE UPDATE
-            # -------------------------------------------------
+            # =============================================
 
             cursor.execute("""
                 UPDATE resources
@@ -961,10 +874,12 @@ def edit_resource(resource_id):
                 )
             )
 
+
         return render_template(
             "resources/edit.html",
             resource=resource_record
         )
+
 
     except Exception as e:
 
@@ -983,10 +898,10 @@ def edit_resource(resource_id):
 
         return redirect(
             url_for(
-                "resource.resource_details",
-                resource_id=resource_id
+                "resource.resource_list"
             )
         )
+
 
     finally:
 
@@ -998,7 +913,7 @@ def edit_resource(resource_id):
 
 
 # =========================================================
-# DELETE RESOURCE
+# DELETE RESOURCE - ADMIN ONLY
 # =========================================================
 
 @resource.route(
@@ -1007,9 +922,37 @@ def edit_resource(resource_id):
 )
 def delete_resource(resource_id):
 
+    # -------------------------------------------------
+    # LOGIN CHECK
+    # -------------------------------------------------
+
     if "user_id" not in session:
-        flash("Please login first.", "error")
-        return redirect(url_for("auth.login"))
+
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+
+    # -------------------------------------------------
+    # ADMIN CHECK
+    # -------------------------------------------------
+
+    if session.get("role") != "admin":
+
+        flash(
+            "Only administrators are allowed to delete resources.",
+            "error"
+        )
+
+        return redirect(
+            url_for("resource.resource_list")
+        )
+
 
     connection = None
     cursor = None
@@ -1019,14 +962,14 @@ def delete_resource(resource_id):
         connection = get_db_connection()
         cursor = connection.cursor()
 
+
         # -------------------------------------------------
-        # CHECK WHETHER RESOURCE EXISTS
+        # CHECK RESOURCE EXISTS
         # -------------------------------------------------
 
         cursor.execute(
             """
-            SELECT
-                resource_id
+            SELECT resource_id
             FROM resources
             WHERE resource_id = %s
             """,
@@ -1034,6 +977,7 @@ def delete_resource(resource_id):
         )
 
         resource_record = cursor.fetchone()
+
 
         if not resource_record:
 
@@ -1046,8 +990,9 @@ def delete_resource(resource_id):
                 url_for("resource.resource_list")
             )
 
+
         # -------------------------------------------------
-        # DATABASE DELETE
+        # DELETE RESOURCE
         # -------------------------------------------------
 
         cursor.execute(
@@ -1060,33 +1005,42 @@ def delete_resource(resource_id):
 
         connection.commit()
 
+
         flash(
             "Resource deleted successfully.",
             "success"
         )
 
+
     except Exception as e:
 
         if connection:
+
             connection.rollback()
+
 
         print(
             "DELETE RESOURCE ERROR:",
             repr(e)
         )
 
+
         flash(
             "Unable to delete resource.",
             "error"
         )
 
+
     finally:
 
         if cursor:
+
             cursor.close()
 
         if connection:
+
             connection.close()
+
 
     return redirect(
         url_for("resource.resource_list")

@@ -102,7 +102,6 @@ body {
     font-size: 12px;
     font-weight: 700;
     color: #374151;
-    letter-spacing: 0.1px;
 }
 
 .filter-input,
@@ -116,10 +115,6 @@ body {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s ease,
-                box-shadow 0.2s ease,
-                background 0.2s ease;
 }
 
 .filter-input {
@@ -131,10 +126,6 @@ body {
     cursor: pointer;
 }
 
-.filter-input::placeholder {
-    color: #9ca3af;
-}
-
 .filter-input:hover,
 .filter-select:hover {
     border-color: #9ca3af;
@@ -143,7 +134,6 @@ body {
 .filter-input:focus,
 .filter-select:focus {
     border-color: #2563eb;
-    background: #ffffff;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
 }
 
@@ -158,29 +148,10 @@ body {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 600;
-    transition: all 0.2s ease;
 }
 
 .clear-filters-btn i {
     margin-right: 5px;
-}
-
-.clear-filters-btn:hover {
-    background: #1f2937;
-    transform: translateY(-1px);
-    box-shadow: 0 5px 12px rgba(15, 23, 42, 0.14);
-}
-
-.clear-filters-btn:active {
-    transform: translateY(0);
-}
-
-.filter-result {
-    width: 100%;
-    color: #6b7280;
-    font-size: 12px;
-    margin-top: 0;
-    padding-top: 2px;
 }
 
 
@@ -194,20 +165,6 @@ body {
     border: 1px solid #e5e7eb;
     border-radius: 12px;
     background: #ffffff;
-}
-
-.resource-table-wrapper::-webkit-scrollbar {
-    height: 7px;
-}
-
-.resource-table-wrapper::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 10px;
-}
-
-.resource-table-wrapper::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
 }
 
 #resourceTable {
@@ -228,8 +185,6 @@ body {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
 }
 
 #resourceTable th:last-child {
@@ -238,11 +193,6 @@ body {
 
 #resourceTable tbody tr {
     border-bottom: 1px solid #f1f5f9;
-    transition: background 0.18s ease;
-}
-
-#resourceTable tbody tr:last-child {
-    border-bottom: none;
 }
 
 #resourceTable tbody tr:hover {
@@ -253,80 +203,19 @@ body {
     padding: 14px 15px;
     color: #4b5563;
     font-size: 13px;
-    vertical-align: middle;
-}
-
-#resourceTable td:first-child {
-    color: #111827;
-}
-
-#resourceTable td:first-child strong {
-    font-weight: 700;
 }
 
 #resourceTable td:first-child a {
     color: #1d4ed8;
-    transition: color 0.18s ease;
-}
-
-#resourceTable td:first-child a:hover {
-    color: #1e40af;
-    text-decoration: underline !important;
-}
-
-#resourceTable td:nth-child(2) {
-    color: #475569;
-    font-weight: 500;
-}
-
-#resourceTable td:nth-child(3) {
-    color: #111827;
-    font-weight: 600;
-}
-
-#resourceTable td:nth-child(4) {
-    color: #64748b;
-}
-
-#resourceTable td:nth-child(4) i {
-    margin-right: 5px;
-    color: #64748b;
-}
-
-#resourceTable td:nth-child(5) {
-    font-weight: 600;
-}
-
-#resourceTable td:nth-child(5) {
-    color: #2563eb;
-}
-
-#resourceTable td:last-child {
-    white-space: nowrap;
 }
 
 #resourceTable td:last-child a {
     color: #2563eb;
-    transition: all 0.18s ease;
-}
-
-#resourceTable td:last-child a:hover {
-    color: #1d4ed8;
-    transform: translateY(-1px);
+    font-size: 15px;
 }
 
 #resourceTable td:last-child button {
     color: #dc2626;
-    transition: all 0.18s ease;
-}
-
-#resourceTable td:last-child button:hover {
-    color: #b91c1c;
-    transform: translateY(-1px);
-}
-
-#resourceTable td:last-child a,
-#resourceTable td:last-child button {
     font-size: 15px;
 }
 
@@ -342,28 +231,12 @@ body {
 }
 
 .no-filter-results i {
-    width: 62px;
-    height: 62px;
-    margin: 0 auto 16px;
-    border-radius: 50%;
-    background: #f1f5f9;
-    color: #94a3b8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 25px;
+    color: #94a3b8;
 }
 
 .no-filter-results h4 {
-    margin: 0 0 8px;
     color: #374151;
-    font-size: 17px;
-}
-
-.no-filter-results p {
-    margin: 0;
-    color: #6b7280;
-    font-size: 13px;
 }
 
 
@@ -388,32 +261,6 @@ body {
     font-size: 30px;
 }
 
-.empty-state h4 {
-    margin: 0 0 8px;
-    color: #1f2937;
-    font-size: 19px;
-}
-
-.empty-state p {
-    margin: 0;
-    color: #6b7280;
-    font-size: 13px;
-}
-
-
-/* =========================================
-   QUICK ACTION POLISH
-   ========================================= */
-
-.quick-action {
-    transition: all 0.2s ease;
-}
-
-.quick-action:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.14);
-}
-
 
 /* =========================================
    DELETE CONFIRMATION MODAL
@@ -425,7 +272,6 @@ body {
     inset: 0;
     background: rgba(15, 23, 42, 0.55);
     backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
     z-index: 9999;
     align-items: center;
     justify-content: center;
@@ -444,21 +290,6 @@ body {
     padding: 32px;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22);
     text-align: center;
-    animation: deleteModalShow 0.2s ease;
-}
-
-@keyframes deleteModalShow {
-
-    from {
-        opacity: 0;
-        transform: scale(0.95) translateY(8px);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-
 }
 
 .delete-modal-icon {
@@ -474,19 +305,6 @@ body {
     font-size: 25px;
 }
 
-.delete-modal h3 {
-    margin: 0 0 10px;
-    color: #111827;
-    font-size: 21px;
-}
-
-.delete-modal p {
-    margin: 0 0 25px;
-    color: #6b7280;
-    line-height: 1.6;
-    font-size: 13px;
-}
-
 .delete-modal-buttons {
     display: flex;
     justify-content: center;
@@ -498,10 +316,8 @@ body {
     border: none;
     padding: 11px 20px;
     border-radius: 9px;
-    font-family: 'Inter', sans-serif;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .delete-cancel-btn {
@@ -509,25 +325,14 @@ body {
     color: #374151;
 }
 
-.delete-cancel-btn:hover {
-    background: #e5e7eb;
-    transform: translateY(-1px);
-}
-
 .delete-confirm-btn {
     background: #dc2626;
     color: #ffffff;
 }
 
-.delete-confirm-btn:hover {
-    background: #b91c1c;
-    transform: translateY(-1px);
-    box-shadow: 0 5px 12px rgba(220, 38, 38, 0.20);
-}
-
 
 /* =========================================
-   RESPONSIVE FILTERS
+   RESPONSIVE
    ========================================= */
 
 @media (max-width: 900px) {
@@ -540,91 +345,12 @@ body {
     }
 
     .filter-group,
-    .filter-group.search-group {
-        width: 100%;
-        min-width: 100%;
-    }
-
+    .filter-group.search-group,
     .filter-input,
     .filter-select,
     .clear-filters-btn {
         width: 100%;
-        min-width: 100%;
     }
-
-}
-
-
-/* =========================================
-   MOBILE TABLE / CARD SPACING
-   ========================================= */
-
-@media (max-width: 600px) {
-
-    .resource-filters {
-        margin: 15px 12px 0;
-        padding: 15px;
-        gap: 12px;
-    }
-
-    .filter-input,
-    .filter-select,
-    .clear-filters-btn {
-        height: 40px;
-    }
-
-    .resource-table-wrapper {
-        margin-top: 15px;
-        border-radius: 10px;
-    }
-
-    #resourceTable th {
-        padding: 12px;
-    }
-
-    #resourceTable td {
-        padding: 12px;
-    }
-
-    .delete-modal {
-        padding: 25px 20px;
-        border-radius: 14px;
-    }
-
-    .delete-modal-buttons {
-        flex-direction: column;
-    }
-
-    .delete-cancel-btn,
-    .delete-confirm-btn {
-        width: 100%;
-    }
-
-    .user-profile {
-        padding: 7px 10px 7px 7px;
-        gap: 9px;
-    }
-
-    .user-avatar {
-        width: 40px;
-        height: 40px;
-    }
-
-}
-
-
-/* =========================================
-   VERY SMALL SCREENS
-   ========================================= */
-
-@media (max-width: 480px) {
-
-    .user-profile strong {
-        max-width: 100px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
 }
 
 </style>
@@ -636,726 +362,665 @@ body {
 
 <div class="dashboard-page">
 
-<!-- ========================================= -->
-<!-- SIDEBAR -->
-<!-- ========================================= -->
+    <!-- SIDEBAR -->
 
-<aside class="sidebar">
+    <aside class="sidebar">
 
-<div class="sidebar-brand">
+        <div class="sidebar-brand">
 
-    <div class="brand-icon">
-        <i class="fa-solid fa-hand-holding-heart"></i>
-    </div>
+            <div class="brand-icon">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+            </div>
 
-    <div>
-        <h2>DRRMS</h2>
-        <span>Disaster Relief</span>
-    </div>
-
-</div>
-
-
-<nav class="sidebar-nav">
-
-
-    <!-- DASHBOARD -->
-
-    <a href="{{ url_for('dashboard.dashboard_home') }}"
-       class="nav-item">
-
-        <i class="fa-solid fa-chart-line"></i>
-        <span>Dashboard</span>
-
-    </a>
-
-
-    <!-- DISASTERS -->
-
-    <a href="{{ url_for('disaster.disaster_list') }}"
-       class="nav-item">
-
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        <span>Disasters</span>
-
-    </a>
-
-
-    <!-- RESOURCES -->
-
-    <a href="{{ url_for('resource.resource_list') }}"
-       class="nav-item active">
-
-        <i class="fa-solid fa-boxes-stacked"></i>
-        <span>Resources</span>
-
-    </a>
-
-
-    <!-- SHELTERS -->
-
-    <a href="{{ url_for('shelters.shelter_list') }}"
-       class="nav-item">
-
-        <i class="fa-solid fa-house-medical"></i>
-        <span>Shelters</span>
-
-    </a>
-
-
-    <!-- VEHICLES -->
-
-    <a href="{{ url_for('vehicles.vehicle_list') }}"
-       class="nav-item">
-
-        <i class="fa-solid fa-truck"></i>
-        <span>Vehicles</span>
-
-    </a>
-
-
-    <!-- VOLUNTEERS -->
-
-    <a href="{{ url_for('volunteers.volunteer_list') }}"
-       class="nav-item">
-
-        <i class="fa-solid fa-users"></i>
-        <span>Volunteers</span>
-
-    </a>
-
-
-    <!-- RELIEF REQUESTS -->
-
-    <a href="{{ url_for('requests.request_list') }}"
-       class="nav-item">
-
-        <i class="fa-solid fa-clipboard-list"></i>
-        <span>Relief Requests</span>
-
-    </a>
-
-
-    <!-- REPORTS -->
-
-    <a href="{{ url_for('reports.reports_home') }}"
-       class="nav-item">
-
-        <i class="fa-solid fa-chart-pie"></i>
-        <span>Reports</span>
-
-    </a>
-
-</nav>
-
-
-<!-- ========================================= -->
-<!-- SIDEBAR BOTTOM -->
-<!-- ========================================= -->
-
-<div class="sidebar-bottom">
-
-
-    <!-- SETTINGS -->
-
-    <a href="{{ url_for('settings.settings_home') }}"
-       class="nav-item">
-
-        <i class="fa-solid fa-gear"></i>
-        <span>Settings</span>
-
-    </a>
-
-
-    <!-- LOGOUT -->
-
-    <a href="{{ url_for('auth.logout') }}"
-       class="nav-item logout">
-
-        <i class="fa-solid fa-right-from-bracket"></i>
-        <span>Logout</span>
-
-    </a>
-
-</div>
-
-</aside>
-
-
-<!-- ========================================= -->
-<!-- MAIN CONTENT -->
-<!-- ========================================= -->
-
-<main class="dashboard-main">
-
-
-<!-- ========================================= -->
-<!-- HEADER -->
-<!-- ========================================= -->
-
-<header class="dashboard-header">
-
-    <div>
-
-        <h1>
-            Resource Management
-        </h1>
-
-        <p>
-            Monitor and manage relief resources.
-        </p>
-
-    </div>
-
-
-    <!-- USER PROFILE -->
-
-    <div class="user-profile">
-
-        <div class="user-avatar">
-
-            {{ session["full_name"][0] | upper }}
-
-        </div>
-
-        <div>
-
-            <strong>
-                {{ session["full_name"] }}
-            </strong>
-
-            <span>
-                {{ session["role"] | title }}
-            </span>
-
-        </div>
-
-    </div>
-
-</header>
-
-
-<!-- ========================================= -->
-<!-- RESOURCE CONTENT -->
-<!-- ========================================= -->
-
-<section class="dashboard-card"
-         style="margin-top: 25px;">
-
-
-    <!-- ========================================= -->
-    <!-- CARD HEADER -->
-    <!-- ========================================= -->
-
-    <div class="card-header">
-
-        <div>
-
-            <h3>
-                Resource Inventory
-            </h3>
-
-            <p>
-                All available relief resources
-            </p>
+            <div>
+                <h2>DRRMS</h2>
+                <span>Disaster Relief</span>
+            </div>
 
         </div>
 
 
-        <!-- ADD RESOURCE -->
+        <nav class="sidebar-nav">
 
-        <a href="{{ url_for('resource.add_resource') }}"
-           class="quick-action"
-           style="padding: 10px 18px;">
-
-            <i class="fa-solid fa-plus"></i>
-
-            <span>
-                Add Resource
-            </span>
-
-        </a>
-
-    </div>
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
 
 
-    <!-- ========================================= -->
-    <!-- SEARCH & FILTERS -->
-    <!-- ========================================= -->
-
-    {% if resources %}
-
-    <div class="resource-filters">
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Disasters</span>
+            </a>
 
 
-        <!-- SEARCH -->
-
-        <div class="filter-group search-group">
-
-            <label for="resourceSearch">
-                Search Resource
-            </label>
-
-            <input
-                type="text"
-                id="resourceSearch"
-                class="filter-input"
-                placeholder="Search by resource name or location..."
-                autocomplete="off">
-
-        </div>
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item active">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Resources</span>
+            </a>
 
 
-        <!-- RESOURCE TYPE FILTER -->
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+                <i class="fa-solid fa-house-medical"></i>
+                <span>Shelters</span>
+            </a>
 
-        <div class="filter-group">
 
-            <label for="resourceTypeFilter">
-                Resource Type
-            </label>
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item">
+                <i class="fa-solid fa-truck"></i>
+                <span>Vehicles</span>
+            </a>
 
-            <select
-                id="resourceTypeFilter"
-                class="filter-select">
 
-                <option value="">
-                    All Resource Types
-                </option>
+            <a href="{{ url_for('volunteers.volunteer_list') }}"
+               class="nav-item">
+                <i class="fa-solid fa-users"></i>
+                <span>Volunteers</span>
+            </a>
 
-                <option value="food">
-                    Food
-                </option>
 
-                <option value="water">
-                    Water
-                </option>
+            <a href="{{ url_for('requests.request_list') }}"
+               class="nav-item">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Relief Requests</span>
+            </a>
 
-                <option value="medicine">
-                    Medicine
-                </option>
 
-                <option value="clothing">
-                    Clothing
-                </option>
+            <a href="{{ url_for('reports.reports_home') }}"
+               class="nav-item">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Reports</span>
+            </a>
 
-                <option value="shelter equipment">
-                    Shelter Equipment
-                </option>
+        </nav>
 
-                <option value="emergency equipment">
-                    Emergency Equipment
-                </option>
 
-                <option value="other">
-                    Other
-                </option>
+        <div class="sidebar-bottom">
 
-            </select>
+            <a href="{{ url_for('settings.settings_home') }}"
+               class="nav-item">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+            </a>
+
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
 
         </div>
 
-
-        <!-- STATUS FILTER -->
-
-        <div class="filter-group">
-
-            <label for="resourceStatusFilter">
-                Status
-            </label>
-
-            <select
-                id="resourceStatusFilter"
-                class="filter-select">
-
-                <option value="">
-                    All Statuses
-                </option>
-
-                <option value="available">
-                    Available
-                </option>
-
-                <option value="low stock">
-                    Low Stock
-                </option>
-
-                <option value="out of stock">
-                    Out of Stock
-                </option>
-
-            </select>
-
-        </div>
+    </aside>
 
 
-        <!-- CLEAR -->
+    <!-- MAIN CONTENT -->
 
-        <button type="button"
-                class="clear-filters-btn"
-                onclick="clearResourceFilters()">
-
-            <i class="fa-solid fa-rotate-left"></i>
-
-            Clear
-
-        </button>
+    <main class="dashboard-main">
 
 
-        <!-- RESULT COUNT -->
+        <!-- HEADER -->
 
-        <div class="filter-result"
-             id="resourceFilterResult">
+        <header class="dashboard-header">
 
-            Showing {{ resources | length }} resource record(s).
+            <div>
 
-        </div>
+                <h1>Resource Management</h1>
+
+                <p>
+                    Monitor and manage relief resources.
+                </p>
+
+            </div>
 
 
-    </div>
+            <div class="user-profile">
 
-    {% endif %}
+                <div class="user-avatar">
+                    {{ session["full_name"][0] | upper }}
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ session["full_name"] }}
+                    </strong>
+
+                    <span>
+                        {{ session["role"] | title }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
 
 
-    <!-- ========================================= -->
-    <!-- RESOURCE TABLE -->
-    <!-- ========================================= -->
+        <!-- RESOURCE CONTENT -->
 
-    {% if resources %}
+        <section class="dashboard-card"
+                 style="margin-top: 25px;">
 
-    <div class="resource-table-wrapper">
 
-        <table id="resourceTable">
+            <!-- CARD HEADER -->
 
-            <thead>
+            <div class="card-header">
 
-                <tr>
+                <div>
 
-                    <th>
-                        Resource
-                    </th>
+                    <h3>Resource Inventory</h3>
 
-                    <th>
-                        Type
-                    </th>
+                    <p>
+                        All available relief resources
+                    </p>
 
-                    <th>
-                        Quantity
-                    </th>
+                </div>
 
-                    <th>
-                        Location
-                    </th>
 
-                    <th>
+                <a href="{{ url_for('resource.add_resource') }}"
+                   class="quick-action"
+                   style="padding: 10px 18px;">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    <span>
+                        Add Resource
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- FILTERS -->
+
+            {% if resources %}
+
+            <div class="resource-filters">
+
+
+                <div class="filter-group search-group">
+
+                    <label for="resourceSearch">
+                        Search Resource
+                    </label>
+
+                    <input
+                        type="text"
+                        id="resourceSearch"
+                        class="filter-input"
+                        placeholder="Search by resource name or location..."
+                        autocomplete="off">
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label for="resourceTypeFilter">
+                        Resource Type
+                    </label>
+
+                    <select
+                        id="resourceTypeFilter"
+                        class="filter-select">
+
+                        <option value="">
+                            All Resource Types
+                        </option>
+
+                        <option value="food">Food</option>
+                        <option value="water">Water</option>
+                        <option value="medicine">Medicine</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="shelter equipment">
+                            Shelter Equipment
+                        </option>
+                        <option value="emergency equipment">
+                            Emergency Equipment
+                        </option>
+                        <option value="other">Other</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label for="resourceStatusFilter">
                         Status
-                    </th>
+                    </label>
 
-                    <th style="text-align: center;">
-                        Action
-                    </th>
+                    <select
+                        id="resourceStatusFilter"
+                        class="filter-select">
 
-                </tr>
+                        <option value="">
+                            All Statuses
+                        </option>
 
-            </thead>
+                        <option value="available">
+                            Available
+                        </option>
 
+                        <option value="low stock">
+                            Low Stock
+                        </option>
 
-            <tbody id="resourceTableBody">
+                        <option value="out of stock">
+                            Out of Stock
+                        </option>
 
-                {% for resource in resources %}
+                    </select>
 
-                <tr class="resource-row"
+                </div>
 
-                    data-name="{{ resource.resource_name | lower }}"
 
-                    data-location="{{ resource.location | lower }}"
+                <button
+                    type="button"
+                    class="clear-filters-btn"
+                    onclick="clearResourceFilters()">
 
-                    data-type="{{ resource.resource_type | lower }}"
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Clear
 
-                    data-status="{{ resource.status | lower }}">
+                </button>
 
 
-                    <!-- RESOURCE -->
+                <div
+                    class="filter-result"
+                    id="resourceFilterResult">
 
-                    <td>
+                    Showing {{ resources | length }}
+                    resource record(s).
 
-                        <strong>
+                </div>
 
-                            <a href="{{ url_for('resource.resource_details', resource_id=resource.resource_id) }}"
-                               style="text-decoration: none;">
+            </div>
 
-                                {{ resource.resource_name }}
+            {% endif %}
 
-                            </a>
 
-                        </strong>
+            <!-- RESOURCE TABLE -->
 
-                    </td>
+            {% if resources %}
 
+            <div class="resource-table-wrapper">
 
-                    <!-- TYPE -->
+                <table id="resourceTable">
 
-                    <td>
+                    <thead>
 
-                        {{ resource.resource_type }}
+                        <tr>
 
-                    </td>
+                            <th>Resource</th>
 
+                            <th>Type</th>
 
-                    <!-- QUANTITY -->
+                            <th>Quantity</th>
 
-                    <td>
+                            <th>Location</th>
 
-                        {{ resource.quantity }}
-                        {{ resource.unit }}
+                            <th>Status</th>
 
-                    </td>
+                            <th style="text-align: center;">
+                                Action
+                            </th>
 
+                        </tr>
 
-                    <!-- LOCATION -->
+                    </thead>
 
-                    <td>
 
-                        <i class="fa-solid fa-location-dot"></i>
+                    <tbody id="resourceTableBody">
 
-                        {{ resource.location }}
+                        {% for resource in resources %}
 
-                    </td>
+                        <tr
+                            class="resource-row"
+                            data-name="{{ resource.resource_name | lower }}"
+                            data-location="{{ resource.location | lower }}"
+                            data-type="{{ resource.resource_type | lower }}"
+                            data-status="{{ resource.status | lower }}">
 
 
-                    <!-- STATUS -->
+                            <!-- RESOURCE -->
 
-                    <td>
+                            <td>
 
-                        {{ resource.status }}
+                                <strong>
 
-                    </td>
+                                    <a
+                                        href="{{ url_for(
+                                            'resource.resource_details',
+                                            resource_id=resource.resource_id
+                                        ) }}"
+                                        style="text-decoration: none;">
 
+                                        {{ resource.resource_name }}
 
-                    <!-- ACTION -->
+                                    </a>
 
-                    <td style="text-align: center;">
+                                </strong>
 
+                            </td>
 
-                        <!-- EDIT -->
 
-                        <a href="{{ url_for('resource.edit_resource', resource_id=resource.resource_id) }}"
-                           style="text-decoration: none; margin-right: 12px;"
-                           title="Edit Resource">
+                            <!-- TYPE -->
 
-                            <i class="fa-solid fa-pen-to-square"></i>
+                            <td>
+                                {{ resource.resource_type }}
+                            </td>
 
-                        </a>
 
+                            <!-- QUANTITY -->
 
-                        <!-- DELETE -->
+                            <td>
 
-                        <form method="POST"
-                              action="{{ url_for('resource.delete_resource', resource_id=resource.resource_id) }}"
-                              style="display: inline;">
+                                {{ resource.quantity }}
+                                {{ resource.unit }}
 
-                            <!-- CSRF PROTECTION -->
+                            </td>
 
-                            <input type="hidden"
-                                   name="csrf_token"
-                                   value="{{ csrf_token() }}">
 
-                            <button type="button"
-                                    onclick="openDeleteModal(this)"
-                                    style="border: none; background: none; cursor: pointer;"
-                                    title="Delete Resource">
+                            <!-- LOCATION -->
 
-                                <i class="fa-solid fa-trash"></i>
+                            <td>
 
-                            </button>
+                                <i class="fa-solid fa-location-dot"></i>
 
-                        </form>
+                                {{ resource.location }}
 
-                    </td>
+                            </td>
 
-                </tr>
 
-                {% endfor %}
+                            <!-- STATUS -->
 
-            </tbody>
+                            <td>
+                                {{ resource.status }}
+                            </td>
 
-        </table>
 
-    </div>
+                            <!-- ACTION -->
 
+                            <td style="text-align: center;">
 
-    <!-- ========================================= -->
-    <!-- NO FILTER RESULTS -->
-    <!-- ========================================= -->
 
-    <div id="noFilterResults"
-         class="no-filter-results">
+                                <!-- EDIT -->
 
-        <i class="fa-solid fa-magnifying-glass"></i>
+                                <a
+                                    href="{{ url_for(
+                                        'resource.edit_resource',
+                                        resource_id=resource.resource_id
+                                    ) }}"
+                                    style="
+                                        text-decoration: none;
+                                        margin-right: 12px;
+                                    "
+                                    title="Edit Resource">
 
-        <h4>
-            No Matching Resources
-        </h4>
+                                    <i class="fa-solid fa-pen-to-square"></i>
 
-        <p>
-            No resource records match your current search or filters.
-        </p>
+                                </a>
 
-    </div>
 
+                                <!-- DELETE - ADMIN ONLY -->
 
-    {% else %}
+                                {% if session.get("role") == "admin" %}
 
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'resource.delete_resource',
+                                        resource_id=resource.resource_id
+                                    ) }}"
+                                    style="display: inline;">
 
-    <!-- ========================================= -->
-    <!-- EMPTY STATE -->
-    <!-- ========================================= -->
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token() }}">
 
-    <div class="empty-state"
-         style="padding: 60px 20px;">
+                                    <button
+                                        type="button"
+                                        onclick="openDeleteModal(this)"
+                                        style="
+                                            border: none;
+                                            background: none;
+                                            cursor: pointer;
+                                        "
+                                        title="Delete Resource">
 
-        <i class="fa-solid fa-box-open"></i>
+                                        <i class="fa-solid fa-trash"></i>
 
-        <h4>
-            No Resources Available
-        </h4>
+                                    </button>
 
-        <p>
-            There are currently no resources recorded.
-        </p>
+                                </form>
 
+                                {% endif %}
 
-        <a href="{{ url_for('resource.add_resource') }}"
-           class="quick-action"
-           style="display: inline-flex; margin-top: 15px; padding: 10px 18px;">
 
-            <i class="fa-solid fa-plus"></i>
+                            </td>
 
-            <span>
-                Add Your First Resource
-            </span>
+                        </tr>
 
-        </a>
+                        {% endfor %}
 
-    </div>
+                    </tbody>
 
-    {% endif %}
+                </table>
 
+            </div>
 
-</section>
 
-</main>
+            <!-- NO FILTER RESULTS -->
+
+            <div
+                id="noFilterResults"
+                class="no-filter-results">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <h4>
+                    No Matching Resources
+                </h4>
+
+                <p>
+                    No resource records match your current search or filters.
+                </p>
+
+            </div>
+
+
+            {% else %}
+
+
+            <!-- EMPTY STATE -->
+
+            <div
+                class="empty-state"
+                style="padding: 60px 20px;">
+
+                <i class="fa-solid fa-box-open"></i>
+
+                <h4>
+                    No Resources Available
+                </h4>
+
+                <p>
+                    There are currently no resources recorded.
+                </p>
+
+
+                <a
+                    href="{{ url_for('resource.add_resource') }}"
+                    class="quick-action"
+                    style="
+                        display: inline-flex;
+                        margin-top: 15px;
+                        padding: 10px 18px;
+                    ">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    <span>
+                        Add Your First Resource
+                    </span>
+
+                </a>
+
+            </div>
+
+            {% endif %}
+
+
+        </section>
+
+    </main>
 
 </div>
 
 
-<!-- ========================================= -->
-<!-- DELETE CONFIRMATION MODAL -->
-<!-- ========================================= -->
+<!-- DELETE MODAL -->
 
-<div class="delete-modal-overlay"
-     id="deleteModal">
+{% if session.get("role") == "admin" %}
 
-<div class="delete-modal">
+<div
+    class="delete-modal-overlay"
+    id="deleteModal">
 
-
-    <div class="delete-modal-icon">
-
-        <i class="fa-solid fa-trash"></i>
-
-    </div>
+    <div class="delete-modal">
 
 
-    <h3>
-        Delete Resource?
-    </h3>
-
-
-    <p>
-        Are you sure you want to delete this resource?
-        This action cannot be undone.
-    </p>
-
-
-    <div class="delete-modal-buttons">
-
-
-        <button type="button"
-                class="delete-cancel-btn"
-                onclick="closeDeleteModal()">
-
-            Cancel
-
-        </button>
-
-
-        <button type="button"
-                class="delete-confirm-btn"
-                onclick="confirmDelete()">
+        <div class="delete-modal-icon">
 
             <i class="fa-solid fa-trash"></i>
 
-            Delete Resource
+        </div>
 
-        </button>
 
+        <h3>
+            Delete Resource?
+        </h3>
+
+
+        <p>
+
+            Are you sure you want to delete this resource?
+
+            This action cannot be undone.
+
+        </p>
+
+
+        <div class="delete-modal-buttons">
+
+
+            <button
+                type="button"
+                class="delete-cancel-btn"
+                onclick="closeDeleteModal()">
+
+                Cancel
+
+            </button>
+
+
+            <button
+                type="button"
+                class="delete-confirm-btn"
+                onclick="confirmDelete()">
+
+                <i class="fa-solid fa-trash"></i>
+
+                Delete Resource
+
+            </button>
+
+
+        </div>
 
     </div>
 
-
 </div>
 
-</div>
+{% endif %}
 
 
-<!-- ========================================= -->
 <!-- JAVASCRIPT -->
-<!-- ========================================= -->
 
 <script>
 
-    let deleteForm = null;
+let deleteForm = null;
 
 
-    /* =========================================
-       DELETE MODAL
-       ========================================= */
+/* =========================================
+   DELETE MODAL
+   ========================================= */
 
-    function openDeleteModal(button) {
+function openDeleteModal(button) {
 
-        deleteForm = button.closest("form");
+    deleteForm = button.closest("form");
 
-        document
-            .getElementById("deleteModal")
-            .classList.add("show");
-    }
+    const modal =
+        document.getElementById("deleteModal");
 
+    if (modal) {
 
-    function closeDeleteModal() {
-
-        document
-            .getElementById("deleteModal")
-            .classList.remove("show");
-
-        deleteForm = null;
-    }
-
-
-    function confirmDelete() {
-
-        if (deleteForm) {
-
-            deleteForm.submit();
-
-        }
+        modal.classList.add("show");
 
     }
 
+}
 
-    /* Close when clicking outside modal */
 
-    document
-        .getElementById("deleteModal")
-        .addEventListener("click", function(event) {
+function closeDeleteModal() {
+
+    const modal =
+        document.getElementById("deleteModal");
+
+    if (modal) {
+
+        modal.classList.remove("show");
+
+    }
+
+    deleteForm = null;
+
+}
+
+
+function confirmDelete() {
+
+    if (deleteForm) {
+
+        deleteForm.submit();
+
+    }
+
+}
+
+
+/* =========================================
+   CLOSE MODAL
+   ========================================= */
+
+const deleteModal =
+    document.getElementById("deleteModal");
+
+if (deleteModal) {
+
+    deleteModal.addEventListener(
+        "click",
+        function(event) {
 
             if (event.target === this) {
 
@@ -1363,12 +1028,15 @@ body {
 
             }
 
-        });
+        }
+    );
+
+}
 
 
-    /* Close with Escape key */
-
-    document.addEventListener("keydown", function(event) {
+document.addEventListener(
+    "keydown",
+    function(event) {
 
         if (event.key === "Escape") {
 
@@ -1376,201 +1044,212 @@ body {
 
         }
 
-    });
+    }
+);
 
 
-    /* =========================================
-       RESOURCE SEARCH & FILTER
-       ========================================= */
+/* =========================================
+   RESOURCE SEARCH & FILTER
+   ========================================= */
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        function() {
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
 
 
-            const searchInput =
-                document.getElementById("resourceSearch");
+        const searchInput =
+            document.getElementById(
+                "resourceSearch"
+            );
 
 
-            const typeFilter =
-                document.getElementById("resourceTypeFilter");
+        const typeFilter =
+            document.getElementById(
+                "resourceTypeFilter"
+            );
 
 
-            const statusFilter =
-                document.getElementById("resourceStatusFilter");
+        const statusFilter =
+            document.getElementById(
+                "resourceStatusFilter"
+            );
 
 
-            const rows =
-                document.querySelectorAll(".resource-row");
+        const rows =
+            document.querySelectorAll(
+                ".resource-row"
+            );
 
 
-            const resultText =
-                document.getElementById("resourceFilterResult");
+        const resultText =
+            document.getElementById(
+                "resourceFilterResult"
+            );
 
 
-            const noResults =
-                document.getElementById("noFilterResults");
+        const noResults =
+            document.getElementById(
+                "noFilterResults"
+            );
 
 
-            if (
-                !searchInput ||
-                !typeFilter ||
-                !statusFilter
-            ) {
+        if (
+            !searchInput ||
+            !typeFilter ||
+            !statusFilter
+        ) {
 
-                return;
+            return;
 
-            }
+        }
 
 
-            function filterResources() {
+        function filterResources() {
 
 
-                const searchValue =
-                    searchInput.value
-                        .trim()
-                        .toLowerCase();
+            const searchValue =
+                searchInput.value
+                    .trim()
+                    .toLowerCase();
 
 
-                const selectedType =
-                    typeFilter.value
-                        .trim()
-                        .toLowerCase();
+            const selectedType =
+                typeFilter.value
+                    .trim()
+                    .toLowerCase();
 
 
-                const selectedStatus =
-                    statusFilter.value
-                        .trim()
-                        .toLowerCase();
+            const selectedStatus =
+                statusFilter.value
+                    .trim()
+                    .toLowerCase();
 
 
-                let visibleCount = 0;
+            let visibleCount = 0;
 
 
-                rows.forEach(
-                    function(row) {
+            rows.forEach(
+                function(row) {
 
 
-                        const name =
-                            row.dataset.name || "";
+                    const name =
+                        row.dataset.name || "";
 
 
-                        const location =
-                            row.dataset.location || "";
+                    const location =
+                        row.dataset.location || "";
 
 
-                        const type =
-                            row.dataset.type || "";
+                    const type =
+                        row.dataset.type || "";
 
 
-                        const status =
-                            row.dataset.status || "";
+                    const status =
+                        row.dataset.status || "";
 
 
-                        const matchesSearch =
-                            !searchValue ||
-                            name.includes(searchValue) ||
-                            location.includes(searchValue);
+                    const matchesSearch =
+                        !searchValue ||
+                        name.includes(searchValue) ||
+                        location.includes(searchValue);
 
 
-                        const matchesType =
-                            !selectedType ||
-                            type === selectedType;
+                    const matchesType =
+                        !selectedType ||
+                        type === selectedType;
 
 
-                        const matchesStatus =
-                            !selectedStatus ||
-                            status === selectedStatus;
+                    const matchesStatus =
+                        !selectedStatus ||
+                        status === selectedStatus;
 
 
-                        const shouldShow =
-                            matchesSearch &&
-                            matchesType &&
-                            matchesStatus;
+                    const shouldShow =
+                        matchesSearch &&
+                        matchesType &&
+                        matchesStatus;
 
 
-                        if (shouldShow) {
+                    if (shouldShow) {
 
-                            row.style.display = "";
+                        row.style.display = "";
 
-                            visibleCount++;
-
-                        } else {
-
-                            row.style.display = "none";
-
-                        }
-
-
-                    }
-                );
-
-
-                if (resultText) {
-
-                    resultText.textContent =
-                        "Showing " +
-                        visibleCount +
-                        " resource record(s).";
-
-                }
-
-
-                if (noResults) {
-
-                    if (visibleCount === 0) {
-
-                        noResults.style.display =
-                            "block";
+                        visibleCount++;
 
                     } else {
 
-                        noResults.style.display =
-                            "none";
+                        row.style.display = "none";
 
                     }
+
+
+                }
+            );
+
+
+            if (resultText) {
+
+                resultText.textContent =
+                    "Showing " +
+                    visibleCount +
+                    " resource record(s).";
+
+            }
+
+
+            if (noResults) {
+
+                if (visibleCount === 0) {
+
+                    noResults.style.display =
+                        "block";
+
+                } else {
+
+                    noResults.style.display =
+                        "none";
 
                 }
 
             }
 
-
-            window.clearResourceFilters =
-                function() {
-
-
-                    searchInput.value = "";
-
-                    typeFilter.value = "";
-
-                    statusFilter.value = "";
-
-
-                    filterResources();
-
-                };
-
-
-            searchInput.addEventListener(
-                "input",
-                filterResources
-            );
-
-
-            typeFilter.addEventListener(
-                "change",
-                filterResources
-            );
-
-
-            statusFilter.addEventListener(
-                "change",
-                filterResources
-            );
-
-
         }
-    );
+
+
+        window.clearResourceFilters =
+            function() {
+
+                searchInput.value = "";
+
+                typeFilter.value = "";
+
+                statusFilter.value = "";
+
+                filterResources();
+
+            };
+
+
+        searchInput.addEventListener(
+            "input",
+            filterResources
+        );
+
+
+        typeFilter.addEventListener(
+            "change",
+            filterResources
+        );
+
+
+        statusFilter.addEventListener(
+            "change",
+            filterResources
+        );
+
+
+    }
+);
 
 </script>
 
