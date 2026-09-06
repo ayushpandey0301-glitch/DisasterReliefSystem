@@ -102,7 +102,6 @@ def add_shelter():
         flash("Please login first.", "error")
         return redirect(url_for("auth.login"))
 
-    # ROLE PERMISSION
     if not can_manage_shelters():
 
         flash(
@@ -390,21 +389,21 @@ def add_shelter():
                 )
 
 
-            connection = None
-            cursor = None
+            validation_connection = None
+            validation_cursor = None
 
             try:
 
-                connection = get_db_connection()
-                cursor = connection.cursor()
+                validation_connection = get_db_connection()
+                validation_cursor = validation_connection.cursor()
 
-                cursor.execute("""
+                validation_cursor.execute("""
                     SELECT disaster_id
                     FROM disasters
                     WHERE disaster_id = %s
                 """, (disaster_id_value,))
 
-                disaster_record = cursor.fetchone()
+                disaster_record = validation_cursor.fetchone()
 
                 if not disaster_record:
 
@@ -419,11 +418,11 @@ def add_shelter():
 
             finally:
 
-                if cursor:
-                    cursor.close()
+                if validation_cursor:
+                    validation_cursor.close()
 
-                if connection:
-                    connection.close()
+                if validation_connection:
+                    validation_connection.close()
 
 
         # DATABASE INSERT
@@ -599,7 +598,6 @@ def edit_shelter(shelter_id):
         flash("Please login first.", "error")
         return redirect(url_for("auth.login"))
 
-    # ROLE PERMISSION
     if not can_manage_shelters():
 
         flash(
@@ -1003,97 +1001,3 @@ def edit_shelter(shelter_id):
 
         if connection:
             connection.close()
-
-
-# =========================================================
-# DELETE SHELTER
-# =========================================================
-
-@shelters.route(
-    "/shelters/<int:shelter_id>/delete",
-    methods=["POST"]
-)
-def delete_shelter(shelter_id):
-
-    if "user_id" not in session:
-        flash("Please login first.", "error")
-        return redirect(url_for("auth.login"))
-
-    # ROLE PERMISSION
-    if not can_manage_shelters():
-
-        flash(
-            "You do not have permission to delete shelters.",
-            "error"
-        )
-
-        return redirect(
-            url_for("shelters.shelter_list")
-        )
-
-    connection = None
-    cursor = None
-
-    try:
-
-        connection = get_db_connection()
-        cursor = connection.cursor()
-
-        cursor.execute("""
-            SELECT shelter_id
-            FROM shelters
-            WHERE shelter_id = %s
-        """, (shelter_id,))
-
-        shelter = cursor.fetchone()
-
-        if not shelter:
-
-            flash(
-                "Shelter not found.",
-                "error"
-            )
-
-            return redirect(
-                url_for("shelters.shelter_list")
-            )
-
-
-        cursor.execute("""
-            DELETE FROM shelters
-            WHERE shelter_id = %s
-        """, (shelter_id,))
-
-        connection.commit()
-
-        flash(
-            "Shelter deleted successfully.",
-            "success"
-        )
-
-    except Exception as e:
-
-        if connection:
-            connection.rollback()
-
-        print(
-            "DELETE SHELTER ERROR:",
-            repr(e)
-        )
-
-        flash(
-            "Unable to delete shelter. It may be linked to other records.",
-            "error"
-        )
-
-    finally:
-
-        if cursor:
-            cursor.close()
-
-        if connection:
-            connection.close()
-
-    return redirect(
-        url_for("shelters.shelter_list")
-    )
