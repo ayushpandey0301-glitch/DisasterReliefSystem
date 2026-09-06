@@ -4,6 +4,7 @@
 Disasters | Disaster Relief Management System
 {% endblock %}
 
+
 {% block extra_css %}
 
 <style>
@@ -154,13 +155,10 @@ Disasters | Disaster Relief Management System
     align-items: center;
     gap: 11px;
     flex-shrink: 0;
-
     padding: 8px 13px 8px 8px;
-
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 13px;
-
     box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
 }
 
@@ -232,19 +230,13 @@ Disasters | Disaster Relief Management System
     align-items: center;
     justify-content: center;
     gap: 8px;
-
     background: #2563eb;
     color: white;
-
     text-decoration: none;
-
     border-radius: 9px;
-
     font-size: 13px;
     font-weight: 600;
-
     border: none;
-
     transition:
         background 0.2s ease,
         transform 0.2s ease,
@@ -268,16 +260,11 @@ Disasters | Disaster Relief Management System
     flex-wrap: wrap;
     align-items: end;
     gap: 15px;
-
     margin: 20px 24px 0;
     padding: 18px;
-
     background: #f8fafc;
-
     border: 1px solid #e5e7eb;
     border-radius: 13px;
-
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .filter-group {
@@ -300,25 +287,15 @@ Disasters | Disaster Relief Management System
 .filter-input,
 .filter-select {
     height: 42px;
-
     padding: 0 12px;
-
     border: 1px solid #d1d5db;
     border-radius: 9px;
-
     background: white;
     color: #111827;
-
     font-family: "Inter", sans-serif;
     font-size: 13px;
-
     outline: none;
-
     box-sizing: border-box;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
 }
 
 .filter-input {
@@ -329,10 +306,6 @@ Disasters | Disaster Relief Management System
     min-width: 165px;
 }
 
-.filter-input::placeholder {
-    color: #9ca3af;
-}
-
 .filter-input:focus,
 .filter-select:focus {
     border-color: #2563eb;
@@ -341,38 +314,24 @@ Disasters | Disaster Relief Management System
 
 .clear-filters-btn {
     height: 42px;
-
     padding: 0 16px;
-
     border: none;
     border-radius: 9px;
-
     background: #111827;
     color: white;
-
     cursor: pointer;
-
     font-size: 13px;
     font-weight: 600;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
 }
 
 .clear-filters-btn:hover {
     background: #1f2937;
-    transform: translateY(-1px);
 }
 
 .filter-result {
     width: 100%;
-
     color: #6b7280;
-
     font-size: 12px;
-
-    margin-top: 0;
 }
 
 
@@ -382,22 +341,16 @@ Disasters | Disaster Relief Management System
 
 .table-container {
     width: 100%;
-
     overflow-x: auto;
-
     margin-top: 20px;
-
     padding: 0 24px 24px;
-
     box-sizing: border-box;
 }
 
 .disaster-table {
     width: 100%;
-
     border-collapse: separate;
     border-spacing: 0;
-
     min-width: 850px;
 }
 
@@ -407,77 +360,37 @@ Disasters | Disaster Relief Management System
 
 .disaster-table th {
     padding: 13px 12px;
-
     text-align: left;
-
     font-size: 11px;
-
     font-weight: 700;
-
     color: #475569;
-
     border-top: 1px solid #e5e7eb;
     border-bottom: 1px solid #e5e7eb;
-
     white-space: nowrap;
-
     text-transform: uppercase;
-
-    letter-spacing: 0.35px;
-}
-
-.disaster-table th:first-child {
-    border-left: 1px solid #e5e7eb;
-    border-top-left-radius: 9px;
-}
-
-.disaster-table th:last-child {
-    border-right: 1px solid #e5e7eb;
-    border-top-right-radius: 9px;
 }
 
 .disaster-table td {
     padding: 14px 12px;
-
     font-size: 13px;
-
     color: #4b5563;
-
     border-bottom: 1px solid #eef2f7;
-
     vertical-align: middle;
-}
-
-.disaster-table tbody tr {
-    transition: background 0.15s ease;
 }
 
 .disaster-table tbody tr:hover {
     background: #f8fafc;
 }
 
-.disaster-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
 .disaster-name-link {
     color: #2563eb;
-
     text-decoration: none;
-
     font-weight: 650;
-
-    transition: color 0.2s ease;
 }
 
 .disaster-name-link:hover {
     color: #1d4ed8;
     text-decoration: underline;
-}
-
-.disaster-table td .fa-location-dot {
-    color: #94a3b8;
-    margin-right: 4px;
 }
 
 
@@ -489,18 +402,12 @@ Disasters | Disaster Relief Management System
 .severity-badge,
 .status-badge {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
-
     padding: 5px 10px;
-
     border-radius: 999px;
-
     font-size: 11px;
-
     font-weight: 650;
-
     white-space: nowrap;
 }
 
@@ -542,30 +449,16 @@ Disasters | Disaster Relief Management System
 .action-btn {
     width: 34px;
     height: 34px;
-
     border: none;
-
     background: transparent;
-
     cursor: pointer;
-
     padding: 0;
-
     border-radius: 8px;
-
     font-size: 14px;
-
     display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
-}
-
-.action-btn:hover {
-    transform: translateY(-1px);
+    text-decoration: none;
 }
 
 .edit-btn {
@@ -586,13 +479,12 @@ Disasters | Disaster Relief Management System
 
 
 /* =========================================================
-   EMPTY / NO RESULTS
+   EMPTY STATE
    ========================================================= */
 
 .empty-state,
 .no-filter-results {
     text-align: center;
-
     padding: 65px 20px;
 }
 
@@ -600,39 +492,27 @@ Disasters | Disaster Relief Management System
 .no-filter-results i {
     width: 64px;
     height: 64px;
-
     margin: 0 auto 16px;
-
     border-radius: 50%;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: #f8fafc;
-
     font-size: 28px;
-
     color: #94a3b8;
 }
 
 .empty-state h4,
 .no-filter-results h4 {
     margin: 0 0 8px;
-
-    font-family: "Poppins", sans-serif;
-
     color: #374151;
-
     font-size: 18px;
 }
 
 .empty-state p,
 .no-filter-results p {
     margin: 0;
-
     color: #6b7280;
-
     font-size: 13px;
 }
 
@@ -647,20 +527,13 @@ Disasters | Disaster Relief Management System
 
 .delete-modal-overlay {
     position: fixed;
-
     inset: 0;
-
     background: rgba(15, 23, 42, 0.58);
-
     display: none;
-
     align-items: center;
     justify-content: center;
-
     z-index: 9999;
-
     padding: 20px;
-
     backdrop-filter: blur(3px);
 }
 
@@ -670,158 +543,79 @@ Disasters | Disaster Relief Management System
 
 .delete-modal {
     width: 100%;
-
     max-width: 430px;
-
     background: white;
-
     border-radius: 18px;
-
     padding: 32px;
-
     text-align: center;
-
-    box-shadow:
-        0 20px 60px rgba(15, 23, 42, 0.25);
-
-    animation: disasterDeleteModalShow 0.20s ease;
-}
-
-@keyframes disasterDeleteModalShow {
-
-    from {
-        opacity: 0;
-        transform: scale(0.94);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
 }
 
 .delete-modal-icon {
     width: 64px;
     height: 64px;
-
     border-radius: 50%;
-
     margin: 0 auto 18px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: #fef2f2;
-
     color: #dc2626;
-
     font-size: 25px;
 }
 
 .delete-modal h3 {
     margin: 0 0 10px;
-
     color: #111827;
-
-    font-family: "Poppins", sans-serif;
-
     font-size: 20px;
-
     font-weight: 700;
 }
 
 .delete-modal p {
     margin: 0;
-
     color: #6b7280;
-
     font-size: 14px;
-
     line-height: 1.6;
 }
 
 .delete-modal-actions {
     display: flex;
-
     justify-content: center;
-
     gap: 12px;
-
     margin-top: 25px;
 }
 
 .delete-cancel-btn,
 .delete-confirm-btn {
     min-width: 120px;
-
     height: 42px;
-
     padding: 0 18px;
-
     border-radius: 9px;
-
     cursor: pointer;
-
     font-size: 13px;
-
     font-weight: 600;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
 }
 
 .delete-cancel-btn {
     border: 1px solid #d1d5db;
-
     background: white;
-
     color: #374151;
-}
-
-.delete-cancel-btn:hover {
-    background: #f9fafb;
-
-    transform: translateY(-1px);
 }
 
 .delete-confirm-btn {
     border: none;
-
     background: #dc2626;
-
     color: white;
 }
 
 .delete-confirm-btn:hover {
     background: #b91c1c;
-
-    transform: translateY(-1px);
 }
 
 
 /* =========================================================
    RESPONSIVE
    ========================================================= */
-
-@media (max-width: 1000px) {
-
-    .sidebar {
-        width: 220px;
-    }
-
-    .dashboard-main {
-        padding: 24px;
-    }
-
-    .page-header h1 {
-        font-size: 27px;
-    }
-
-}
-
 
 @media (max-width: 800px) {
 
@@ -831,19 +625,16 @@ Disasters | Disaster Relief Management System
 
     .sidebar {
         width: 100%;
-
         min-height: auto;
     }
 
     .nav-menu {
         flex-direction: row;
-
         flex-wrap: wrap;
     }
 
     .nav-item {
         flex: 1;
-
         min-width: 130px;
     }
 
@@ -853,77 +644,7 @@ Disasters | Disaster Relief Management System
 
     .page-header {
         flex-direction: column;
-
         align-items: flex-start;
-    }
-
-    .user-profile {
-        align-self: flex-start;
-    }
-
-}
-
-
-@media (max-width: 600px) {
-
-    .dashboard-main {
-        padding: 18px;
-    }
-
-    .page-header h1 {
-        font-size: 23px;
-    }
-
-    .page-header p {
-        font-size: 13px;
-    }
-
-    .card-header {
-        flex-direction: column;
-
-        align-items: flex-start;
-    }
-
-    .disaster-filters {
-        margin-left: 18px;
-
-        margin-right: 18px;
-
-        padding: 15px;
-    }
-
-    .filter-group,
-    .filter-group.search-group {
-        width: 100%;
-
-        min-width: 100%;
-    }
-
-    .filter-input,
-    .filter-select,
-    .clear-filters-btn {
-        width: 100%;
-
-        min-width: 100%;
-    }
-
-    .table-container {
-        padding-left: 18px;
-
-        padding-right: 18px;
-    }
-
-    .delete-modal {
-        padding: 26px 20px;
-    }
-
-    .delete-modal-actions {
-        flex-direction: column;
-    }
-
-    .delete-cancel-btn,
-    .delete-confirm-btn {
-        width: 100%;
     }
 
 }
@@ -944,176 +665,110 @@ Disasters | Disaster Relief Management System
 
     <aside class="sidebar">
 
-
-        <!-- BRAND -->
-
         <div class="sidebar-brand">
 
             <div class="brand-icon">
-
                 <i class="fa-solid fa-hand-holding-heart"></i>
-
             </div>
 
             <div>
-
-                <h2>
-                    DRRMS
-                </h2>
-
-                <span>
-                    Disaster Relief
-                </span>
-
+                <h2>DRRMS</h2>
+                <span>Disaster Relief</span>
             </div>
 
         </div>
 
 
-        <!-- NAVIGATION -->
-
         <nav class="nav-menu">
-
-
-            <!-- DASHBOARD -->
 
             <a href="{{ url_for('dashboard.dashboard_home') }}"
                class="nav-item">
 
                 <i class="fa-solid fa-chart-line"></i>
-
-                <span>
-                    Dashboard
-                </span>
+                <span>Dashboard</span>
 
             </a>
 
-
-            <!-- DISASTERS -->
 
             <a href="{{ url_for('disaster.disaster_list') }}"
                class="nav-item active">
 
                 <i class="fa-solid fa-triangle-exclamation"></i>
-
-                <span>
-                    Disasters
-                </span>
+                <span>Disasters</span>
 
             </a>
 
-
-            <!-- RESOURCES -->
 
             <a href="{{ url_for('resource.resource_list') }}"
                class="nav-item">
 
                 <i class="fa-solid fa-boxes-stacked"></i>
-
-                <span>
-                    Resources
-                </span>
+                <span>Resources</span>
 
             </a>
 
-
-            <!-- SHELTERS -->
 
             <a href="{{ url_for('shelters.shelter_list') }}"
                class="nav-item">
 
                 <i class="fa-solid fa-house-medical"></i>
-
-                <span>
-                    Shelters
-                </span>
+                <span>Shelters</span>
 
             </a>
 
-
-            <!-- VEHICLES -->
 
             <a href="{{ url_for('vehicles.vehicle_list') }}"
                class="nav-item">
 
                 <i class="fa-solid fa-truck"></i>
-
-                <span>
-                    Vehicles
-                </span>
+                <span>Vehicles</span>
 
             </a>
 
-
-            <!-- VOLUNTEERS -->
 
             <a href="{{ url_for('volunteers.volunteer_list') }}"
                class="nav-item">
 
                 <i class="fa-solid fa-users"></i>
-
-                <span>
-                    Volunteers
-                </span>
+                <span>Volunteers</span>
 
             </a>
 
-
-            <!-- RELIEF REQUESTS -->
 
             <a href="{{ url_for('requests.request_list') }}"
                class="nav-item">
 
                 <i class="fa-solid fa-clipboard-list"></i>
-
-                <span>
-                    Relief Requests
-                </span>
+                <span>Relief Requests</span>
 
             </a>
 
-
-            <!-- REPORTS -->
 
             <a href="{{ url_for('reports.reports_home') }}"
                class="nav-item">
 
                 <i class="fa-solid fa-chart-pie"></i>
-
-                <span>
-                    Reports
-                </span>
+                <span>Reports</span>
 
             </a>
 
-
-            <!-- SETTINGS -->
 
             <a href="{{ url_for('settings.settings_home') }}"
                class="nav-item">
 
                 <i class="fa-solid fa-gear"></i>
-
-                <span>
-                    Settings
-                </span>
+                <span>Settings</span>
 
             </a>
 
-
-            <!-- LOGOUT -->
 
             <a href="{{ url_for('auth.logout') }}"
                class="nav-item logout">
 
                 <i class="fa-solid fa-right-from-bracket"></i>
-
-                <span>
-                    Logout
-                </span>
+                <span>Logout</span>
 
             </a>
-
 
         </nav>
 
@@ -1131,7 +786,6 @@ Disasters | Disaster Relief Management System
 
         <div class="page-header">
 
-
             <div>
 
                 <h1>
@@ -1145,30 +799,28 @@ Disasters | Disaster Relief Management System
             </div>
 
 
-            <!-- USER -->
-
             <div class="user-profile">
 
                 <div class="user-avatar">
 
-                    {{ session["full_name"][0] | upper }}
+                    {{ session.get("full_name", "U")[0] | upper }}
 
                 </div>
+
 
                 <div>
 
                     <strong>
-                        {{ session["full_name"] }}
+                        {{ session.get("full_name", "User") }}
                     </strong>
 
                     <span>
-                        {{ session["role"] | title }}
+                        {{ session.get("role", "User") | title }}
                     </span>
 
                 </div>
 
             </div>
-
 
         </div>
 
@@ -1184,7 +836,6 @@ Disasters | Disaster Relief Management System
 
             <div class="card-header">
 
-
                 <div>
 
                     <h3>
@@ -1198,8 +849,6 @@ Disasters | Disaster Relief Management System
                 </div>
 
 
-                <!-- ADD DISASTER -->
-
                 <a href="{{ url_for('disaster.add_disaster') }}"
                    class="quick-action"
                    style="padding: 10px 18px;">
@@ -1212,7 +861,6 @@ Disasters | Disaster Relief Management System
 
                 </a>
 
-
             </div>
 
 
@@ -1224,8 +872,6 @@ Disasters | Disaster Relief Management System
 
             <div class="disaster-filters">
 
-
-                <!-- SEARCH -->
 
                 <div class="filter-group search-group">
 
@@ -1242,8 +888,6 @@ Disasters | Disaster Relief Management System
 
                 </div>
 
-
-                <!-- DISASTER TYPE -->
 
                 <div class="filter-group">
 
@@ -1284,8 +928,6 @@ Disasters | Disaster Relief Management System
                 </div>
 
 
-                <!-- SEVERITY -->
-
                 <div class="filter-group">
 
                     <label for="disasterSeverityFilter">
@@ -1298,6 +940,10 @@ Disasters | Disaster Relief Management System
 
                         <option value="">
                             All Severities
+                        </option>
+
+                        <option value="critical">
+                            Critical
                         </option>
 
                         <option value="high">
@@ -1316,8 +962,6 @@ Disasters | Disaster Relief Management System
 
                 </div>
 
-
-                <!-- STATUS -->
 
                 <div class="filter-group">
 
@@ -1341,16 +985,19 @@ Disasters | Disaster Relief Management System
                             Resolved
                         </option>
 
+                        <option value="closed">
+                            Closed
+                        </option>
+
                     </select>
 
                 </div>
 
 
-                <!-- CLEAR -->
-
-                <button type="button"
-                        class="clear-filters-btn"
-                        onclick="clearDisasterFilters()">
+                <button
+                    type="button"
+                    class="clear-filters-btn"
+                    onclick="clearDisasterFilters()">
 
                     <i class="fa-solid fa-rotate-left"></i>
 
@@ -1359,15 +1006,13 @@ Disasters | Disaster Relief Management System
                 </button>
 
 
-                <!-- RESULT COUNT -->
-
-                <div class="filter-result"
-                     id="filterResult">
+                <div
+                    class="filter-result"
+                    id="filterResult">
 
                     Showing {{ disasters | length }} disaster record(s).
 
                 </div>
-
 
             </div>
 
@@ -1382,8 +1027,9 @@ Disasters | Disaster Relief Management System
 
             <div class="table-container">
 
-                <table id="disasterTable"
-                       class="disaster-table">
+                <table
+                    id="disasterTable"
+                    class="disaster-table">
 
 
                     <thead>
@@ -1428,16 +1074,12 @@ Disasters | Disaster Relief Management System
 
                         {% for disaster in disasters %}
 
-                        <tr class="disaster-row"
-
+                        <tr
+                            class="disaster-row"
                             data-name="{{ disaster.disaster_name | lower }}"
-
                             data-location="{{ disaster.location | lower }}"
-
                             data-type="{{ disaster.disaster_type | lower }}"
-
                             data-severity="{{ disaster.severity | lower }}"
-
                             data-status="{{ disaster.status | lower }}">
 
 
@@ -1447,8 +1089,9 @@ Disasters | Disaster Relief Management System
 
                                 <strong>
 
-                                    <a href="{{ url_for('disaster.disaster_details', disaster_id=disaster.disaster_id) }}"
-                                       class="disaster-name-link">
+                                    <a
+                                        href="{{ url_for('disaster.disaster_details', disaster_id=disaster.disaster_id) }}"
+                                        class="disaster-name-link">
 
                                         {{ disaster.disaster_name }}
 
@@ -1487,7 +1130,13 @@ Disasters | Disaster Relief Management System
 
                             <td>
 
-                                {% if disaster.severity | lower == "high" %}
+                                {% if disaster.severity | lower == "critical" %}
+
+                                <span class="severity-badge severity-high">
+                                    Critical
+                                </span>
+
+                                {% elif disaster.severity | lower == "high" %}
 
                                 <span class="severity-badge severity-high">
                                     High
@@ -1552,47 +1201,50 @@ Disasters | Disaster Relief Management System
                             </td>
 
 
-                            <!-- ACTION -->
+                            <!-- =====================================
+                                 ACTION
+                                 ===================================== -->
 
                             <td style="text-align: center;">
 
 
                                 <!-- EDIT -->
 
-                                <a href="{{ url_for('disaster.edit_disaster', disaster_id=disaster.disaster_id) }}"
-                                   class="action-btn edit-btn"
-                                   title="Edit Disaster">
+                                <a
+                                    href="{{ url_for('disaster.edit_disaster', disaster_id=disaster.disaster_id) }}"
+                                    class="action-btn edit-btn"
+                                    title="Edit Disaster">
 
                                     <i class="fa-solid fa-pen-to-square"></i>
 
                                 </a>
 
 
-                                <!-- DELETE -->
+                                <!-- =====================================
+                                     DELETE
+                                     ADMIN ONLY
+                                     ===================================== -->
 
-                                <form method="POST"
-                                      action="{{ url_for('disaster.delete_disaster', disaster_id=disaster.disaster_id) }}"
-                                      style="display: inline;">
+                                {% if session.get("role", "") | lower == "admin" %}
 
-                                    <!-- CSRF TOKEN -->
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('disaster.delete_disaster', disaster_id=disaster.disaster_id) }}"
+                                    style="display: inline;">
 
-                                    <input
-                                        type="hidden"
-                                        name="csrf_token"
-                                        value="{{ csrf_token() }}">
-
-
-                                    <button type="button"
-                                            class="action-btn delete-btn"
-                                            onclick="openDeleteModal(this)"
-                                            title="Delete Disaster">
+                                    <button
+                                        type="button"
+                                        class="action-btn delete-btn"
+                                        onclick="openDeleteModal(this)"
+                                        title="Delete Disaster">
 
                                         <i class="fa-solid fa-trash"></i>
 
                                     </button>
 
-
                                 </form>
+
+                                {% endif %}
 
 
                             </td>
@@ -1610,12 +1262,11 @@ Disasters | Disaster Relief Management System
             </div>
 
 
-            <!-- =================================================
-                 NO FILTER RESULTS
-                 ================================================= -->
+            <!-- NO FILTER RESULTS -->
 
-            <div id="noFilterResults"
-                 class="no-filter-results">
+            <div
+                id="noFilterResults"
+                class="no-filter-results">
 
                 <i class="fa-solid fa-magnifying-glass"></i>
 
@@ -1633,9 +1284,7 @@ Disasters | Disaster Relief Management System
             {% else %}
 
 
-            <!-- =================================================
-                 EMPTY STATE
-                 ================================================= -->
+            <!-- EMPTY STATE -->
 
             <div class="empty-state">
 
@@ -1650,9 +1299,14 @@ Disasters | Disaster Relief Management System
                 </p>
 
 
-                <a href="{{ url_for('disaster.add_disaster') }}"
-                   class="quick-action"
-                   style="display: inline-flex; margin-top: 15px; padding: 10px 18px;">
+                <a
+                    href="{{ url_for('disaster.add_disaster') }}"
+                    class="quick-action"
+                    style="
+                        display: inline-flex;
+                        margin-top: 15px;
+                        padding: 10px 18px;
+                    ">
 
                     <i class="fa-solid fa-plus"></i>
 
@@ -1662,8 +1316,8 @@ Disasters | Disaster Relief Management System
 
                 </a>
 
-
             </div>
+
 
             {% endif %}
 
@@ -1681,8 +1335,11 @@ Disasters | Disaster Relief Management System
      DELETE MODAL
      ========================================================= -->
 
-<div id="deleteModal"
-     class="delete-modal-overlay">
+{% if session.get("role", "") | lower == "admin" %}
+
+<div
+    id="deleteModal"
+    class="delete-modal-overlay">
 
 
     <div class="delete-modal">
@@ -1709,18 +1366,20 @@ Disasters | Disaster Relief Management System
         <div class="delete-modal-actions">
 
 
-            <button type="button"
-                    class="delete-cancel-btn"
-                    onclick="closeDeleteModal()">
+            <button
+                type="button"
+                class="delete-cancel-btn"
+                onclick="closeDeleteModal()">
 
                 Cancel
 
             </button>
 
 
-            <button type="button"
-                    class="delete-confirm-btn"
-                    onclick="confirmDelete()">
+            <button
+                type="button"
+                class="delete-confirm-btn"
+                onclick="confirmDelete()">
 
                 Delete Disaster
 
@@ -1732,7 +1391,10 @@ Disasters | Disaster Relief Management System
 
     </div>
 
+
 </div>
+
+{% endif %}
 
 
 <!-- =========================================================
@@ -1740,6 +1402,7 @@ Disasters | Disaster Relief Management System
      ========================================================= -->
 
 <script>
+
 
 let selectedDeleteForm = null;
 
@@ -1750,11 +1413,9 @@ let selectedDeleteForm = null;
 
 function openDeleteModal(button) {
 
-    selectedDeleteForm =
-        button.closest("form");
+    selectedDeleteForm = button.closest("form");
 
-    const modal =
-        document.getElementById("deleteModal");
+    const modal = document.getElementById("deleteModal");
 
     if (modal) {
 
@@ -1769,8 +1430,7 @@ function openDeleteModal(button) {
 
 function closeDeleteModal() {
 
-    const modal =
-        document.getElementById("deleteModal");
+    const modal = document.getElementById("deleteModal");
 
     if (modal) {
 
@@ -1789,9 +1449,7 @@ function confirmDelete() {
 
     if (selectedDeleteForm) {
 
-        HTMLFormElement.prototype.submit.call(
-            selectedDeleteForm
-        );
+        selectedDeleteForm.submit();
 
     }
 
@@ -1802,274 +1460,267 @@ function confirmDelete() {
    CLOSE MODAL WHEN CLICKING OUTSIDE
    ========================================================= */
 
-document.addEventListener(
-    "click",
-    function (event) {
+document.addEventListener("click", function(event) {
 
-        const modal =
-            document.getElementById("deleteModal");
+    const modal = document.getElementById("deleteModal");
 
-        if (
-            modal &&
-            event.target === modal
-        ) {
+    if (
+        modal &&
+        event.target === modal
+    ) {
 
-            closeDeleteModal();
-
-        }
+        closeDeleteModal();
 
     }
-);
+
+});
 
 
 /* =========================================================
    ESC KEY
    ========================================================= */
 
-document.addEventListener(
-    "keydown",
-    function (event) {
+document.addEventListener("keydown", function(event) {
 
-        const modal =
-            document.getElementById("deleteModal");
+    const modal = document.getElementById("deleteModal");
 
-        if (
-            event.key === "Escape" &&
-            modal &&
-            modal.classList.contains("show")
-        ) {
+    if (
+        event.key === "Escape" &&
+        modal &&
+        modal.classList.contains("show")
+    ) {
 
-            closeDeleteModal();
-
-        }
+        closeDeleteModal();
 
     }
-);
+
+});
 
 
 /* =========================================================
    SEARCH & FILTER
    ========================================================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", function() {
 
 
-        const searchInput =
-            document.getElementById("disasterSearch");
+    const searchInput =
+        document.getElementById("disasterSearch");
 
 
-        const typeFilter =
-            document.getElementById("disasterTypeFilter");
+    const typeFilter =
+        document.getElementById("disasterTypeFilter");
 
 
-        const severityFilter =
-            document.getElementById("disasterSeverityFilter");
+    const severityFilter =
+        document.getElementById("disasterSeverityFilter");
 
 
-        const statusFilter =
-            document.getElementById("disasterStatusFilter");
+    const statusFilter =
+        document.getElementById("disasterStatusFilter");
 
 
-        const rows =
-            document.querySelectorAll(".disaster-row");
+    const rows =
+        document.querySelectorAll(".disaster-row");
 
 
-        const resultText =
-            document.getElementById("filterResult");
+    const resultText =
+        document.getElementById("filterResult");
 
 
-        const noResults =
-            document.getElementById("noFilterResults");
+    const noResults =
+        document.getElementById("noFilterResults");
 
 
-        if (
-            !searchInput ||
-            !typeFilter ||
-            !severityFilter ||
-            !statusFilter
-        ) {
+    if (
+        !searchInput ||
+        !typeFilter ||
+        !severityFilter ||
+        !statusFilter
+    ) {
 
-            return;
+        return;
 
-        }
+    }
 
 
-        function filterDisasters() {
+    function filterDisasters() {
 
 
-            const searchValue =
-                searchInput.value
-                    .trim()
-                    .toLowerCase();
+        const searchValue =
+            searchInput.value
+                .trim()
+                .toLowerCase();
 
 
-            const selectedType =
-                typeFilter.value
-                    .trim()
-                    .toLowerCase();
+        const selectedType =
+            typeFilter.value
+                .trim()
+                .toLowerCase();
 
 
-            const selectedSeverity =
-                severityFilter.value
-                    .trim()
-                    .toLowerCase();
+        const selectedSeverity =
+            severityFilter.value
+                .trim()
+                .toLowerCase();
 
 
-            const selectedStatus =
-                statusFilter.value
-                    .trim()
-                    .toLowerCase();
+        const selectedStatus =
+            statusFilter.value
+                .trim()
+                .toLowerCase();
 
 
-            let visibleCount = 0;
+        let visibleCount = 0;
 
 
-            rows.forEach(
-                function (row) {
+        rows.forEach(function(row) {
 
 
-                    const name =
-                        row.dataset.name || "";
+            const name =
+                row.dataset.name || "";
 
 
-                    const location =
-                        row.dataset.location || "";
+            const location =
+                row.dataset.location || "";
 
 
-                    const type =
-                        row.dataset.type || "";
+            const type =
+                row.dataset.type || "";
 
 
-                    const severity =
-                        row.dataset.severity || "";
+            const severity =
+                row.dataset.severity || "";
 
 
-                    const status =
-                        row.dataset.status || "";
+            const status =
+                row.dataset.status || "";
 
 
-                    const matchesSearch =
-                        !searchValue ||
-                        name.includes(searchValue) ||
-                        location.includes(searchValue);
+            const matchesSearch =
+                !searchValue ||
+                name.includes(searchValue) ||
+                location.includes(searchValue);
 
 
-                    const matchesType =
-                        !selectedType ||
-                        type === selectedType;
+            const matchesType =
+                !selectedType ||
+                type === selectedType;
 
 
-                    const matchesSeverity =
-                        !selectedSeverity ||
-                        severity === selectedSeverity;
+            const matchesSeverity =
+                !selectedSeverity ||
+                severity === selectedSeverity;
 
 
-                    const matchesStatus =
-                        !selectedStatus ||
-                        status === selectedStatus;
+            const matchesStatus =
+                !selectedStatus ||
+                status === selectedStatus;
 
 
-                    const shouldShow =
-                        matchesSearch &&
-                        matchesType &&
-                        matchesSeverity &&
-                        matchesStatus;
+            const shouldShow =
+                matchesSearch &&
+                matchesType &&
+                matchesSeverity &&
+                matchesStatus;
 
 
-                    if (shouldShow) {
+            if (shouldShow) {
 
-                        row.style.display = "";
+                row.style.display = "";
 
-                        visibleCount++;
+                visibleCount++;
 
-                    } else {
+            }
 
-                        row.style.display = "none";
+            else {
 
-                    }
-
-
-                }
-            );
-
-
-            if (resultText) {
-
-                resultText.textContent =
-                    "Showing " +
-                    visibleCount +
-                    " disaster record(s).";
+                row.style.display = "none";
 
             }
 
 
-            if (noResults) {
+        });
 
-                if (visibleCount === 0) {
 
-                    noResults.style.display =
-                        "block";
+        if (resultText) {
 
-                } else {
-
-                    noResults.style.display =
-                        "none";
-
-                }
-
-            }
+            resultText.textContent =
+                "Showing " +
+                visibleCount +
+                " disaster record(s).";
 
         }
 
 
-        window.clearDisasterFilters =
-            function () {
+        if (noResults) {
 
+            if (visibleCount === 0) {
 
-                searchInput.value = "";
+                noResults.style.display =
+                    "block";
 
-                typeFilter.value = "";
+            }
 
-                severityFilter.value = "";
+            else {
 
-                statusFilter.value = "";
+                noResults.style.display =
+                    "none";
 
+            }
 
-                filterDisasters();
-
-
-            };
-
-
-        searchInput.addEventListener(
-            "input",
-            filterDisasters
-        );
-
-
-        typeFilter.addEventListener(
-            "change",
-            filterDisasters
-        );
-
-
-        severityFilter.addEventListener(
-            "change",
-            filterDisasters
-        );
-
-
-        statusFilter.addEventListener(
-            "change",
-            filterDisasters
-        );
+        }
 
 
     }
-);
+
+
+    window.clearDisasterFilters = function() {
+
+
+        searchInput.value = "";
+
+        typeFilter.value = "";
+
+        severityFilter.value = "";
+
+        statusFilter.value = "";
+
+
+        filterDisasters();
+
+
+    };
+
+
+    searchInput.addEventListener(
+        "input",
+        filterDisasters
+    );
+
+
+    typeFilter.addEventListener(
+        "change",
+        filterDisasters
+    );
+
+
+    severityFilter.addEventListener(
+        "change",
+        filterDisasters
+    );
+
+
+    statusFilter.addEventListener(
+        "change",
+        filterDisasters
+    );
+
+
+});
+
 
 </script>
+
 
 {% endblock %}
