@@ -1,13 +1,415 @@
 {% extends "base.html" %}
 
 {% block title %}
-Disaster Details | Disaster Relief Management System
+{{ disaster.disaster_name }} | Disaster Details
 {% endblock %}
+
 
 {% block extra_css %}
 
 <link rel="stylesheet"
       href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+<style>
+
+    /* =========================================
+       DISASTER DETAILS PAGE
+       ========================================= */
+
+    .disaster-details-page {
+        width: 100%;
+    }
+
+    .disaster-details-wrapper {
+        margin-top: 25px;
+    }
+
+
+    /* =========================================
+       TOP ACTIONS
+       ========================================= */
+
+    .disaster-details-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .back-to-disasters {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 9px;
+        background: #ffffff;
+        border: 1px solid #e5e5e5;
+        color: #333333;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+    .back-to-disasters:hover {
+        background: #f5f5f5;
+    }
+
+
+    /* =========================================
+       MAIN DETAILS CARD
+       ========================================= */
+
+    .disaster-details-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 30px;
+        border: 1px solid #eeeeee;
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.06);
+    }
+
+
+    /* =========================================
+       DISASTER HERO
+       ========================================= */
+
+    .disaster-details-hero {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #eeeeee;
+        margin-bottom: 25px;
+    }
+
+    .disaster-large-icon {
+        width: 75px;
+        height: 75px;
+        min-width: 75px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f1f1;
+        color: #333333;
+        font-size: 30px;
+    }
+
+    .disaster-details-hero h2 {
+        margin: 0;
+        font-size: 26px;
+        color: #222222;
+    }
+
+    .disaster-details-hero p {
+        margin: 6px 0 0;
+        color: #777777;
+        font-size: 14px;
+    }
+
+
+    /* =========================================
+       STATUS
+       ========================================= */
+
+    .details-status {
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: 20px;
+        background: #f1f1f1;
+        color: #333333;
+        font-size: 13px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .details-status i {
+        font-size: 8px;
+    }
+
+
+    /* =========================================
+       INFORMATION GRID
+       ========================================= */
+
+    .disaster-information-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    .disaster-information-box {
+        padding: 20px;
+        border: 1px solid #eeeeee;
+        border-radius: 12px;
+        background: #fafafa;
+    }
+
+    .disaster-information-box.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .information-label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #888888;
+        font-weight: 700;
+    }
+
+    .information-value {
+        display: block;
+        font-size: 16px;
+        font-weight: 600;
+        color: #222222;
+        line-height: 1.6;
+    }
+
+    .information-value i {
+        margin-right: 7px;
+        color: #777777;
+    }
+
+
+    /* =========================================
+       FOOTER ACTIONS
+       ========================================= */
+
+    .disaster-details-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eeeeee;
+    }
+
+    .details-action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 11px 18px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s ease;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+    .edit-disaster-btn {
+        background: #222222;
+        color: #ffffff;
+        border: none;
+    }
+
+    .edit-disaster-btn:hover {
+        background: #000000;
+    }
+
+    .delete-disaster-btn {
+        background: #ffffff;
+        color: #dc2626;
+        border: 1px solid #e5e5e5;
+    }
+
+    .delete-disaster-btn:hover {
+        background: #fff5f5;
+    }
+
+
+    /* =========================================
+       DELETE CONFIRMATION MODAL
+       ========================================= */
+
+    .delete-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.55);
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .delete-modal-overlay.show {
+        display: flex;
+    }
+
+    .delete-modal {
+        width: 100%;
+        max-width: 430px;
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 30px;
+        box-shadow:
+            0 20px 60px rgba(0, 0, 0, 0.20);
+        text-align: center;
+        animation: deleteModalAppear 0.2s ease;
+    }
+
+    @keyframes deleteModalAppear {
+
+        from {
+            opacity: 0;
+            transform:
+                translateY(10px)
+                scale(0.97);
+        }
+
+        to {
+            opacity: 1;
+            transform:
+                translateY(0)
+                scale(1);
+        }
+
+    }
+
+    .delete-modal-icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff1f1;
+        color: #dc2626;
+        font-size: 25px;
+    }
+
+    .delete-modal h3 {
+        margin: 0 0 10px;
+        font-size: 21px;
+        color: #222222;
+    }
+
+    .delete-modal p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #777777;
+    }
+
+    .delete-modal-disaster {
+        margin-top: 12px;
+        font-weight: 700;
+        color: #333333;
+    }
+
+    .delete-modal-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .delete-modal-btn {
+        min-width: 120px;
+        padding: 11px 18px;
+        border-radius: 9px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .cancel-delete-btn {
+        background: #f1f1f1;
+        color: #333333;
+        border: 1px solid #e5e5e5;
+    }
+
+    .cancel-delete-btn:hover {
+        background: #e5e5e5;
+    }
+
+    .confirm-delete-btn {
+        background: #dc2626;
+        color: #ffffff;
+        border: 1px solid #dc2626;
+    }
+
+    .confirm-delete-btn:hover {
+        background: #b91c1c;
+    }
+
+
+    /* =========================================
+       RESPONSIVE
+       ========================================= */
+
+    @media (max-width: 700px) {
+
+        .disaster-details-top {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .disaster-details-card {
+            padding: 20px;
+        }
+
+        .disaster-details-hero {
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .details-status {
+            margin-left: 0;
+        }
+
+        .disaster-information-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .disaster-information-box.full-width {
+            grid-column: auto;
+        }
+
+        .disaster-details-actions {
+            flex-direction: column;
+        }
+
+        .details-action-btn {
+            width: 100%;
+        }
+
+    }
+
+    @media (max-width: 500px) {
+
+        .delete-modal {
+            padding: 25px 20px;
+        }
+
+        .delete-modal-actions {
+            flex-direction: column;
+        }
+
+        .delete-modal-btn {
+            width: 100%;
+        }
+
+    }
+
+</style>
 
 {% endblock %}
 
@@ -16,9 +418,8 @@ Disaster Details | Disaster Relief Management System
 
 <div class="dashboard-page">
 
-    <!-- ============================= -->
+
     <!-- SIDEBAR -->
-    <!-- ============================= -->
 
     <aside class="sidebar">
 
@@ -56,39 +457,57 @@ Disaster Details | Disaster Relief Management System
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item">
+
                 <i class="fa-solid fa-boxes-stacked"></i>
                 <span>Resources</span>
+
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+
                 <i class="fa-solid fa-house-medical"></i>
                 <span>Shelters</span>
+
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item">
+
                 <i class="fa-solid fa-truck"></i>
                 <span>Vehicles</span>
+
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="{{ url_for('volunteers.volunteer_list') }}"
+               class="nav-item">
+
                 <i class="fa-solid fa-users"></i>
                 <span>Volunteers</span>
+
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="{{ url_for('requests.request_list') }}"
+               class="nav-item">
+
                 <i class="fa-solid fa-clipboard-list"></i>
                 <span>Relief Requests</span>
+
             </a>
 
 
-            <a href="#" class="nav-item">
+            <a href="{{ url_for('reports.reports_home') }}"
+               class="nav-item">
+
                 <i class="fa-solid fa-chart-pie"></i>
                 <span>Reports</span>
+
             </a>
 
         </nav>
@@ -96,7 +515,8 @@ Disaster Details | Disaster Relief Management System
 
         <div class="sidebar-bottom">
 
-            <a href="#" class="nav-item">
+            <a href="{{ url_for('settings.settings_home') }}"
+               class="nav-item">
 
                 <i class="fa-solid fa-gear"></i>
                 <span>Settings</span>
@@ -117,9 +537,7 @@ Disaster Details | Disaster Relief Management System
     </aside>
 
 
-    <!-- ============================= -->
     <!-- MAIN CONTENT -->
-    <!-- ============================= -->
 
     <main class="dashboard-main">
 
@@ -130,12 +548,10 @@ Disaster Details | Disaster Relief Management System
 
             <div>
 
-                <h1>
-                    Disaster Details
-                </h1>
+                <h1>Disaster Details</h1>
 
                 <p>
-                    Detailed information about the disaster.
+                    View complete information about this disaster.
                 </p>
 
             </div>
@@ -144,9 +560,7 @@ Disaster Details | Disaster Relief Management System
             <div class="user-profile">
 
                 <div class="user-avatar">
-
                     {{ session["full_name"][0] | upper }}
-
                 </div>
 
                 <div>
@@ -166,224 +580,468 @@ Disaster Details | Disaster Relief Management System
         </header>
 
 
-        <!-- ============================= -->
-        <!-- DISASTER DETAILS CARD -->
-        <!-- ============================= -->
+        <!-- DISASTER DETAILS -->
 
-        <section class="dashboard-card"
-                 style="margin-top: 25px;">
+        <div class="disaster-details-page">
 
-
-            <div class="card-header">
-
-                <div>
-
-                    <h3>
-                        {{ disaster.disaster_name }}
-                    </h3>
-
-                    <p>
-                        Disaster ID: #{{ disaster.disaster_id }}
-                    </p>
-
-                </div>
+            <div class="disaster-details-wrapper">
 
 
-                <a href="{{ url_for('disaster.disaster_list') }}"
-                   class="quick-action"
-                   style="padding: 10px 18px;">
+                <!-- BACK BUTTON -->
 
-                    <i class="fa-solid fa-arrow-left"></i>
+                <div class="disaster-details-top">
 
-                    <span>
+                    <a href="{{ url_for('disaster.disaster_list') }}"
+                       class="back-to-disasters">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
                         Back to Disasters
-                    </span>
 
-                </a>
-
-            </div>
-
-
-            <!-- DETAILS -->
-
-            <div style="
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-                margin-top: 25px;
-            ">
-
-
-                <!-- TYPE -->
-
-                <div>
-
-                    <strong>
-                        Disaster Type
-                    </strong>
-
-                    <p>
-                        {{ disaster.disaster_type }}
-                    </p>
+                    </a>
 
                 </div>
 
 
-                <!-- LOCATION -->
+                <!-- DETAILS CARD -->
 
-                <div>
-
-                    <strong>
-                        Location
-                    </strong>
-
-                    <p>
-
-                        <i class="fa-solid fa-location-dot"></i>
-
-                        {{ disaster.location }}
-
-                    </p>
-
-                </div>
+                <section class="disaster-details-card">
 
 
-                <!-- SEVERITY -->
+                    <!-- DISASTER HERO -->
 
-                <div>
+                    <div class="disaster-details-hero">
 
-                    <strong>
-                        Severity
-                    </strong>
+                        <div class="disaster-large-icon">
 
-                    <p>
-                        {{ disaster.severity }}
-                    </p>
+                            <i class="fa-solid fa-triangle-exclamation"></i>
 
-                </div>
+                        </div>
 
 
-                <!-- STATUS -->
+                        <div>
 
-                <div>
+                            <h2>
+                                {{ disaster.disaster_name }}
+                            </h2>
 
-                    <strong>
-                        Status
-                    </strong>
+                            <p>
+                                {{ disaster.disaster_type }}
+                            </p>
 
-                    <p>
-                        {{ disaster.status }}
-                    </p>
-
-                </div>
+                        </div>
 
 
-                <!-- START DATE -->
+                        <span class="details-status">
 
-                <div>
+                            <i class="fa-solid fa-circle"></i>
 
-                    <strong>
-                        Start Date
-                    </strong>
+                            {{ disaster.status or "Active" }}
 
-                    <p>
-                        {{ disaster.start_date }}
-                    </p>
+                        </span>
 
-                </div>
+                    </div>
 
 
-                <!-- END DATE -->
+                    <!-- DISASTER INFORMATION -->
 
-                <div>
+                    <div class="disaster-information-grid">
 
-                    <strong>
-                        End Date
-                    </strong>
 
-                    <p>
+                        <!-- DISASTER TYPE -->
 
-                        {% if disaster.end_date %}
+                        <div class="disaster-information-box">
 
-                            {{ disaster.end_date }}
+                            <span class="information-label">
+                                Disaster Type
+                            </span>
 
-                        {% else %}
+                            <span class="information-value">
+                                {{ disaster.disaster_type }}
+                            </span>
 
-                            Ongoing
+                        </div>
+
+
+                        <!-- LOCATION -->
+
+                        <div class="disaster-information-box">
+
+                            <span class="information-label">
+                                Location
+                            </span>
+
+                            <span class="information-value">
+
+                                <i class="fa-solid fa-location-dot"></i>
+
+                                {{ disaster.location }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- SEVERITY -->
+
+                        <div class="disaster-information-box">
+
+                            <span class="information-label">
+                                Severity
+                            </span>
+
+                            <span class="information-value">
+                                {{ disaster.severity }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- STATUS -->
+
+                        <div class="disaster-information-box">
+
+                            <span class="information-label">
+                                Disaster Status
+                            </span>
+
+                            <span class="information-value">
+                                {{ disaster.status }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- START DATE -->
+
+                        <div class="disaster-information-box">
+
+                            <span class="information-label">
+                                Start Date
+                            </span>
+
+                            <span class="information-value">
+
+                                <i class="fa-solid fa-calendar"></i>
+
+                                {{ disaster.start_date }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- END DATE -->
+
+                        <div class="disaster-information-box">
+
+                            <span class="information-label">
+                                End Date
+                            </span>
+
+                            <span class="information-value">
+
+                                <i class="fa-solid fa-calendar-check"></i>
+
+                                {% if disaster.end_date %}
+
+                                    {{ disaster.end_date }}
+
+                                {% else %}
+
+                                    Ongoing
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- DISASTER ID -->
+
+                        <div class="disaster-information-box">
+
+                            <span class="information-label">
+                                Disaster ID
+                            </span>
+
+                            <span class="information-value">
+                                #{{ disaster.disaster_id }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- CREATED DATE -->
+
+                        <div class="disaster-information-box">
+
+                            <span class="information-label">
+                                Added On
+                            </span>
+
+                            <span class="information-value">
+
+                                {% if disaster.created_at %}
+
+                                    {{ disaster.created_at }}
+
+                                {% else %}
+
+                                    Not Available
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+
+                        <div class="disaster-information-box full-width">
+
+                            <span class="information-label">
+                                Description
+                            </span>
+
+                            <span class="information-value">
+                                {{ disaster.description }}
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ACTION BUTTONS -->
+
+                    <div class="disaster-details-actions">
+
+
+                        <!-- EDIT DISASTER -->
+
+                        <a href="{{ url_for(
+                            'disaster.edit_disaster',
+                            disaster_id=disaster.disaster_id
+                        ) }}"
+                           class="details-action-btn edit-disaster-btn">
+
+                            <i class="fa-solid fa-pen"></i>
+
+                            Edit Disaster
+
+                        </a>
+
+
+                        <!-- DELETE DISASTER -->
+                        <!-- ONLY ADMIN CAN SEE -->
+
+                        {% if session["role"] == "admin" %}
+
+                        <form method="POST"
+                              action="{{ url_for(
+                                  'disaster.delete_disaster',
+                                  disaster_id=disaster.disaster_id
+                              ) }}"
+                              id="deleteDisasterForm"
+                              style="display: inline;">
+
+                            <button type="button"
+                                    class="details-action-btn delete-disaster-btn"
+                                    onclick="openDeleteModal()">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                                Delete Disaster
+
+                            </button>
+
+                        </form>
 
                         {% endif %}
 
-                    </p>
 
-                </div>
+                    </div>
+
+
+                </section>
 
 
             </div>
 
-
-            <!-- DESCRIPTION -->
-
-            <div style="margin-top: 30px;">
-
-                <strong>
-                    Description
-                </strong>
-
-                <p style="
-                    margin-top: 10px;
-                    line-height: 1.7;
-                ">
-
-                    {{ disaster.description }}
-
-                </p>
-
-            </div>
-
-
-            <!-- ACTIONS -->
-
-            <div style="
-                display: flex;
-                gap: 15px;
-                margin-top: 30px;
-            ">
-
-
-                <a href="{{ url_for('disaster.disaster_list') }}"
-                   style="padding: 12px 20px;">
-
-                    <i class="fa-solid fa-arrow-left"></i>
-
-                    Back
-
-                </a>
-
-
-                <form method="POST"
-                      action="{{ url_for('disaster.delete_disaster', disaster_id=disaster.disaster_id) }}">
-
-                    <button
-                        type="submit"
-                        onclick="return confirm('Are you sure you want to delete this disaster?');"
-                        style="padding: 12px 20px; cursor: pointer;">
-
-                        <i class="fa-solid fa-trash"></i>
-
-                        Delete Disaster
-
-                    </button>
-
-                </form>
-
-            </div>
-
-
-        </section>
+        </div>
 
 
     </main>
 
+
+    <!-- DELETE CONFIRMATION MODAL -->
+
+    {% if session["role"] == "admin" %}
+
+    <div class="delete-modal-overlay"
+         id="deleteDisasterModal">
+
+        <div class="delete-modal">
+
+
+            <div class="delete-modal-icon">
+
+                <i class="fa-solid fa-trash"></i>
+
+            </div>
+
+
+            <h3>
+                Delete Disaster?
+            </h3>
+
+
+            <p>
+
+                Are you sure you want to delete this disaster?
+
+                This action cannot be undone.
+
+            </p>
+
+
+            <div class="delete-modal-disaster">
+
+                {{ disaster.disaster_name }}
+
+            </div>
+
+
+            <div class="delete-modal-actions">
+
+
+                <button type="button"
+                        class="delete-modal-btn cancel-delete-btn"
+                        onclick="closeDeleteModal()">
+
+                    Cancel
+
+                </button>
+
+
+                <button type="button"
+                        class="delete-modal-btn confirm-delete-btn"
+                        onclick="confirmDeleteDisaster()">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete Disaster
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
 </div>
+
+
+<!-- DELETE MODAL JAVASCRIPT -->
+
+{% if session["role"] == "admin" %}
+
+<script>
+
+    function openDeleteModal() {
+
+        const modal =
+            document.getElementById("deleteDisasterModal");
+
+        if (modal) {
+
+            modal.classList.add("show");
+
+        }
+
+    }
+
+
+    function closeDeleteModal() {
+
+        const modal =
+            document.getElementById("deleteDisasterModal");
+
+        if (modal) {
+
+            modal.classList.remove("show");
+
+        }
+
+    }
+
+
+    function confirmDeleteDisaster() {
+
+        const form =
+            document.getElementById("deleteDisasterForm");
+
+        if (form) {
+
+            form.submit();
+
+        }
+
+    }
+
+
+    /* CLOSE WHEN CLICKING OUTSIDE */
+
+    const deleteModal =
+        document.getElementById("deleteDisasterModal");
+
+
+    if (deleteModal) {
+
+        deleteModal.addEventListener(
+            "click",
+            function(event) {
+
+                if (event.target === deleteModal) {
+
+                    closeDeleteModal();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* CLOSE WITH ESC KEY */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Escape") {
+
+                closeDeleteModal();
+
+            }
+
+        }
+    );
+
+</script>
+
+{% endif %}
+
 
 {% endblock %}
