@@ -17,6 +17,17 @@ VALID_STATUSES = {
 
 
 # =========================================================
+# ROLE PERMISSION HELPER
+# =========================================================
+
+def can_manage_shelters():
+
+    user_role = session.get("role", "").lower()
+
+    return user_role in ["admin", "coordinator"]
+
+
+# =========================================================
 # SHELTER LIST
 # =========================================================
 
@@ -91,11 +102,19 @@ def add_shelter():
         flash("Please login first.", "error")
         return redirect(url_for("auth.login"))
 
-    if request.method == "POST":
+    # ROLE PERMISSION
+    if not can_manage_shelters():
 
-        # -------------------------------------------------
-        # GET FORM DATA SAFELY
-        # -------------------------------------------------
+        flash(
+            "You do not have permission to add shelters.",
+            "error"
+        )
+
+        return redirect(
+            url_for("shelters.shelter_list")
+        )
+
+    if request.method == "POST":
 
         shelter_name = request.form.get(
             "shelter_name",
@@ -138,9 +157,7 @@ def add_shelter():
         ).strip() or None
 
 
-        # -------------------------------------------------
         # REQUIRED FIELD VALIDATION
-        # -------------------------------------------------
 
         if not shelter_name or not location or not capacity:
 
@@ -154,9 +171,7 @@ def add_shelter():
             )
 
 
-        # -------------------------------------------------
         # SHELTER NAME VALIDATION
-        # -------------------------------------------------
 
         if len(shelter_name) < 2:
 
@@ -182,9 +197,7 @@ def add_shelter():
             )
 
 
-        # -------------------------------------------------
         # LOCATION VALIDATION
-        # -------------------------------------------------
 
         if len(location) < 2:
 
@@ -210,9 +223,7 @@ def add_shelter():
             )
 
 
-        # -------------------------------------------------
         # CAPACITY VALIDATION
-        # -------------------------------------------------
 
         try:
 
@@ -242,9 +253,7 @@ def add_shelter():
             )
 
 
-        # -------------------------------------------------
         # CURRENT OCCUPANCY VALIDATION
-        # -------------------------------------------------
 
         if current_occupancy == "":
             occupancy_value = 0
@@ -291,9 +300,7 @@ def add_shelter():
             )
 
 
-        # -------------------------------------------------
         # CONTACT NUMBER VALIDATION
-        # -------------------------------------------------
 
         if contact_number:
 
@@ -321,9 +328,7 @@ def add_shelter():
                 )
 
 
-        # -------------------------------------------------
         # FACILITIES VALIDATION
-        # -------------------------------------------------
 
         if facilities and len(facilities) > 1000:
 
@@ -337,9 +342,7 @@ def add_shelter():
             )
 
 
-        # -------------------------------------------------
         # STATUS VALIDATION
-        # -------------------------------------------------
 
         if status not in VALID_STATUSES:
 
@@ -353,9 +356,7 @@ def add_shelter():
             )
 
 
-        # -------------------------------------------------
         # DISASTER ID VALIDATION
-        # -------------------------------------------------
 
         disaster_id_value = None
 
@@ -389,10 +390,6 @@ def add_shelter():
                 )
 
 
-            # -------------------------------------------------
-            # CHECK WHETHER DISASTER EXISTS
-            # -------------------------------------------------
-
             connection = None
             cursor = None
 
@@ -402,8 +399,7 @@ def add_shelter():
                 cursor = connection.cursor()
 
                 cursor.execute("""
-                    SELECT
-                        disaster_id
+                    SELECT disaster_id
                     FROM disasters
                     WHERE disaster_id = %s
                 """, (disaster_id_value,))
@@ -421,22 +417,6 @@ def add_shelter():
                         url_for("shelters.add_shelter")
                     )
 
-            except Exception as e:
-
-                print(
-                    "DISASTER VALIDATION ERROR:",
-                    repr(e)
-                )
-
-                flash(
-                    "Unable to validate selected disaster.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for("shelters.add_shelter")
-                )
-
             finally:
 
                 if cursor:
@@ -446,9 +426,7 @@ def add_shelter():
                     connection.close()
 
 
-        # -------------------------------------------------
         # DATABASE INSERT
-        # -------------------------------------------------
 
         connection = None
         cursor = None
@@ -621,6 +599,18 @@ def edit_shelter(shelter_id):
         flash("Please login first.", "error")
         return redirect(url_for("auth.login"))
 
+    # ROLE PERMISSION
+    if not can_manage_shelters():
+
+        flash(
+            "You do not have permission to edit shelters.",
+            "error"
+        )
+
+        return redirect(
+            url_for("shelters.shelter_details", shelter_id=shelter_id)
+        )
+
     connection = None
     cursor = None
 
@@ -628,10 +618,6 @@ def edit_shelter(shelter_id):
 
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
-
-        # =========================================
-        # GET EXISTING SHELTER
-        # =========================================
 
         cursor.execute("""
             SELECT
@@ -662,10 +648,6 @@ def edit_shelter(shelter_id):
                 url_for("shelters.shelter_list")
             )
 
-
-        # =========================================
-        # UPDATE SHELTER
-        # =========================================
 
         if request.method == "POST":
 
@@ -710,10 +692,6 @@ def edit_shelter(shelter_id):
             ).strip() or None
 
 
-            # -------------------------------------------------
-            # REQUIRED FIELD VALIDATION
-            # -------------------------------------------------
-
             if not shelter_name or not location or not capacity:
 
                 flash(
@@ -729,14 +707,10 @@ def edit_shelter(shelter_id):
                 )
 
 
-            # -------------------------------------------------
-            # SHELTER NAME VALIDATION
-            # -------------------------------------------------
-
-            if len(shelter_name) < 2:
+            if len(shelter_name) < 2 or len(shelter_name) > 150:
 
                 flash(
-                    "Shelter name must contain at least 2 characters.",
+                    "Shelter name must contain between 2 and 150 characters.",
                     "error"
                 )
 
@@ -748,10 +722,10 @@ def edit_shelter(shelter_id):
                 )
 
 
-            if len(shelter_name) > 150:
+            if len(location) < 2 or len(location) > 255:
 
                 flash(
-                    "Shelter name cannot exceed 150 characters.",
+                    "Location must contain between 2 and 255 characters.",
                     "error"
                 )
 
@@ -762,44 +736,6 @@ def edit_shelter(shelter_id):
                     )
                 )
 
-
-            # -------------------------------------------------
-            # LOCATION VALIDATION
-            # -------------------------------------------------
-
-            if len(location) < 2:
-
-                flash(
-                    "Location must contain at least 2 characters.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for(
-                        "shelters.edit_shelter",
-                        shelter_id=shelter_id
-                    )
-                )
-
-
-            if len(location) > 255:
-
-                flash(
-                    "Location cannot exceed 255 characters.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for(
-                        "shelters.edit_shelter",
-                        shelter_id=shelter_id
-                    )
-                )
-
-
-            # -------------------------------------------------
-            # CAPACITY VALIDATION
-            # -------------------------------------------------
 
             try:
 
@@ -835,10 +771,6 @@ def edit_shelter(shelter_id):
                 )
 
 
-            # -------------------------------------------------
-            # CURRENT OCCUPANCY VALIDATION
-            # -------------------------------------------------
-
             if current_occupancy == "":
                 occupancy_value = 0
 
@@ -863,10 +795,10 @@ def edit_shelter(shelter_id):
                     )
 
 
-            if occupancy_value < 0:
+            if occupancy_value < 0 or occupancy_value > capacity_value:
 
                 flash(
-                    "Current occupancy cannot be negative.",
+                    "Current occupancy must be between 0 and shelter capacity.",
                     "error"
                 )
 
@@ -877,25 +809,6 @@ def edit_shelter(shelter_id):
                     )
                 )
 
-
-            if occupancy_value > capacity_value:
-
-                flash(
-                    "Current occupancy cannot exceed shelter capacity.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for(
-                        "shelters.edit_shelter",
-                        shelter_id=shelter_id
-                    )
-                )
-
-
-            # -------------------------------------------------
-            # CONTACT NUMBER VALIDATION
-            # -------------------------------------------------
 
             if contact_number:
 
@@ -929,10 +842,6 @@ def edit_shelter(shelter_id):
                     )
 
 
-            # -------------------------------------------------
-            # FACILITIES VALIDATION
-            # -------------------------------------------------
-
             if facilities and len(facilities) > 1000:
 
                 flash(
@@ -948,10 +857,6 @@ def edit_shelter(shelter_id):
                 )
 
 
-            # -------------------------------------------------
-            # STATUS VALIDATION
-            # -------------------------------------------------
-
             if status not in VALID_STATUSES:
 
                 flash(
@@ -966,10 +871,6 @@ def edit_shelter(shelter_id):
                     )
                 )
 
-
-            # -------------------------------------------------
-            # DISASTER ID VALIDATION
-            # -------------------------------------------------
 
             disaster_id_value = None
 
@@ -1009,13 +910,8 @@ def edit_shelter(shelter_id):
                     )
 
 
-                # -------------------------------------------------
-                # CHECK WHETHER DISASTER EXISTS
-                # -------------------------------------------------
-
                 cursor.execute("""
-                    SELECT
-                        disaster_id
+                    SELECT disaster_id
                     FROM disasters
                     WHERE disaster_id = %s
                 """, (disaster_id_value,))
@@ -1036,10 +932,6 @@ def edit_shelter(shelter_id):
                         )
                     )
 
-
-            # -------------------------------------------------
-            # DATABASE UPDATE
-            # -------------------------------------------------
 
             cursor.execute("""
                 UPDATE shelters
@@ -1080,10 +972,6 @@ def edit_shelter(shelter_id):
             )
 
 
-        # =========================================
-        # SHOW EDIT FORM
-        # =========================================
-
         return render_template(
             "shelters/edit.html",
             shelter=shelter
@@ -1105,10 +993,7 @@ def edit_shelter(shelter_id):
         )
 
         return redirect(
-            url_for(
-                "shelters.shelter_details",
-                shelter_id=shelter_id
-            )
+            url_for("shelters.shelter_list")
         )
 
     finally:
@@ -1134,6 +1019,18 @@ def delete_shelter(shelter_id):
         flash("Please login first.", "error")
         return redirect(url_for("auth.login"))
 
+    # ROLE PERMISSION
+    if not can_manage_shelters():
+
+        flash(
+            "You do not have permission to delete shelters.",
+            "error"
+        )
+
+        return redirect(
+            url_for("shelters.shelter_list")
+        )
+
     connection = None
     cursor = None
 
@@ -1141,10 +1038,6 @@ def delete_shelter(shelter_id):
 
         connection = get_db_connection()
         cursor = connection.cursor()
-
-        # =========================================
-        # CHECK WHETHER SHELTER EXISTS
-        # =========================================
 
         cursor.execute("""
             SELECT shelter_id
@@ -1165,9 +1058,6 @@ def delete_shelter(shelter_id):
                 url_for("shelters.shelter_list")
             )
 
-        # =========================================
-        # DELETE SHELTER
-        # =========================================
 
         cursor.execute("""
             DELETE FROM shelters
@@ -1179,10 +1069,6 @@ def delete_shelter(shelter_id):
         flash(
             "Shelter deleted successfully.",
             "success"
-        )
-
-        return redirect(
-            url_for("shelters.shelter_list")
         )
 
     except Exception as e:
@@ -1200,13 +1086,6 @@ def delete_shelter(shelter_id):
             "error"
         )
 
-        return redirect(
-            url_for(
-                "shelters.shelter_details",
-                shelter_id=shelter_id
-            )
-        )
-
     finally:
 
         if cursor:
@@ -1214,3 +1093,7 @@ def delete_shelter(shelter_id):
 
         if connection:
             connection.close()
+
+    return redirect(
+        url_for("shelters.shelter_list")
+    )

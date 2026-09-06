@@ -1,1688 +1,1329 @@
-{% extends "base.html" %}
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from utils.database import get_db_connection
 
-{% block title %}
-Shelters | Disaster Relief Management System
-{% endblock %}
 
-{% block extra_css %}
+shelters = Blueprint("shelters", __name__)
 
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/dashboard.css') }}">
 
-<style>
+# =========================================================
+# VALIDATION OPTIONS
+# =========================================================
 
-/* =========================================
-   SHELTER PAGE STABILITY
-   ========================================= */
-
-html {
-    scrollbar-gutter: stable;
-}
-
-body {
-    overflow-x: hidden;
-}
-
-.shelter-page {
-    width: 100%;
-}
-
-
-/* =========================================
-   USER PROFILE
-   ========================================= */
-
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    flex-shrink: 0;
-    padding: 8px 13px 8px 8px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 13px;
-    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
-}
-
-.user-avatar {
-    width: 43px;
-    height: 43px;
-    border-radius: 50%;
-    background: #2563eb;
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 700;
-    font-size: 16px;
-    flex-shrink: 0;
-}
-
-.user-profile strong {
-    display: block;
-    color: #111827;
-    font-size: 14px;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.user-profile span {
-    display: block;
-    color: #6b7280;
-    font-size: 12px;
-    margin-top: 2px;
-}
-
-
-/* =========================================
-   SHELTER CARD
-   ========================================= */
-
-.shelter-card {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 30px;
-
-    box-shadow:
-        0 8px 30px rgba(15, 23, 42, 0.06);
-
-    border: 1px solid #e5e7eb;
-
-    margin-top: 25px;
-
-    transition:
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
-}
-
-.shelter-card:hover {
-    border-color: #dbe2ea;
-
-    box-shadow:
-        0 10px 32px rgba(15, 23, 42, 0.07);
-}
-
-.shelter-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.shelter-card-header h3 {
-    margin: 0;
-    font-size: 20px;
-    color: #111827;
-    font-weight: 700;
-}
-
-.shelter-card-header p {
-    margin: 6px 0 0;
-    font-size: 13px;
-    color: #6b7280;
-}
-
-
-/* =========================================
-   ADD SHELTER BUTTON
-   ========================================= */
-
-.add-shelter-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    padding: 11px 18px;
-
-    border-radius: 9px;
-
-    background: #2563eb;
-    color: #ffffff;
-
-    text-decoration: none;
-
-    font-size: 13px;
-    font-weight: 600;
-
-    transition: all 0.2s ease;
-
-    white-space: nowrap;
-}
-
-.add-shelter-btn i {
-    font-size: 12px;
-}
-
-.add-shelter-btn:hover {
-    background: #1d4ed8;
-    color: #ffffff;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 6px 14px rgba(37, 99, 235, 0.18);
-}
-
-
-/* =========================================
-   SEARCH & FILTERS
-   ========================================= */
-
-.shelter-filters {
-    display: grid;
-
-    grid-template-columns:
-        minmax(240px, 1fr)
-        220px
-        auto;
-
-    gap: 15px;
-
-    align-items: end;
-
-    margin-bottom: 20px;
-
-    padding: 20px;
-
-    background: #f8fafc;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 14px;
-
-    box-shadow:
-        0 4px 14px rgba(15, 23, 42, 0.04);
-}
-
-.filter-group {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.filter-group label {
-    font-size: 12px;
-    font-weight: 700;
-    color: #374151;
-    letter-spacing: 0.1px;
-}
-
-.filter-input,
-.filter-select {
-    width: 100%;
-    height: 42px;
-
-    padding: 0 13px;
-
-    border: 1px solid #d1d5db;
-    border-radius: 9px;
-
-    background: #ffffff;
-    color: #111827;
-
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-
-    outline: none;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-}
-
-.filter-input::placeholder {
-    color: #9ca3af;
-}
-
-.filter-input:hover,
-.filter-select:hover {
-    border-color: #9ca3af;
-}
-
-.filter-input:focus,
-.filter-select:focus {
-    border-color: #2563eb;
-
-    background: #ffffff;
-
-    box-shadow:
-        0 0 0 3px rgba(37, 99, 235, 0.10);
-}
-
-.filter-select {
-    cursor: pointer;
-}
-
-
-/* =========================================
-   CLEAR FILTER BUTTON
-   ========================================= */
-
-.clear-filters-btn {
-    height: 42px;
-
-    padding: 0 17px;
-
-    border: 1px solid #111827;
-    border-radius: 9px;
-
-    background: #111827;
-    color: #ffffff;
-
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition: all 0.2s ease;
-
-    white-space: nowrap;
-}
-
-.clear-filters-btn i {
-    margin-right: 5px;
-}
-
-.clear-filters-btn:hover {
-    background: #1f2937;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 5px 12px rgba(15, 23, 42, 0.14);
-}
-
-.clear-filters-btn:active {
-    transform: translateY(0);
-}
-
-.filter-result {
-    grid-column: 1 / -1;
-
-    margin-top: -2px;
-
-    font-size: 12px;
-    color: #6b7280;
-}
-
-
-/* =========================================
-   TABLE WRAPPER
-   ========================================= */
-
-.shelter-table-wrapper {
-    width: 100%;
-
-    overflow-x: auto;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 12px;
-
-    background: #ffffff;
-}
-
-.shelter-table-wrapper::-webkit-scrollbar {
-    height: 7px;
-}
-
-.shelter-table-wrapper::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 10px;
-}
-
-.shelter-table-wrapper::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-}
-
-
-/* =========================================
-   TABLE
-   ========================================= */
-
-.shelter-table {
-    width: 100%;
-
-    border-collapse: collapse;
-
-    min-width: 900px;
-}
-
-.shelter-table thead {
-    background: #f8fafc;
-}
-
-.shelter-table th {
-    padding: 14px 15px;
-
-    text-align: left;
-
-    font-size: 11px;
-
-    text-transform: uppercase;
-
-    letter-spacing: 0.55px;
-
-    color: #475569;
-
-    font-weight: 700;
-
-    border-bottom: 1px solid #e5e7eb;
-
-    white-space: nowrap;
-}
-
-.shelter-table th:last-child {
-    text-align: center;
-}
-
-.shelter-table td {
-    padding: 15px;
-
-    border-bottom: 1px solid #f1f5f9;
-
-    font-size: 13px;
-
-    color: #4b5563;
-
-    vertical-align: middle;
-}
-
-.shelter-table tbody tr {
-    transition:
-        background 0.18s ease;
-}
-
-.shelter-table tbody tr:hover {
-    background: #f8fbff;
-}
-
-.shelter-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-
-/* =========================================
-   SHELTER NAME
-   ========================================= */
-
-.shelter-name-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.shelter-small-icon {
-    width: 40px;
-    height: 40px;
-
-    min-width: 40px;
-
-    border-radius: 10px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #eff6ff;
-
-    color: #2563eb;
-
-    border: 1px solid #dbeafe;
-}
-
-.shelter-name-link {
-    color: #1d4ed8;
-
-    text-decoration: none;
-
-    font-weight: 700;
-
-    font-size: 14px;
-
-    transition:
-        color 0.18s ease;
-}
-
-.shelter-name-link:hover {
-    color: #1e40af;
-
-    text-decoration: underline;
-}
-
-.shelter-id {
-    display: block;
-
-    margin-top: 3px;
-
-    font-size: 11px;
-
-    color: #9ca3af;
-}
-
-
-/* =========================================
-   LOCATION
-   ========================================= */
-
-.shelter-location {
-    display: flex;
-    align-items: center;
-
-    gap: 7px;
-}
-
-.shelter-location i {
-    color: #64748b;
-
-    font-size: 12px;
-}
-
-.shelter-location span {
-    color: #475569;
-}
-
-
-/* =========================================
-   CAPACITY
-   ========================================= */
-
-.shelter-table td:nth-child(3) strong {
-    color: #111827;
-
-    font-size: 14px;
-}
-
-.shelter-table td:nth-child(3) {
-    white-space: nowrap;
-}
-
-
-/* =========================================
-   OCCUPANCY
-   ========================================= */
-
-.occupancy-wrapper {
-    min-width: 130px;
-}
-
-.occupancy-numbers {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 7px;
-
-    font-size: 12px;
-
-    font-weight: 600;
-
-    color: #475569;
-}
-
-.occupancy-numbers span:first-child {
-    color: #111827;
-}
-
-.occupancy-numbers span:last-child {
-    color: #94a3b8;
-}
-
-.occupancy-bar {
-    width: 100%;
-
-    height: 7px;
-
-    background: #e5e7eb;
-
-    border-radius: 20px;
-
-    overflow: hidden;
-}
-
-.occupancy-fill {
-    height: 100%;
-
-    background: #2563eb;
-
-    border-radius: 20px;
-
-    transition:
-        width 0.4s ease;
-}
-
-
-/* =========================================
-   STATUS
-   ========================================= */
-
-.shelter-status {
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-    padding: 7px 11px;
-
-    border-radius: 20px;
-
-    background: #eff6ff;
-
-    border: 1px solid #dbeafe;
-
-    color: #1d4ed8;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-    white-space: nowrap;
-}
-
-.shelter-status i {
-    font-size: 7px;
-
-    color: #2563eb;
-}
-
-
-/* =========================================
-   VIEW BUTTON
-   ========================================= */
-
-.view-shelter-btn {
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 7px;
-
-    padding: 8px 12px;
-
-    border-radius: 8px;
-
-    background: #eff6ff;
-
-    border: 1px solid #dbeafe;
-
-    color: #1d4ed8;
-
-    text-decoration: none;
-
-    font-size: 12px;
-
-    font-weight: 600;
-
-    transition: all 0.2s ease;
-
-    white-space: nowrap;
-}
-
-.view-shelter-btn:hover {
-    background: #dbeafe;
-
-    color: #1e40af;
-
-    transform: translateY(-1px);
-}
-
-
-/* =========================================
-   FILTER NO RESULTS
-   ========================================= */
-
-.no-filter-results {
-    display: none;
-
-    padding: 55px 20px;
-
-    text-align: center;
-
-    border: 1px dashed #d1d5db;
-
-    border-radius: 14px;
-
-    background: #f8fafc;
-}
-
-.no-filter-icon {
-    width: 60px;
-    height: 60px;
-
-    margin: 0 auto 16px;
-
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #f1f5f9;
-
-    color: #64748b;
-
-    font-size: 23px;
-}
-
-.no-filter-results h4 {
-    margin: 0;
-
-    font-size: 18px;
-
-    color: #1f2937;
-}
-
-.no-filter-results p {
-    margin: 8px 0 0;
-
-    font-size: 13px;
-
-    color: #6b7280;
-}
-
-
-/* =========================================
-   EMPTY STATE
-   ========================================= */
-
-.empty-shelter-state {
-    padding: 70px 20px;
-
-    text-align: center;
-
-    border: 1px dashed #d1d5db;
-
-    border-radius: 14px;
-
-    background: #f8fafc;
-}
-
-.empty-shelter-icon {
-    width: 68px;
-    height: 68px;
-
-    margin: 0 auto 18px;
-
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #eff6ff;
-
-    color: #2563eb;
-
-    border: 1px solid #dbeafe;
-
-    font-size: 25px;
-}
-
-.empty-shelter-state h4 {
-    margin: 0;
-
-    font-size: 19px;
-
-    color: #1f2937;
-}
-
-.empty-shelter-state p {
-    margin: 8px 0 0;
-
-    font-size: 13px;
-
-    color: #6b7280;
-}
-
-.empty-add-btn {
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    margin-top: 20px;
-
-    padding: 10px 17px;
-
-    border-radius: 9px;
-
-    background: #2563eb;
-
-    color: #ffffff;
-
-    text-decoration: none;
-
-    font-size: 13px;
-
-    font-weight: 600;
-
-    transition: all 0.2s ease;
-}
-
-.empty-add-btn:hover {
-    background: #1d4ed8;
-
-    color: #ffffff;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 5px 12px rgba(37, 99, 235, 0.16);
-}
-
-
-/* =========================================
-   RESPONSIVE
-   ========================================= */
-
-@media (max-width: 900px) {
-
-    .shelter-filters {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .clear-filters-btn {
-        width: 100%;
-    }
-
+VALID_STATUSES = {
+    "Available",
+    "Full",
+    "Closed"
 }
 
 
-@media (max-width: 800px) {
+# =========================================================
+# ROLE PERMISSION
+# =========================================================
 
-    .shelter-card {
-        padding: 20px;
-    }
+def can_manage_shelters():
 
-    .shelter-card-header {
-        align-items: flex-start;
+    return session.get("role") in [
+        "admin",
+        "coordinator"
+    ]
 
-        flex-direction: column;
-    }
 
-    .add-shelter-btn {
-        width: 100%;
-    }
-
-}
-
-
-@media (max-width: 600px) {
-
-    .shelter-card {
-        padding: 15px;
-
-        border-radius: 13px;
-    }
-
-    .shelter-filters {
-        grid-template-columns: 1fr;
-
-        gap: 12px;
-
-        padding: 15px;
-    }
-
-    .filter-result {
-        grid-column: auto;
-    }
-
-    .shelter-table th {
-        padding: 12px;
-    }
-
-    .shelter-table td {
-        padding: 12px;
-    }
-
-    .shelter-small-icon {
-        width: 36px;
-        height: 36px;
-
-        min-width: 36px;
-    }
-
-    .user-profile {
-        padding: 7px 10px 7px 7px;
-        gap: 9px;
-    }
-
-    .user-avatar {
-        width: 40px;
-        height: 40px;
-    }
-
-}
-
-
-@media (max-width: 480px) {
-
-    .user-profile strong {
-        max-width: 100px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-}
+# =========================================================
+# SHELTER LIST
+# =========================================================
 
-</style>
+@shelters.route("/shelters")
+def shelter_list():
 
-{% endblock %}
+    if "user_id" not in session:
 
+        flash("Please login first.", "error")
 
-{% block content %}
+        return redirect(
+            url_for("auth.login")
+        )
 
-<div class="dashboard-page">
+    connection = None
+    cursor = None
 
+    try:
 
-<!-- =========================================
-     SIDEBAR
-     ========================================= -->
+        connection = get_db_connection()
 
-<aside class="sidebar">
+        cursor = connection.cursor(
+            dictionary=True
+        )
 
-    <!-- BRAND -->
+        cursor.execute("""
+            SELECT
+                shelter_id,
+                shelter_name,
+                location,
+                capacity,
+                current_occupancy,
+                contact_number,
+                facilities,
+                status,
+                disaster_id,
+                created_at
+            FROM shelters
+            ORDER BY created_at DESC
+        """)
 
-    <div class="sidebar-brand">
+        shelter_records = cursor.fetchall()
 
-        <div class="brand-icon">
+        return render_template(
+            "shelters/list.html",
+            shelters=shelter_records
+        )
 
-            <i class="fa-solid fa-hand-holding-heart"></i>
+    except Exception as e:
 
-        </div>
+        print(
+            "SHELTER LIST ERROR:",
+            repr(e)
+        )
 
-        <div>
+        flash(
+            "Unable to load shelter records.",
+            "error"
+        )
 
-            <h2>DRRMS</h2>
+        return redirect(
+            url_for(
+                "dashboard.dashboard_home"
+            )
+        )
 
-            <span>
-                Disaster Relief
-            </span>
+    finally:
 
-        </div>
+        if cursor:
+            cursor.close()
 
-    </div>
+        if connection:
+            connection.close()
 
 
-    <!-- NAVIGATION -->
+# =========================================================
+# ADD SHELTER
+# =========================================================
 
-    <nav class="sidebar-nav">
+@shelters.route(
+    "/shelters/add",
+    methods=["GET", "POST"]
+)
+def add_shelter():
 
-        <!-- DASHBOARD -->
+    if "user_id" not in session:
 
-        <a href="{{ url_for('dashboard.dashboard_home') }}"
-           class="nav-item">
+        flash(
+            "Please login first.",
+            "error"
+        )
 
-            <i class="fa-solid fa-chart-line"></i>
+        return redirect(
+            url_for("auth.login")
+        )
 
-            <span>
-                Dashboard
-            </span>
 
-        </a>
+    # ROLE CHECK
+    if not can_manage_shelters():
 
+        flash(
+            "You do not have permission to add shelters.",
+            "error"
+        )
 
-        <!-- DISASTERS -->
+        return redirect(
+            url_for(
+                "shelters.shelter_list"
+            )
+        )
 
-        <a href="{{ url_for('disaster.disaster_list') }}"
-           class="nav-item">
 
-            <i class="fa-solid fa-triangle-exclamation"></i>
+    if request.method == "POST":
 
-            <span>
-                Disasters
-            </span>
+        shelter_name = request.form.get(
+            "shelter_name",
+            ""
+        ).strip()
 
-        </a>
+        location = request.form.get(
+            "location",
+            ""
+        ).strip()
 
+        capacity = request.form.get(
+            "capacity",
+            ""
+        ).strip()
 
-        <!-- RESOURCES -->
+        current_occupancy = request.form.get(
+            "current_occupancy",
+            ""
+        ).strip()
 
-        <a href="{{ url_for('resource.resource_list') }}"
-           class="nav-item">
+        contact_number = request.form.get(
+            "contact_number",
+            ""
+        ).strip() or None
 
-            <i class="fa-solid fa-boxes-stacked"></i>
+        facilities = request.form.get(
+            "facilities",
+            ""
+        ).strip() or None
 
-            <span>
-                Resources
-            </span>
+        status = request.form.get(
+            "status",
+            "Available"
+        ).strip()
 
-        </a>
+        disaster_id = request.form.get(
+            "disaster_id",
+            ""
+        ).strip() or None
 
 
-        <!-- SHELTERS -->
+        # REQUIRED VALIDATION
 
-        <a href="{{ url_for('shelters.shelter_list') }}"
-           class="nav-item active">
+        if (
+            not shelter_name
+            or not location
+            or not capacity
+        ):
 
-            <i class="fa-solid fa-house-medical"></i>
+            flash(
+                "Shelter name, location and capacity are required.",
+                "error"
+            )
 
-            <span>
-                Shelters
-            </span>
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-        </a>
 
+        # SHELTER NAME VALIDATION
 
-        <!-- VEHICLES -->
+        if len(shelter_name) < 2:
 
-        <a href="{{ url_for('vehicles.vehicle_list') }}"
-           class="nav-item">
+            flash(
+                "Shelter name must contain at least 2 characters.",
+                "error"
+            )
 
-            <i class="fa-solid fa-truck"></i>
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-            <span>
-                Vehicles
-            </span>
 
-        </a>
+        if len(shelter_name) > 150:
 
+            flash(
+                "Shelter name cannot exceed 150 characters.",
+                "error"
+            )
 
-        <!-- VOLUNTEERS -->
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-        <a href="{{ url_for('volunteers.volunteer_list') }}"
-           class="nav-item">
 
-            <i class="fa-solid fa-users"></i>
+        # LOCATION VALIDATION
 
-            <span>
-                Volunteers
-            </span>
+        if len(location) < 2:
 
-        </a>
+            flash(
+                "Location must contain at least 2 characters.",
+                "error"
+            )
 
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-        <!-- RELIEF REQUESTS -->
 
-        <a href="{{ url_for('requests.request_list') }}"
-           class="nav-item">
+        if len(location) > 255:
 
-            <i class="fa-solid fa-clipboard-list"></i>
+            flash(
+                "Location cannot exceed 255 characters.",
+                "error"
+            )
 
-            <span>
-                Relief Requests
-            </span>
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-        </a>
 
+        # CAPACITY VALIDATION
 
-        <!-- REPORTS -->
+        try:
 
-        <a href="{{ url_for('reports.reports_home') }}"
-           class="nav-item">
+            capacity_value = int(capacity)
 
-            <i class="fa-solid fa-chart-pie"></i>
+        except ValueError:
 
-            <span>
-                Reports
-            </span>
+            flash(
+                "Capacity must be a valid whole number.",
+                "error"
+            )
 
-        </a>
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-    </nav>
 
+        if capacity_value <= 0:
 
-    <!-- SIDEBAR BOTTOM -->
+            flash(
+                "Capacity must be greater than 0.",
+                "error"
+            )
 
-    <div class="sidebar-bottom">
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-        <!-- SETTINGS -->
 
-        <a href="{{ url_for('settings.settings_home') }}"
-           class="nav-item">
+        # OCCUPANCY VALIDATION
 
-            <i class="fa-solid fa-gear"></i>
+        if current_occupancy == "":
 
-            <span>
-                Settings
-            </span>
+            occupancy_value = 0
 
-        </a>
+        else:
 
+            try:
 
-        <!-- LOGOUT -->
+                occupancy_value = int(
+                    current_occupancy
+                )
 
-        <a href="{{ url_for('auth.logout') }}"
-           class="nav-item logout">
+            except ValueError:
 
-            <i class="fa-solid fa-right-from-bracket"></i>
+                flash(
+                    "Current occupancy must be a valid whole number.",
+                    "error"
+                )
 
-            <span>
-                Logout
-            </span>
+                return redirect(
+                    url_for(
+                        "shelters.add_shelter"
+                    )
+                )
 
-        </a>
 
-    </div>
+        if occupancy_value < 0:
 
-</aside>
+            flash(
+                "Current occupancy cannot be negative.",
+                "error"
+            )
 
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-<!-- =========================================
-     MAIN CONTENT
-     ========================================= -->
 
-<main class="dashboard-main">
+        if occupancy_value > capacity_value:
 
+            flash(
+                "Current occupancy cannot exceed shelter capacity.",
+                "error"
+            )
 
-    <!-- HEADER -->
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-    <header class="dashboard-header">
 
-        <div>
+        # CONTACT VALIDATION
 
-            <h1>
-                Shelter Management
-            </h1>
+        if contact_number:
 
-            <p>
-                Monitor and manage emergency shelters.
-            </p>
+            if not contact_number.isdigit():
 
-        </div>
+                flash(
+                    "Contact number must contain only digits.",
+                    "error"
+                )
 
+                return redirect(
+                    url_for(
+                        "shelters.add_shelter"
+                    )
+                )
 
-        <!-- USER PROFILE -->
 
-        <div class="user-profile">
+            if (
+                len(contact_number) < 7
+                or len(contact_number) > 15
+            ):
 
-            <div class="user-avatar">
+                flash(
+                    "Contact number must contain between 7 and 15 digits.",
+                    "error"
+                )
 
-                {{ session["full_name"][0] | upper }}
+                return redirect(
+                    url_for(
+                        "shelters.add_shelter"
+                    )
+                )
 
-            </div>
 
-            <div>
+        # FACILITIES VALIDATION
 
-                <strong>
-                    {{ session["full_name"] }}
-                </strong>
+        if (
+            facilities
+            and len(facilities) > 1000
+        ):
 
-                <span>
-                    {{ session["role"] | title }}
-                </span>
+            flash(
+                "Facilities description cannot exceed 1000 characters.",
+                "error"
+            )
 
-            </div>
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-        </div>
 
-    </header>
+        # STATUS VALIDATION
 
+        if status not in VALID_STATUSES:
 
-    <!-- SHELTER CONTENT -->
+            flash(
+                "Invalid shelter status selected.",
+                "error"
+            )
 
-    <div class="shelter-page">
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-        <section class="shelter-card">
 
+        # DISASTER VALIDATION
 
-            <!-- CARD HEADER -->
+        disaster_id_value = None
 
-            <div class="shelter-card-header">
+        if disaster_id:
 
-                <div>
+            try:
 
-                    <h3>
-                        Shelter Inventory
-                    </h3>
+                disaster_id_value = int(
+                    disaster_id
+                )
 
-                    <p>
-                        All registered emergency shelters
-                    </p>
+            except ValueError:
 
-                </div>
+                flash(
+                    "Invalid disaster selected.",
+                    "error"
+                )
 
+                return redirect(
+                    url_for(
+                        "shelters.add_shelter"
+                    )
+                )
 
-                <!-- ADD SHELTER -->
 
-                <a href="{{ url_for('shelters.add_shelter') }}"
-                   class="add-shelter-btn">
+            if disaster_id_value <= 0:
 
-                    <i class="fa-solid fa-plus"></i>
+                flash(
+                    "Invalid disaster selected.",
+                    "error"
+                )
 
-                    Add Shelter
+                return redirect(
+                    url_for(
+                        "shelters.add_shelter"
+                    )
+                )
 
-                </a>
 
-            </div>
+            validation_connection = None
+            validation_cursor = None
 
+            try:
 
-            <!-- SHELTER DATA -->
+                validation_connection = (
+                    get_db_connection()
+                )
 
-            {% if shelters %}
+                validation_cursor = (
+                    validation_connection.cursor()
+                )
 
+                validation_cursor.execute("""
+                    SELECT disaster_id
+                    FROM disasters
+                    WHERE disaster_id = %s
+                """, (
+                    disaster_id_value,
+                ))
 
-                <!-- SEARCH & FILTER -->
+                disaster_record = (
+                    validation_cursor.fetchone()
+                )
 
-                <div class="shelter-filters">
+                if not disaster_record:
 
-                    <div class="filter-group">
+                    flash(
+                        "Selected disaster does not exist.",
+                        "error"
+                    )
 
-                        <label for="shelterSearch">
-                            Search Shelter
-                        </label>
+                    return redirect(
+                        url_for(
+                            "shelters.add_shelter"
+                        )
+                    )
 
-                        <input
-                            type="text"
-                            id="shelterSearch"
-                            class="filter-input"
-                            placeholder="Search by name or location..."
-                            autocomplete="off">
+            finally:
 
-                    </div>
+                if validation_cursor:
+                    validation_cursor.close()
 
+                if validation_connection:
+                    validation_connection.close()
 
-                    <div class="filter-group">
 
-                        <label for="shelterStatusFilter">
-                            Status
-                        </label>
+        # INSERT SHELTER
 
-                        <select
-                            id="shelterStatusFilter"
-                            class="filter-select">
+        connection = None
+        cursor = None
 
-                            <option value="">
-                                All Statuses
-                            </option>
+        try:
 
-                            <option value="available">
-                                Available
-                            </option>
+            connection = get_db_connection()
 
-                            <option value="full">
-                                Full
-                            </option>
+            cursor = connection.cursor()
 
-                            <option value="closed">
-                                Closed
-                            </option>
+            cursor.execute("""
+                INSERT INTO shelters
+                (
+                    shelter_name,
+                    location,
+                    capacity,
+                    current_occupancy,
+                    contact_number,
+                    facilities,
+                    status,
+                    disaster_id
+                )
+                VALUES
+                (
+                    %s, %s, %s, %s,
+                    %s, %s, %s, %s
+                )
+            """, (
+                shelter_name,
+                location,
+                capacity_value,
+                occupancy_value,
+                contact_number,
+                facilities,
+                status,
+                disaster_id_value
+            ))
 
-                        </select>
+            connection.commit()
 
-                    </div>
+            flash(
+                "Shelter added successfully.",
+                "success"
+            )
 
+            return redirect(
+                url_for(
+                    "shelters.shelter_list"
+                )
+            )
 
-                    <button
-                        type="button"
-                        class="clear-filters-btn"
-                        onclick="clearShelterFilters()">
+        except Exception as e:
 
-                        <i class="fa-solid fa-rotate-left"></i>
+            if connection:
+                connection.rollback()
 
-                        Clear
+            print(
+                "ADD SHELTER ERROR:",
+                repr(e)
+            )
 
-                    </button>
+            flash(
+                "Unable to add shelter.",
+                "error"
+            )
 
+            return redirect(
+                url_for(
+                    "shelters.add_shelter"
+                )
+            )
 
-                    <div
-                        class="filter-result"
-                        id="shelterFilterResult">
+        finally:
 
-                        Showing {{ shelters | length }} shelter record(s).
+            if cursor:
+                cursor.close()
 
-                    </div>
+            if connection:
+                connection.close()
 
-                </div>
 
+    return render_template(
+        "shelters/add.html"
+    )
 
-                <!-- SHELTER TABLE -->
 
-                <div class="shelter-table-wrapper"
-                     id="shelterTableWrapper">
+# =========================================================
+# SHELTER DETAILS
+# =========================================================
 
-                    <table class="shelter-table"
-                           id="shelterTable">
+@shelters.route(
+    "/shelters/<int:shelter_id>"
+)
+def shelter_details(shelter_id):
 
-                        <thead>
+    if "user_id" not in session:
 
-                            <tr>
+        flash(
+            "Please login first.",
+            "error"
+        )
 
-                                <th>
-                                    Shelter
-                                </th>
+        return redirect(
+            url_for("auth.login")
+        )
 
-                                <th>
-                                    Location
-                                </th>
 
-                                <th>
-                                    Capacity
-                                </th>
+    connection = None
+    cursor = None
 
-                                <th>
-                                    Occupancy
-                                </th>
+    try:
 
-                                <th>
-                                    Contact
-                                </th>
+        connection = get_db_connection()
 
-                                <th>
-                                    Status
-                                </th>
+        cursor = connection.cursor(
+            dictionary=True
+        )
 
-                                <th>
-                                    Action
-                                </th>
+        cursor.execute("""
+            SELECT
+                shelter_id,
+                shelter_name,
+                location,
+                capacity,
+                current_occupancy,
+                contact_number,
+                facilities,
+                status,
+                disaster_id,
+                created_at
+            FROM shelters
+            WHERE shelter_id = %s
+        """, (
+            shelter_id,
+        ))
 
-                            </tr>
+        shelter = cursor.fetchone()
 
-                        </thead>
+        if not shelter:
 
+            flash(
+                "Shelter not found.",
+                "error"
+            )
 
-                        <tbody id="shelterTableBody">
+            return redirect(
+                url_for(
+                    "shelters.shelter_list"
+                )
+            )
 
 
-                            {% for shelter in shelters %}
+        return render_template(
+            "shelters/details.html",
+            shelter=shelter
+        )
 
-                                <tr
-                                    class="shelter-row"
 
-                                    data-name="{{ shelter.shelter_name | lower }}"
+    except Exception as e:
 
-                                    data-location="{{ shelter.location | lower }}"
+        print(
+            "SHELTER DETAILS ERROR:",
+            repr(e)
+        )
 
-                                    data-status="{{ shelter.status | lower }}">
+        flash(
+            "Unable to load shelter details.",
+            "error"
+        )
 
+        return redirect(
+            url_for(
+                "shelters.shelter_list"
+            )
+        )
 
-                                    <!-- SHELTER -->
 
-                                    <td>
+    finally:
 
-                                        <div class="shelter-name-wrapper">
+        if cursor:
+            cursor.close()
 
-                                            <div class="shelter-small-icon">
+        if connection:
+            connection.close()
 
-                                                <i class="fa-solid fa-house-medical"></i>
 
-                                            </div>
+# =========================================================
+# EDIT SHELTER
+# =========================================================
 
-                                            <div>
+@shelters.route(
+    "/shelters/<int:shelter_id>/edit",
+    methods=["GET", "POST"]
+)
+def edit_shelter(shelter_id):
 
-                                                <a
-                                                    href="{{ url_for('shelters.shelter_details', shelter_id=shelter.shelter_id) }}"
-                                                    class="shelter-name-link">
+    if "user_id" not in session:
 
-                                                    {{ shelter.shelter_name }}
+        flash(
+            "Please login first.",
+            "error"
+        )
 
-                                                </a>
+        return redirect(
+            url_for("auth.login")
+        )
 
-                                                <span class="shelter-id">
 
-                                                    ID #{{ shelter.shelter_id }}
+    # ROLE CHECK
 
-                                                </span>
+    if not can_manage_shelters():
 
-                                            </div>
+        flash(
+            "You do not have permission to edit shelters.",
+            "error"
+        )
 
-                                        </div>
+        return redirect(
+            url_for(
+                "shelters.shelter_details",
+                shelter_id=shelter_id
+            )
+        )
 
-                                    </td>
 
+    connection = None
+    cursor = None
 
-                                    <!-- LOCATION -->
+    try:
 
-                                    <td>
+        connection = get_db_connection()
 
-                                        <div class="shelter-location">
+        cursor = connection.cursor(
+            dictionary=True
+        )
 
-                                            <i class="fa-solid fa-location-dot"></i>
 
-                                            <span>
+        # GET SHELTER
 
-                                                {{ shelter.location or "Not specified" }}
+        cursor.execute("""
+            SELECT
+                shelter_id,
+                shelter_name,
+                location,
+                capacity,
+                current_occupancy,
+                contact_number,
+                facilities,
+                status,
+                disaster_id,
+                created_at
+            FROM shelters
+            WHERE shelter_id = %s
+        """, (
+            shelter_id,
+        ))
 
-                                            </span>
+        shelter = cursor.fetchone()
 
-                                        </div>
 
-                                    </td>
+        if not shelter:
 
+            flash(
+                "Shelter not found.",
+                "error"
+            )
 
-                                    <!-- CAPACITY -->
+            return redirect(
+                url_for(
+                    "shelters.shelter_list"
+                )
+            )
 
-                                    <td>
 
-                                        <strong>
+        # UPDATE
 
-                                            {{ shelter.capacity }}
+        if request.method == "POST":
 
-                                        </strong>
+            shelter_name = request.form.get(
+                "shelter_name",
+                ""
+            ).strip()
 
-                                        people
+            location = request.form.get(
+                "location",
+                ""
+            ).strip()
 
-                                    </td>
+            capacity = request.form.get(
+                "capacity",
+                ""
+            ).strip()
 
+            current_occupancy = request.form.get(
+                "current_occupancy",
+                ""
+            ).strip()
 
-                                    <!-- OCCUPANCY -->
+            contact_number = request.form.get(
+                "contact_number",
+                ""
+            ).strip() or None
 
-                                    <td>
+            facilities = request.form.get(
+                "facilities",
+                ""
+            ).strip() or None
 
-                                        <div class="occupancy-wrapper">
+            status = request.form.get(
+                "status",
+                "Available"
+            ).strip()
 
-                                            <div class="occupancy-numbers">
+            disaster_id = request.form.get(
+                "disaster_id",
+                ""
+            ).strip() or None
 
-                                                <span>
 
-                                                    {{ shelter.current_occupancy }}
+            if (
+                not shelter_name
+                or not location
+                or not capacity
+            ):
 
-                                                </span>
+                flash(
+                    "Shelter name, location and capacity are required.",
+                    "error"
+                )
 
-                                                <span>
+                return redirect(
+                    url_for(
+                        "shelters.edit_shelter",
+                        shelter_id=shelter_id
+                    )
+                )
 
-                                                    {{ shelter.capacity }}
 
-                                                </span>
+            if (
+                len(shelter_name) < 2
+                or len(shelter_name) > 150
+            ):
 
-                                            </div>
+                flash(
+                    "Shelter name must contain between 2 and 150 characters.",
+                    "error"
+                )
 
+                return redirect(
+                    url_for(
+                        "shelters.edit_shelter",
+                        shelter_id=shelter_id
+                    )
+                )
 
-                                            {% if shelter.capacity and shelter.capacity > 0 %}
 
-                                                {% set occupancy_percent =
-                                                    (shelter.current_occupancy / shelter.capacity * 100)
-                                                %}
+            if (
+                len(location) < 2
+                or len(location) > 255
+            ):
 
-                                                {% if occupancy_percent > 100 %}
+                flash(
+                    "Location must contain between 2 and 255 characters.",
+                    "error"
+                )
 
-                                                    {% set occupancy_percent = 100 %}
+                return redirect(
+                    url_for(
+                        "shelters.edit_shelter",
+                        shelter_id=shelter_id
+                    )
+                )
 
-                                                {% endif %}
 
-                                            {% else %}
+            try:
 
-                                                {% set occupancy_percent = 0 %}
+                capacity_value = int(capacity)
 
-                                            {% endif %}
+            except ValueError:
 
+                flash(
+                    "Capacity must be a valid whole number.",
+                    "error"
+                )
 
-                                            <div class="occupancy-bar">
+                return redirect(
+                    url_for(
+                        "shelters.edit_shelter",
+                        shelter_id=shelter_id
+                    )
+                )
 
-                                                <div
-                                                    class="occupancy-fill"
-                                                    data-width="{{ occupancy_percent }}">
 
-                                                </div>
+            if capacity_value <= 0:
 
-                                            </div>
+                flash(
+                    "Capacity must be greater than 0.",
+                    "error"
+                )
 
-                                        </div>
+                return redirect(
+                    url_for(
+                        "shelters.edit_shelter",
+                        shelter_id=shelter_id
+                    )
+                )
 
-                                    </td>
 
+            if current_occupancy == "":
 
-                                    <!-- CONTACT -->
+                occupancy_value = 0
 
-                                    <td>
+            else:
 
-                                        {{ shelter.contact_number or "N/A" }}
+                try:
 
-                                    </td>
+                    occupancy_value = int(
+                        current_occupancy
+                    )
 
+                except ValueError:
 
-                                    <!-- STATUS -->
+                    flash(
+                        "Current occupancy must be a valid whole number.",
+                        "error"
+                    )
 
-                                    <td>
+                    return redirect(
+                        url_for(
+                            "shelters.edit_shelter",
+                            shelter_id=shelter_id
+                        )
+                    )
 
-                                        <span class="shelter-status">
 
-                                            <i class="fa-solid fa-circle"></i>
+            if occupancy_value < 0:
 
-                                            {{ shelter.status or "Unknown" }}
+                flash(
+                    "Current occupancy cannot be negative.",
+                    "error"
+                )
 
-                                        </span>
+                return redirect(
+                    url_for(
+                        "shelters.edit_shelter",
+                        shelter_id=shelter_id
+                    )
+                )
 
-                                    </td>
 
+            if occupancy_value > capacity_value:
 
-                                    <!-- ACTION -->
+                flash(
+                    "Current occupancy cannot exceed shelter capacity.",
+                    "error"
+                )
 
-                                    <td style="text-align: center;">
+                return redirect(
+                    url_for(
+                        "shelters.edit_shelter",
+                        shelter_id=shelter_id
+                    )
+                )
 
-                                        <a
-                                            href="{{ url_for('shelters.shelter_details', shelter_id=shelter.shelter_id) }}"
-                                            class="view-shelter-btn">
 
-                                            <i class="fa-solid fa-eye"></i>
+            if contact_number:
 
-                                            View
+                if not contact_number.isdigit():
 
-                                        </a>
+                    flash(
+                        "Contact number must contain only digits.",
+                        "error"
+                    )
 
-                                    </td>
+                    return redirect(
+                        url_for(
+                            "shelters.edit_shelter",
+                            shelter_id=shelter_id
+                        )
+                    )
 
-                                </tr>
 
-                            {% endfor %}
+                if (
+                    len(contact_number) < 7
+                    or len(contact_number) > 15
+                ):
 
-                        </tbody>
+                    flash(
+                        "Contact number must contain between 7 and 15 digits.",
+                        "error"
+                    )
 
-                    </table>
+                    return redirect(
+                        url_for(
+                            "shelters.edit_shelter",
+                            shelter_id=shelter_id
+                        )
+                    )
 
-                </div>
 
+            if (
+                facilities
+                and len(facilities) > 1000
+            ):
 
-                <!-- NO FILTER RESULTS -->
+                flash(
+                    "Facilities description cannot exceed 1000 characters.",
+                    "error"
+                )
 
-                <div
-                    class="no-filter-results"
-                    id="noFilterResults">
+                return redirect(
+                    url_for(
+                        "shelters.edit_shelter",
+                        shelter_id=shelter_id
+                    )
+                )
 
-                    <div class="no-filter-icon">
 
-                        <i class="fa-solid fa-magnifying-glass"></i>
+            if status not in VALID_STATUSES:
 
-                    </div>
+                flash(
+                    "Invalid shelter status selected.",
+                    "error"
+                )
 
-                    <h4>
-                        No Shelters Found
-                    </h4>
+                return redirect(
+                    url_for(
+                        "shelters.edit_shelter",
+                        shelter_id=shelter_id
+                    )
+                )
 
-                    <p>
-                        No shelter matches your current search or filter.
-                    </p>
 
-                </div>
+            disaster_id_value = None
 
 
-            {% else %}
+            if disaster_id:
 
+                try:
 
-                <!-- EMPTY STATE -->
+                    disaster_id_value = int(
+                        disaster_id
+                    )
 
-                <div class="empty-shelter-state">
+                except ValueError:
 
-                    <div class="empty-shelter-icon">
+                    flash(
+                        "Invalid disaster selected.",
+                        "error"
+                    )
 
-                        <i class="fa-solid fa-house-circle-xmark"></i>
+                    return redirect(
+                        url_for(
+                            "shelters.edit_shelter",
+                            shelter_id=shelter_id
+                        )
+                    )
 
-                    </div>
 
-                    <h4>
-                        No Shelters Available
-                    </h4>
+                if disaster_id_value <= 0:
 
-                    <p>
-                        There are currently no shelters recorded.
-                    </p>
+                    flash(
+                        "Invalid disaster selected.",
+                        "error"
+                    )
 
-                    <a
-                        href="{{ url_for('shelters.add_shelter') }}"
-                        class="empty-add-btn">
+                    return redirect(
+                        url_for(
+                            "shelters.edit_shelter",
+                            shelter_id=shelter_id
+                        )
+                    )
 
-                        <i class="fa-solid fa-plus"></i>
 
-                        Add Your First Shelter
+                cursor.execute("""
+                    SELECT disaster_id
+                    FROM disasters
+                    WHERE disaster_id = %s
+                """, (
+                    disaster_id_value,
+                ))
 
-                    </a>
+                disaster_record = cursor.fetchone()
 
-                </div>
 
-            {% endif %}
+                if not disaster_record:
 
+                    flash(
+                        "Selected disaster does not exist.",
+                        "error"
+                    )
 
-        </section>
+                    return redirect(
+                        url_for(
+                            "shelters.edit_shelter",
+                            shelter_id=shelter_id
+                        )
+                    )
 
-    </div>
 
-</main>
+            # UPDATE DATABASE
 
-</div>
+            cursor.execute("""
+                UPDATE shelters
+                SET
+                    shelter_name = %s,
+                    location = %s,
+                    capacity = %s,
+                    current_occupancy = %s,
+                    contact_number = %s,
+                    facilities = %s,
+                    status = %s,
+                    disaster_id = %s
+                WHERE shelter_id = %s
+            """, (
+                shelter_name,
+                location,
+                capacity_value,
+                occupancy_value,
+                contact_number,
+                facilities,
+                status,
+                disaster_id_value,
+                shelter_id
+            ))
 
 
-<!-- =========================================
-     SHELTER SEARCH & FILTER JAVASCRIPT
-     ========================================= -->
+            connection.commit()
 
-{% if shelters %}
 
-<script>
+            flash(
+                "Shelter updated successfully.",
+                "success"
+            )
 
-    const shelterSearch =
-        document.getElementById("shelterSearch");
 
-    const shelterStatusFilter =
-        document.getElementById("shelterStatusFilter");
+            return redirect(
+                url_for(
+                    "shelters.shelter_details",
+                    shelter_id=shelter_id
+                )
+            )
 
-    const shelterRows =
-        document.querySelectorAll(".shelter-row");
 
-    const shelterFilterResult =
-        document.getElementById("shelterFilterResult");
+        return render_template(
+            "shelters/edit.html",
+            shelter=shelter
+        )
 
-    const noFilterResults =
-        document.getElementById("noFilterResults");
 
+    except Exception as e:
 
-    function filterShelters() {
+        if connection:
+            connection.rollback()
 
-        const searchValue =
-            shelterSearch.value
-                .trim()
-                .toLowerCase();
+        print(
+            "EDIT SHELTER ERROR:",
+            repr(e)
+        )
 
-        const statusValue =
-            shelterStatusFilter.value
-                .trim()
-                .toLowerCase();
+        flash(
+            "Unable to update shelter.",
+            "error"
+        )
 
+        return redirect(
+            url_for(
+                "shelters.shelter_details",
+                shelter_id=shelter_id
+            )
+        )
 
-        let visibleCount = 0;
 
+    finally:
 
-        shelterRows.forEach(function(row) {
+        if cursor:
+            cursor.close()
 
-            const name =
-                row.getAttribute("data-name") || "";
+        if connection:
+            connection.close()
 
-            const location =
-                row.getAttribute("data-location") || "";
 
-            const status =
-                row.getAttribute("data-status") || "";
+# =========================================================
+# DELETE SHELTER
+# =========================================================
 
+@shelters.route(
+    "/shelters/<int:shelter_id>/delete",
+    methods=["POST"]
+)
+def delete_shelter(shelter_id):
 
-            const matchesSearch =
-                name.includes(searchValue) ||
-                location.includes(searchValue);
+    if "user_id" not in session:
 
+        flash(
+            "Please login first.",
+            "error"
+        )
 
-            const matchesStatus =
-                !statusValue ||
-                status === statusValue;
+        return redirect(
+            url_for("auth.login")
+        )
 
 
-            if (matchesSearch && matchesStatus) {
+    # ROLE CHECK
 
-                row.style.display = "";
+    if not can_manage_shelters():
 
-                visibleCount++;
+        flash(
+            "You do not have permission to delete shelters.",
+            "error"
+        )
 
-            } else {
+        return redirect(
+            url_for(
+                "shelters.shelter_details",
+                shelter_id=shelter_id
+            )
+        )
 
-                row.style.display = "none";
 
-            }
+    connection = None
+    cursor = None
 
-        });
 
+    try:
 
-        shelterFilterResult.textContent =
-            "Showing " +
-            visibleCount +
-            " shelter record(s).";
+        connection = get_db_connection()
 
+        cursor = connection.cursor()
 
-        if (visibleCount === 0) {
 
-            noFilterResults.style.display = "block";
+        # CHECK SHELTER
 
-        } else {
+        cursor.execute("""
+            SELECT shelter_id
+            FROM shelters
+            WHERE shelter_id = %s
+        """, (
+            shelter_id,
+        ))
 
-            noFilterResults.style.display = "none";
+        shelter = cursor.fetchone()
 
-        }
 
-    }
+        if not shelter:
 
+            flash(
+                "Shelter not found.",
+                "error"
+            )
 
-    function clearShelterFilters() {
+            return redirect(
+                url_for(
+                    "shelters.shelter_list"
+                )
+            )
 
-        shelterSearch.value = "";
 
-        shelterStatusFilter.value = "";
+        # DELETE
 
-        filterShelters();
+        cursor.execute("""
+            DELETE FROM shelters
+            WHERE shelter_id = %s
+        """, (
+            shelter_id,
+        ))
 
-    }
 
+        connection.commit()
 
-    shelterSearch.addEventListener(
-        "input",
-        filterShelters
-    );
 
+        flash(
+            "Shelter deleted successfully.",
+            "success"
+        )
 
-    shelterStatusFilter.addEventListener(
-        "change",
-        filterShelters
-    );
 
+        return redirect(
+            url_for(
+                "shelters.shelter_list"
+            )
+        )
 
-    /* =========================================
-       OCCUPANCY BAR JAVASCRIPT
-       ========================================= */
 
-    document
-        .querySelectorAll(".occupancy-fill")
-        .forEach(function(bar) {
+    except Exception as e:
 
-            const width =
-                bar.getAttribute("data-width");
+        if connection:
+            connection.rollback()
 
-            if (width !== null) {
+        print(
+            "DELETE SHELTER ERROR:",
+            repr(e)
+        )
 
-                bar.style.width =
-                    width + "%";
+        flash(
+            "Unable to delete shelter. It may be linked to other records.",
+            "error"
+        )
 
-            }
+        return redirect(
+            url_for(
+                "shelters.shelter_details",
+                shelter_id=shelter_id
+            )
+        )
 
-        });
 
-</script>
+    finally:
 
-{% endif %}
+        if cursor:
+            cursor.close()
 
-{% endblock %}
+        if connection:
+            connection.close()
