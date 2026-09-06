@@ -11,18 +11,9 @@
 
 <style>
 
-    /* =========================================
-       SHELTER DETAILS
-       ========================================= */
-
     .details-wrapper {
         margin-top: 25px;
     }
-
-
-    /* =========================================
-       MAIN CARDS
-       ========================================= */
 
     .details-card {
         background: #ffffff;
@@ -33,11 +24,6 @@
         margin-bottom: 20px;
     }
 
-
-    /* =========================================
-       HERO
-       ========================================= */
-
     .details-hero {
         display: flex;
         justify-content: space-between;
@@ -45,13 +31,11 @@
         gap: 20px;
     }
 
-
     .details-title {
         display: flex;
         align-items: center;
         gap: 15px;
     }
-
 
     .details-icon {
         width: 55px;
@@ -64,23 +48,16 @@
         font-size: 22px;
     }
 
-
     .details-title h2 {
         margin: 0;
         font-size: 24px;
     }
-
 
     .details-title p {
         margin: 5px 0 0;
         opacity: 0.65;
         font-size: 14px;
     }
-
-
-    /* =========================================
-       STATUS
-       ========================================= */
 
     .status-badge {
         display: inline-flex;
@@ -93,18 +70,12 @@
         font-weight: 600;
     }
 
-
-    /* =========================================
-       INFORMATION GRID
-       ========================================= */
-
     .details-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 18px;
         margin-top: 25px;
     }
-
 
     .info-box {
         padding: 20px;
@@ -113,7 +84,6 @@
         background: #fafafa;
     }
 
-
     .info-box-header {
         display: flex;
         align-items: center;
@@ -121,11 +91,9 @@
         margin-bottom: 10px;
     }
 
-
     .info-box-header i {
         opacity: 0.6;
     }
-
 
     .info-label {
         font-size: 12px;
@@ -134,22 +102,15 @@
         letter-spacing: 0.5px;
     }
 
-
     .info-value {
         font-size: 17px;
         font-weight: 600;
         word-break: break-word;
     }
 
-
-    /* =========================================
-       CAPACITY
-       ========================================= */
-
     .capacity-section {
         margin-top: 25px;
     }
-
 
     .capacity-header {
         display: flex;
@@ -158,11 +119,9 @@
         margin-bottom: 10px;
     }
 
-
     .capacity-header strong {
         font-size: 15px;
     }
-
 
     .capacity-bar {
         width: 100%;
@@ -172,18 +131,12 @@
         overflow: hidden;
     }
 
-
     .capacity-fill {
         height: 100%;
         background: #333333;
         border-radius: 20px;
         transition: width 0.5s ease;
     }
-
-
-    /* =========================================
-       FACILITIES
-       ========================================= */
 
     .facilities-box {
         margin-top: 20px;
@@ -195,7 +148,6 @@
         white-space: pre-line;
     }
 
-
     .section-heading {
         display: flex;
         align-items: center;
@@ -203,21 +155,14 @@
         margin-bottom: 15px;
     }
 
-
     .section-heading h3 {
         margin: 0;
         font-size: 17px;
     }
 
-
     .section-heading i {
         opacity: 0.65;
     }
-
-
-    /* =========================================
-       ACTIONS
-       ========================================= */
 
     .details-actions {
         display: flex;
@@ -227,12 +172,10 @@
         margin-top: 25px;
     }
 
-
     .action-group {
         display: flex;
         gap: 10px;
     }
-
 
     .details-btn {
         display: inline-flex;
@@ -249,13 +192,11 @@
         box-sizing: border-box;
     }
 
-
     .back-btn {
         border: 1px solid #dddddd;
         background: #ffffff;
         color: #222222;
     }
-
 
     .edit-btn {
         border: none;
@@ -263,96 +204,58 @@
         color: #ffffff;
     }
 
-
     .delete-btn {
         border: 1px solid #dddddd;
         background: #ffffff;
         color: #222222;
     }
 
-
     .delete-btn:hover {
         background: #f5f5f5;
         border-color: #bbbbbb;
     }
-
 
     .details-btn:hover {
         transform: translateY(-1px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     }
 
-
-    /* =========================================
-       DELETE FORM
-       ========================================= */
-
     .delete-form {
         margin: 0;
         padding: 0;
     }
 
-
-    /* =========================================
-       DELETE MODAL OVERLAY
-       ========================================= */
-
     .delete-modal-overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-
+        inset: 0;
         width: 100%;
         height: 100%;
-
         background: rgba(0, 0, 0, 0.55);
-
         display: none;
-
         align-items: center;
         justify-content: center;
-
         z-index: 99999;
-
         padding: 20px;
-
         box-sizing: border-box;
-
         backdrop-filter: blur(4px);
     }
-
 
     .delete-modal-overlay.show {
         display: flex;
     }
 
-
-    /* =========================================
-       DELETE MODAL
-       ========================================= */
-
     .delete-modal {
         width: 100%;
         max-width: 450px;
-
         background: #ffffff;
-
         border-radius: 18px;
-
         padding: 30px;
-
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-
         box-sizing: border-box;
-
         animation: deleteModalAppear 0.2s ease-out;
     }
 
-
     @keyframes deleteModalAppear {
-
         from {
             opacity: 0;
             transform: translateY(-15px) scale(0.97);
@@ -362,141 +265,79 @@
             opacity: 1;
             transform: translateY(0) scale(1);
         }
-
     }
-
-
-    /* =========================================
-       MODAL ICON
-       ========================================= */
 
     .delete-modal-icon {
         width: 58px;
         height: 58px;
-
         border-radius: 50%;
-
         background: #f1f1f1;
-
         display: flex;
-
         align-items: center;
         justify-content: center;
-
         margin-bottom: 18px;
-
         font-size: 23px;
-
         color: #222222;
     }
-
-
-    /* =========================================
-       MODAL TEXT
-       ========================================= */
 
     .delete-modal h3 {
         margin: 0 0 10px;
-
         font-size: 21px;
-
         color: #222222;
     }
-
 
     .delete-modal p {
         margin: 0;
-
         font-size: 14px;
-
         line-height: 1.7;
-
         color: #666666;
     }
 
-
-    /* =========================================
-       SHELTER NAME IN MODAL
-       ========================================= */
-
     .delete-modal-shelter {
         margin-top: 14px;
-
         padding: 12px 14px;
-
         background: #f7f7f7;
-
         border-radius: 10px;
-
         font-size: 14px;
-
         font-weight: 600;
-
         color: #222222;
     }
-
-
-    /* =========================================
-       MODAL ACTIONS
-       ========================================= */
 
     .delete-modal-actions {
         display: flex;
-
         justify-content: flex-end;
-
         gap: 10px;
-
         margin-top: 25px;
     }
 
-
     .modal-btn {
         border: none;
-
         padding: 11px 18px;
-
         border-radius: 9px;
-
         font-size: 14px;
-
         font-weight: 600;
-
         cursor: pointer;
-
         transition: 0.2s ease;
     }
 
-
     .modal-cancel-btn {
         background: #f1f1f1;
-
         color: #222222;
     }
-
 
     .modal-cancel-btn:hover {
         background: #e5e5e5;
     }
 
-
     .modal-delete-btn {
         background: #222222;
-
         color: #ffffff;
     }
 
-
     .modal-delete-btn:hover {
         background: #000000;
-
         transform: translateY(-1px);
     }
-
-
-    /* =========================================
-       RESPONSIVE
-       ========================================= */
 
     @media (max-width: 900px) {
 
@@ -506,50 +347,41 @@
 
     }
 
-
     @media (max-width: 600px) {
 
         .details-card {
             padding: 20px;
         }
 
-
         .details-hero {
             flex-direction: column;
         }
 
-
         .details-grid {
             grid-template-columns: 1fr;
         }
-
 
         .details-actions {
             flex-direction: column;
             align-items: stretch;
         }
 
-
         .action-group {
             flex-direction: column;
         }
 
-
         .details-btn {
             width: 100%;
         }
-
 
         .delete-modal {
             padding: 24px;
             max-width: 100%;
         }
 
-
         .delete-modal-actions {
             flex-direction: column-reverse;
         }
-
 
         .modal-btn {
             width: 100%;
@@ -566,188 +398,92 @@
 <div class="dashboard-page">
 
 ```
-<!-- =========================================
-     SIDEBAR
-     ========================================= -->
+<!-- SIDEBAR -->
 
 <aside class="sidebar">
-
-
-    <!-- BRAND -->
 
     <div class="sidebar-brand">
 
         <div class="brand-icon">
-
             <i class="fa-solid fa-hand-holding-heart"></i>
-
         </div>
 
-
         <div>
-
             <h2>DRRMS</h2>
-
-            <span>
-                Disaster Relief
-            </span>
-
+            <span>Disaster Relief</span>
         </div>
 
     </div>
 
 
-    <!-- NAVIGATION -->
-
     <nav class="sidebar-nav">
-
-
-        <!-- DASHBOARD -->
 
         <a href="{{ url_for('dashboard.dashboard_home') }}"
            class="nav-item">
-
             <i class="fa-solid fa-chart-line"></i>
-
-            <span>
-                Dashboard
-            </span>
-
+            <span>Dashboard</span>
         </a>
 
-
-        <!-- DISASTERS -->
 
         <a href="{{ url_for('disaster.disaster_list') }}"
            class="nav-item">
-
             <i class="fa-solid fa-triangle-exclamation"></i>
-
-            <span>
-                Disasters
-            </span>
-
+            <span>Disasters</span>
         </a>
 
-
-        <!-- RESOURCES -->
 
         <a href="{{ url_for('resource.resource_list') }}"
            class="nav-item">
-
             <i class="fa-solid fa-boxes-stacked"></i>
-
-            <span>
-                Resources
-            </span>
-
+            <span>Resources</span>
         </a>
 
-
-        <!-- SHELTERS -->
 
         <a href="{{ url_for('shelters.shelter_list') }}"
            class="nav-item active">
-
             <i class="fa-solid fa-house-medical"></i>
-
-            <span>
-                Shelters
-            </span>
-
+            <span>Shelters</span>
         </a>
 
 
-        <!-- VEHICLES -->
-
-        <a href="#"
-           class="nav-item">
-
+        <a href="#" class="nav-item">
             <i class="fa-solid fa-truck"></i>
-
-            <span>
-                Vehicles
-            </span>
-
+            <span>Vehicles</span>
         </a>
 
 
-        <!-- VOLUNTEERS -->
-
-        <a href="#"
-           class="nav-item">
-
+        <a href="#" class="nav-item">
             <i class="fa-solid fa-users"></i>
-
-            <span>
-                Volunteers
-            </span>
-
+            <span>Volunteers</span>
         </a>
 
 
-        <!-- RELIEF REQUESTS -->
-
-        <a href="#"
-           class="nav-item">
-
+        <a href="#" class="nav-item">
             <i class="fa-solid fa-clipboard-list"></i>
-
-            <span>
-                Relief Requests
-            </span>
-
+            <span>Relief Requests</span>
         </a>
 
 
-        <!-- REPORTS -->
-
-        <a href="#"
-           class="nav-item">
-
+        <a href="#" class="nav-item">
             <i class="fa-solid fa-chart-pie"></i>
-
-            <span>
-                Reports
-            </span>
-
+            <span>Reports</span>
         </a>
 
     </nav>
 
 
-    <!-- =========================================
-         SIDEBAR BOTTOM
-         ========================================= -->
-
     <div class="sidebar-bottom">
 
-
-        <!-- SETTINGS -->
-
-        <a href="#"
-           class="nav-item">
-
+        <a href="#" class="nav-item">
             <i class="fa-solid fa-gear"></i>
-
-            <span>
-                Settings
-            </span>
-
+            <span>Settings</span>
         </a>
 
 
-        <!-- LOGOUT -->
-
         <a href="{{ url_for('auth.logout') }}"
            class="nav-item logout">
-
             <i class="fa-solid fa-right-from-bracket"></i>
-
-            <span>
-                Logout
-            </span>
-
+            <span>Logout</span>
         </a>
 
     </div>
@@ -755,25 +491,15 @@
 </aside>
 
 
-<!-- =========================================
-     MAIN CONTENT
-     ========================================= -->
+<!-- MAIN CONTENT -->
 
 <main class="dashboard-main">
 
-
-    <!-- =========================================
-         HEADER
-         ========================================= -->
-
     <header class="dashboard-header">
-
 
         <div>
 
-            <h1>
-                Shelter Details
-            </h1>
+            <h1>Shelter Details</h1>
 
             <p>
                 View complete information about this emergency shelter.
@@ -782,15 +508,10 @@
         </div>
 
 
-        <!-- USER PROFILE -->
-
         <div class="user-profile">
 
-
             <div class="user-avatar">
-
                 {{ session["full_name"][0] | upper }}
-
             </div>
 
 
@@ -811,32 +532,18 @@
     </header>
 
 
-    <!-- =========================================
-         DETAILS CONTENT
-         ========================================= -->
-
     <div class="details-wrapper">
 
-
-        <!-- =====================================
-             SHELTER OVERVIEW
-             ===================================== -->
+        <!-- SHELTER OVERVIEW -->
 
         <section class="details-card">
 
-
-            <!-- HERO -->
-
             <div class="details-hero">
-
 
                 <div class="details-title">
 
-
                     <div class="details-icon">
-
                         <i class="fa-solid fa-house-medical"></i>
-
                     </div>
 
 
@@ -855,8 +562,6 @@
                 </div>
 
 
-                <!-- STATUS -->
-
                 <div class="status-badge">
 
                     <i class="fa-solid fa-circle"></i>
@@ -868,152 +573,87 @@
             </div>
 
 
-            <!-- =================================
-                 INFORMATION GRID
-                 ================================= -->
-
             <div class="details-grid">
 
-
-                <!-- LOCATION -->
-
                 <div class="info-box">
 
                     <div class="info-box-header">
-
                         <i class="fa-solid fa-location-dot"></i>
-
-                        <span class="info-label">
-                            Location
-                        </span>
-
+                        <span class="info-label">Location</span>
                     </div>
 
-
                     <div class="info-value">
-
                         {{ shelter.location }}
-
                     </div>
 
                 </div>
 
 
-                <!-- CONTACT -->
-
                 <div class="info-box">
 
                     <div class="info-box-header">
-
                         <i class="fa-solid fa-phone"></i>
-
-                        <span class="info-label">
-                            Contact
-                        </span>
-
+                        <span class="info-label">Contact</span>
                     </div>
 
-
                     <div class="info-value">
-
                         {{ shelter.contact_number or "N/A" }}
-
                     </div>
 
                 </div>
 
 
-                <!-- DISASTER -->
-
                 <div class="info-box">
 
                     <div class="info-box-header">
-
                         <i class="fa-solid fa-triangle-exclamation"></i>
-
-                        <span class="info-label">
-                            Disaster ID
-                        </span>
-
+                        <span class="info-label">Disaster ID</span>
                     </div>
 
-
                     <div class="info-value">
-
                         {{ shelter.disaster_id or "Not Linked" }}
-
                     </div>
 
                 </div>
 
 
-                <!-- CAPACITY -->
-
                 <div class="info-box">
 
                     <div class="info-box-header">
-
                         <i class="fa-solid fa-users"></i>
-
-                        <span class="info-label">
-                            Capacity
-                        </span>
-
+                        <span class="info-label">Capacity</span>
                     </div>
 
-
                     <div class="info-value">
-
                         {{ shelter.capacity }} people
-
                     </div>
 
                 </div>
 
 
-                <!-- CURRENT OCCUPANCY -->
-
                 <div class="info-box">
 
                     <div class="info-box-header">
-
                         <i class="fa-solid fa-user-group"></i>
-
-                        <span class="info-label">
-                            Current Occupancy
-                        </span>
-
+                        <span class="info-label">Current Occupancy</span>
                     </div>
 
-
                     <div class="info-value">
-
                         {{ shelter.current_occupancy }} people
-
                     </div>
 
                 </div>
 
 
-                <!-- CREATED -->
-
                 <div class="info-box">
 
                     <div class="info-box-header">
-
                         <i class="fa-solid fa-calendar"></i>
-
-                        <span class="info-label">
-                            Created
-                        </span>
-
+                        <span class="info-label">Created</span>
                     </div>
 
-
                     <div class="info-value">
-
                         {{ shelter.created_at }}
-
                     </div>
 
                 </div>
@@ -1021,28 +661,18 @@
             </div>
 
 
-            <!-- =================================
-                 CAPACITY BAR
-                 ================================= -->
+            <!-- CAPACITY BAR -->
 
             <div class="capacity-section">
 
-
                 <div class="capacity-header">
 
-                    <strong>
-                        Occupancy
-                    </strong>
-
+                    <strong>Occupancy</strong>
 
                     <span>
-
                         {{ shelter.current_occupancy }}
-
                         /
-
                         {{ shelter.capacity }}
-
                     </span>
 
                 </div>
@@ -1054,11 +684,8 @@
                         (shelter.current_occupancy / shelter.capacity * 100)
                     %}
 
-
                     {% if occupancy_percent > 100 %}
-
                         {% set occupancy_percent = 100 %}
-
                     {% endif %}
 
                 {% else %}
@@ -1082,12 +709,9 @@
         </section>
 
 
-        <!-- =====================================
-             FACILITIES
-             ===================================== -->
+        <!-- FACILITIES -->
 
         <section class="details-card">
-
 
             <div class="section-heading">
 
@@ -1102,31 +726,20 @@
 
             <div class="facilities-box">
 
-
                 {% if shelter.facilities %}
-
                     {{ shelter.facilities }}
-
                 {% else %}
-
                     No facilities information provided.
-
                 {% endif %}
-
 
             </div>
 
         </section>
 
 
-        <!-- =====================================
-             ACTIONS
-             ===================================== -->
+        <!-- ACTIONS -->
 
         <div class="details-actions">
-
-
-            <!-- BACK -->
 
             <a href="{{ url_for('shelters.shelter_list') }}"
                class="details-btn back-btn">
@@ -1138,12 +751,9 @@
             </a>
 
 
-            <!-- RIGHT ACTIONS -->
+            {% if session.get("role") in ["admin", "coordinator"] %}
 
             <div class="action-group">
-
-
-                <!-- EDIT SHELTER -->
 
                 <a href="{{ url_for('shelters.edit_shelter', shelter_id=shelter.shelter_id) }}"
                    class="details-btn edit-btn">
@@ -1154,8 +764,6 @@
 
                 </a>
 
-
-                <!-- DELETE SHELTER -->
 
                 <button
                     type="button"
@@ -1170,8 +778,9 @@
 
             </div>
 
-        </div>
+            {% endif %}
 
+        </div>
 
     </div>
 
@@ -1180,18 +789,15 @@
 
 </div>
 
-<!-- =========================================
-     DELETE CONFIRMATION MODAL
-     ========================================= -->
+<!-- DELETE CONFIRMATION MODAL -->
+
+{% if session.get("role") in ["admin", "coordinator"] %}
 
 <div id="deleteModal"
      class="delete-modal-overlay">
 
 ```
 <div class="delete-modal">
-
-
-    <!-- MODAL ICON -->
 
     <div class="delete-modal-icon">
 
@@ -1200,22 +806,16 @@
     </div>
 
 
-    <!-- MODAL TITLE -->
-
     <h3>
         Delete Shelter?
     </h3>
 
-
-    <!-- MODAL MESSAGE -->
 
     <p>
         Are you sure you want to delete this shelter?
         This action cannot be undone.
     </p>
 
-
-    <!-- SHELTER NAME -->
 
     <div class="delete-modal-shelter">
 
@@ -1226,12 +826,7 @@
     </div>
 
 
-    <!-- MODAL ACTIONS -->
-
     <div class="delete-modal-actions">
-
-
-        <!-- CANCEL -->
 
         <button
             type="button"
@@ -1243,12 +838,17 @@
         </button>
 
 
-        <!-- ACTUAL DELETE FORM -->
+        <!-- DELETE FORM WITH CSRF TOKEN -->
 
         <form
             class="delete-form"
             action="{{ url_for('shelters.delete_shelter', shelter_id=shelter.shelter_id) }}"
             method="POST">
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}">
 
             <button
                 type="submit"
@@ -1262,7 +862,6 @@
 
         </form>
 
-
     </div>
 
 </div>
@@ -1270,34 +869,26 @@
 
 </div>
 
-<!-- =========================================
-     JAVASCRIPT
-     ========================================= -->
+{% endif %}
 
 <script>
-
-    /* =========================================
-       OCCUPANCY BAR
-       ========================================= */
 
     document
         .querySelectorAll(".capacity-fill")
         .forEach(function(bar) {
 
-            const width = bar.getAttribute("data-width");
+            const width =
+                bar.getAttribute("data-width");
 
             if (width !== null) {
 
-                bar.style.width = width + "%";
+                bar.style.width =
+                    width + "%";
 
             }
 
         });
 
-
-    /* =========================================
-       DELETE MODAL ELEMENTS
-       ========================================= */
 
     const deleteModal =
         document.getElementById("deleteModal");
@@ -1309,10 +900,6 @@
         document.getElementById("cancelDeleteButton");
 
 
-    /* =========================================
-       OPEN DELETE MODAL
-       ========================================= */
-
     if (openDeleteButton && deleteModal) {
 
         openDeleteButton.addEventListener(
@@ -1321,17 +908,14 @@
 
                 deleteModal.classList.add("show");
 
-                document.body.style.overflow = "hidden";
+                document.body.style.overflow =
+                    "hidden";
 
             }
         );
 
     }
 
-
-    /* =========================================
-       CLOSE DELETE MODAL
-       ========================================= */
 
     if (cancelDeleteButton && deleteModal) {
 
@@ -1341,17 +925,14 @@
 
                 deleteModal.classList.remove("show");
 
-                document.body.style.overflow = "";
+                document.body.style.overflow =
+                    "";
 
             }
         );
 
     }
 
-
-    /* =========================================
-       CLOSE WHEN CLICKING OUTSIDE
-       ========================================= */
 
     if (deleteModal) {
 
@@ -1363,7 +944,8 @@
 
                     deleteModal.classList.remove("show");
 
-                    document.body.style.overflow = "";
+                    document.body.style.overflow =
+                        "";
 
                 }
 
@@ -1373,26 +955,20 @@
     }
 
 
-    /* =========================================
-       ESCAPE KEY
-       ========================================= */
-
     document.addEventListener(
         "keydown",
         function(event) {
 
-            if (event.key === "Escape") {
+            if (
+                event.key === "Escape" &&
+                deleteModal &&
+                deleteModal.classList.contains("show")
+            ) {
 
-                if (
-                    deleteModal &&
-                    deleteModal.classList.contains("show")
-                ) {
+                deleteModal.classList.remove("show");
 
-                    deleteModal.classList.remove("show");
-
-                    document.body.style.overflow = "";
-
-                }
+                document.body.style.overflow =
+                    "";
 
             }
 
