@@ -79,10 +79,7 @@ def disaster_list():
 
     except Exception as e:
 
-        print(
-            "DISASTER LIST ERROR:",
-            repr(e)
-        )
+        print("DISASTER LIST ERROR:", repr(e))
 
         flash(
             "Unable to load disaster records.",
@@ -195,10 +192,6 @@ def add_disaster():
         return redirect(url_for("auth.login"))
 
     if request.method == "POST":
-
-        # -------------------------------------------------
-        # GET FORM DATA SAFELY
-        # -------------------------------------------------
 
         disaster_name = request.form.get(
             "disaster_name",
@@ -350,7 +343,7 @@ def add_disaster():
 
 
         # -------------------------------------------------
-        # DISASTER TYPE VALIDATION
+        # SELECT VALIDATION
         # -------------------------------------------------
 
         if disaster_type not in VALID_DISASTER_TYPES:
@@ -365,10 +358,6 @@ def add_disaster():
             )
 
 
-        # -------------------------------------------------
-        # SEVERITY VALIDATION
-        # -------------------------------------------------
-
         if severity not in VALID_SEVERITIES:
 
             flash(
@@ -380,10 +369,6 @@ def add_disaster():
                 url_for("disaster.add_disaster")
             )
 
-
-        # -------------------------------------------------
-        # STATUS VALIDATION
-        # -------------------------------------------------
 
         if status not in VALID_STATUSES:
 
@@ -567,10 +552,6 @@ def edit_disaster(disaster_id):
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
-        # -------------------------------------------------
-        # GET EXISTING DISASTER
-        # -------------------------------------------------
-
         cursor.execute("""
             SELECT
                 disaster_id,
@@ -599,10 +580,6 @@ def edit_disaster(disaster_id):
                 url_for("disaster.disaster_list")
             )
 
-
-        # -------------------------------------------------
-        # UPDATE DISASTER
-        # -------------------------------------------------
 
         if request.method == "POST":
 
@@ -962,6 +939,7 @@ def edit_disaster(disaster_id):
 
 # =========================================================
 # DELETE DISASTER
+# ADMIN ONLY
 # =========================================================
 
 @disaster.route(
@@ -970,9 +948,25 @@ def edit_disaster(disaster_id):
 )
 def delete_disaster(disaster_id):
 
+    # -------------------------------------------------
+    # CHECK LOGIN
+    # -------------------------------------------------
+
     if "user_id" not in session:
-        flash("Please login first.", "error")
-        return redirect(url_for("auth.login"))
+
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+
+    # -------------------------------------------------
+    # CHECK ADMIN ROLE FROM DATABASE
+    # -------------------------------------------------
 
     connection = None
     cursor = None
@@ -980,18 +974,91 @@ def delete_disaster(disaster_id):
     try:
 
         connection = get_db_connection()
-        cursor = connection.cursor()
+
+        cursor = connection.cursor(
+            dictionary=True
+        )
+
+        cursor.execute("""
+            SELECT
+                user_id,
+                role,
+                status
+            FROM users
+            WHERE user_id = %s
+        """, (
+            session["user_id"],
+        ))
+
+        user = cursor.fetchone()
+
+
+        # -------------------------------------------------
+        # USER CHECK
+        # -------------------------------------------------
+
+        if not user:
+
+            flash(
+                "User account not found.",
+                "error"
+            )
+
+            session.clear()
+
+            return redirect(
+                url_for("auth.login")
+            )
+
+
+        if user["status"] != "active":
+
+            flash(
+                "Your account is not active.",
+                "error"
+            )
+
+            session.clear()
+
+            return redirect(
+                url_for("auth.login")
+            )
+
+
+        # -------------------------------------------------
+        # ADMIN ONLY SECURITY
+        # -------------------------------------------------
+
+        if user["role"] != "admin":
+
+            print(
+                "DELETE BLOCKED | USER ID:",
+                user["user_id"],
+                "| ROLE:",
+                user["role"]
+            )
+
+            flash(
+                "Access denied. Only the admin can delete disasters.",
+                "error"
+            )
+
+            return redirect(
+                url_for("disaster.disaster_list")
+            )
+
 
         # -------------------------------------------------
         # CHECK WHETHER DISASTER EXISTS
         # -------------------------------------------------
 
         cursor.execute("""
-            SELECT
-                disaster_id
+            SELECT disaster_id
             FROM disasters
             WHERE disaster_id = %s
-        """, (disaster_id,))
+        """, (
+            disaster_id,
+        ))
 
         disaster_record = cursor.fetchone()
 
@@ -1006,21 +1073,34 @@ def delete_disaster(disaster_id):
                 url_for("disaster.disaster_list")
             )
 
+
         # -------------------------------------------------
-        # DATABASE DELETE
+        # DELETE DISASTER
         # -------------------------------------------------
 
         cursor.execute("""
             DELETE FROM disasters
             WHERE disaster_id = %s
-        """, (disaster_id,))
+        """, (
+            disaster_id,
+        ))
 
         connection.commit()
+
+        print(
+            "DISASTER DELETED | ADMIN USER ID:",
+            user["user_id"]
+        )
 
         flash(
             "Disaster deleted successfully.",
             "success"
         )
+
+        return redirect(
+            url_for("disaster.disaster_list")
+        )
+
 
     except Exception as e:
 
@@ -1037,6 +1117,11 @@ def delete_disaster(disaster_id):
             "error"
         )
 
+        return redirect(
+            url_for("disaster.disaster_list")
+        )
+
+
     finally:
 
         if cursor:
@@ -1044,7 +1129,3 @@ def delete_disaster(disaster_id):
 
         if connection:
             connection.close()
-
-    return redirect(
-        url_for("disaster.disaster_list")
-    )
