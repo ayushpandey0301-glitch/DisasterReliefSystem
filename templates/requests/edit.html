@@ -208,6 +208,7 @@ Edit Relief Request | Disaster Relief Management System
 
 <div class="request-form-page">
 
+```
 <!-- =========================================
      HEADER
      ========================================= -->
@@ -231,68 +232,92 @@ Edit Relief Request | Disaster Relief Management System
 
 <div class="request-form-container">
 
-    <form method="POST"
-          action="{{ url_for('requests.edit_request', request_id=request.request_id) }}"
-          class="request-form">
+
+    <form
+        method="POST"
+        action="{{ url_for(
+            'requests.edit_request',
+            request_id=request.request_id
+        ) }}"
+        class="request-form">
 
 
-        <!-- CSRF PROTECTION -->
+        <!-- =========================================
+             CSRF PROTECTION
+             ========================================= -->
 
-        <input type="hidden"
-               name="csrf_token"
-               value="{{ csrf_token() }}">
+        <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}">
 
 
-        <!-- REQUESTER NAME -->
+        <!-- =========================================
+             DISASTER ID
+             ========================================= -->
 
         <div class="form-group">
 
-            <label for="requester_name">
+            <label for="disaster_id">
 
-                Requester Name
+                Disaster ID
 
                 <span class="required">*</span>
 
             </label>
 
             <input
-                type="text"
-                id="requester_name"
-                name="requester_name"
-                value="{{ request.requester_name }}"
-                placeholder="Enter requester name"
+                type="number"
+                id="disaster_id"
+                name="disaster_id"
+                value="{{ request.disaster_id }}"
+                placeholder="Enter disaster ID"
+                min="1"
                 required
             >
+
+            <span class="form-hint">
+                Enter the ID of the disaster related to this request.
+            </span>
 
         </div>
 
 
-        <!-- CONTACT -->
+        <!-- =========================================
+             REQUESTER
+             ========================================= -->
 
         <div class="form-group">
 
-            <label for="contact">
-                Contact Number
+            <label for="requester_name">
+
+                Requester
+
             </label>
 
             <input
                 type="text"
-                id="contact"
-                name="contact"
-                value="{{ request.contact or '' }}"
-                placeholder="Enter contact number"
+                id="requester_name"
+                value="{{ request.requester_name }}"
+                readonly
             >
+
+            <span class="form-hint">
+                The requester cannot be changed.
+            </span>
 
         </div>
 
 
-        <!-- REQUEST TYPE -->
+        <!-- =========================================
+             RESOURCE TYPE
+             ========================================= -->
 
         <div class="form-group">
 
             <label for="request_type">
 
-                Request Type
+                Resource Type
 
                 <span class="required">*</span>
 
@@ -305,41 +330,76 @@ Edit Relief Request | Disaster Relief Management System
             >
 
                 <option value="">
-                    Select request type
+                    Select resource type
                 </option>
 
-                <option value="Food"
-                    {% if request.request_type == "Food" %}selected{% endif %}>
+
+                <option
+                    value="Food"
+                    {% if request.request_type == "Food" %}
+                        selected
+                    {% endif %}
+                >
                     Food
                 </option>
 
-                <option value="Water"
-                    {% if request.request_type == "Water" %}selected{% endif %}>
+
+                <option
+                    value="Water"
+                    {% if request.request_type == "Water" %}
+                        selected
+                    {% endif %}
+                >
                     Water
                 </option>
 
-                <option value="Medicine"
-                    {% if request.request_type == "Medicine" %}selected{% endif %}>
+
+                <option
+                    value="Medicine"
+                    {% if request.request_type == "Medicine" %}
+                        selected
+                    {% endif %}
+                >
                     Medicine
                 </option>
 
-                <option value="Clothing"
-                    {% if request.request_type == "Clothing" %}selected{% endif %}>
+
+                <option
+                    value="Clothing"
+                    {% if request.request_type == "Clothing" %}
+                        selected
+                    {% endif %}
+                >
                     Clothing
                 </option>
 
-                <option value="Shelter"
-                    {% if request.request_type == "Shelter" %}selected{% endif %}>
+
+                <option
+                    value="Shelter"
+                    {% if request.request_type == "Shelter" %}
+                        selected
+                    {% endif %}
+                >
                     Shelter
                 </option>
 
-                <option value="Rescue"
-                    {% if request.request_type == "Rescue" %}selected{% endif %}>
+
+                <option
+                    value="Rescue"
+                    {% if request.request_type == "Rescue" %}
+                        selected
+                    {% endif %}
+                >
                     Rescue
                 </option>
 
-                <option value="Other"
-                    {% if request.request_type == "Other" %}selected{% endif %}>
+
+                <option
+                    value="Other"
+                    {% if request.request_type == "Other" %}
+                        selected
+                    {% endif %}
+                >
                     Other
                 </option>
 
@@ -348,7 +408,63 @@ Edit Relief Request | Disaster Relief Management System
         </div>
 
 
-        <!-- LOCATION -->
+        <!-- =========================================
+             RESOURCE NAME
+             ========================================= -->
+
+        <div class="form-group">
+
+            <label for="resource_name">
+
+                Resource Name
+
+                <span class="required">*</span>
+
+            </label>
+
+            <input
+                type="text"
+                id="resource_name"
+                name="resource_name"
+                value="{{ request.resource_name }}"
+                placeholder="Example: Drinking Water"
+                maxlength="150"
+                required
+            >
+
+        </div>
+
+
+        <!-- =========================================
+             QUANTITY REQUESTED
+             ========================================= -->
+
+        <div class="form-group">
+
+            <label for="quantity_requested">
+
+                Quantity Requested
+
+                <span class="required">*</span>
+
+            </label>
+
+            <input
+                type="number"
+                id="quantity_requested"
+                name="quantity_requested"
+                value="{{ request.quantity_requested }}"
+                placeholder="Enter quantity"
+                min="1"
+                required
+            >
+
+        </div>
+
+
+        <!-- =========================================
+             LOCATION
+             ========================================= -->
 
         <div class="form-group">
 
@@ -366,18 +482,23 @@ Edit Relief Request | Disaster Relief Management System
                 name="location"
                 value="{{ request.location }}"
                 placeholder="Enter request location"
+                maxlength="255"
                 required
             >
 
         </div>
 
 
-        <!-- PRIORITY -->
+        <!-- =========================================
+             PRIORITY
+             ========================================= -->
 
         <div class="form-group">
 
             <label for="priority">
+
                 Priority
+
             </label>
 
             <select
@@ -385,23 +506,42 @@ Edit Relief Request | Disaster Relief Management System
                 name="priority"
             >
 
-                <option value="Low"
-                    {% if request.priority == "Low" %}selected{% endif %}>
+                <option
+                    value="Low"
+                    {% if request.priority == "Low" %}
+                        selected
+                    {% endif %}
+                >
                     Low
                 </option>
 
-                <option value="Medium"
-                    {% if request.priority == "Medium" %}selected{% endif %}>
+
+                <option
+                    value="Medium"
+                    {% if request.priority == "Medium" %}
+                        selected
+                    {% endif %}
+                >
                     Medium
                 </option>
 
-                <option value="High"
-                    {% if request.priority == "High" %}selected{% endif %}>
+
+                <option
+                    value="High"
+                    {% if request.priority == "High" %}
+                        selected
+                    {% endif %}
+                >
                     High
                 </option>
 
-                <option value="Critical"
-                    {% if request.priority == "Critical" %}selected{% endif %}>
+
+                <option
+                    value="Critical"
+                    {% if request.priority == "Critical" %}
+                        selected
+                    {% endif %}
+                >
                     Critical
                 </option>
 
@@ -410,12 +550,16 @@ Edit Relief Request | Disaster Relief Management System
         </div>
 
 
-        <!-- STATUS -->
+        <!-- =========================================
+             STATUS
+             ========================================= -->
 
         <div class="form-group">
 
             <label for="status">
+
                 Status
+
             </label>
 
             <select
@@ -423,24 +567,53 @@ Edit Relief Request | Disaster Relief Management System
                 name="status"
             >
 
-                <option value="Pending"
-                    {% if request.status == "Pending" %}selected{% endif %}>
+                <option
+                    value="Pending"
+                    {% if request.status == "Pending" %}
+                        selected
+                    {% endif %}
+                >
                     Pending
                 </option>
 
-                <option value="In Progress"
-                    {% if request.status == "In Progress" %}selected{% endif %}>
-                    In Progress
+
+                <option
+                    value="Approved"
+                    {% if request.status == "Approved" %}
+                        selected
+                    {% endif %}
+                >
+                    Approved
                 </option>
 
-                <option value="Resolved"
-                    {% if request.status == "Resolved" %}selected{% endif %}>
-                    Resolved
-                </option>
 
-                <option value="Rejected"
-                    {% if request.status == "Rejected" %}selected{% endif %}>
+                <option
+                    value="Rejected"
+                    {% if request.status == "Rejected" %}
+                        selected
+                    {% endif %}
+                >
                     Rejected
+                </option>
+
+
+                <option
+                    value="Partially Allocated"
+                    {% if request.status == "Partially Allocated" %}
+                        selected
+                    {% endif %}
+                >
+                    Partially Allocated
+                </option>
+
+
+                <option
+                    value="Completed"
+                    {% if request.status == "Completed" %}
+                        selected
+                    {% endif %}
+                >
+                    Completed
                 </option>
 
             </select>
@@ -448,29 +621,40 @@ Edit Relief Request | Disaster Relief Management System
         </div>
 
 
-        <!-- DESCRIPTION -->
+        <!-- =========================================
+             DESCRIPTION
+             ========================================= -->
 
         <div class="form-group full-width">
 
             <label for="description">
-                Description
+
+                Reason / Description
+
             </label>
 
             <textarea
                 id="description"
                 name="description"
                 placeholder="Describe the relief required..."
+                maxlength="1000"
             >{{ request.description or '' }}</textarea>
 
         </div>
 
 
-        <!-- BUTTONS -->
+        <!-- =========================================
+             BUTTONS
+             ========================================= -->
 
         <div class="form-actions">
 
-            <a href="{{ url_for('requests.request_details', request_id=request.request_id) }}"
-               class="btn btn-cancel">
+            <a
+                href="{{ url_for(
+                    'requests.request_details',
+                    request_id=request.request_id
+                ) }}"
+                class="btn btn-cancel">
 
                 <i class="fa-solid fa-arrow-left"></i>
 
@@ -495,6 +679,7 @@ Edit Relief Request | Disaster Relief Management System
     </form>
 
 </div>
+```
 
 </div>
 
