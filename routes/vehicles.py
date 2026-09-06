@@ -24,6 +24,18 @@ VALID_STATUSES = {
 }
 
 
+# =========================================================
+# ROLE PERMISSION
+# =========================================================
+
+def can_manage_vehicles():
+
+    return (
+        "user_id" in session
+        and session.get("role") in ["admin", "coordinator"]
+    )
+
+
 # =========================================
 # VEHICLE LIST
 # =========================================
@@ -94,10 +106,6 @@ def add_vehicle():
         return redirect(url_for("auth.login"))
 
     if request.method == "POST":
-
-        # =========================================
-        # GET FORM DATA SAFELY
-        # =========================================
 
         vehicle_number = request.form.get(
             "vehicle_number",
@@ -337,10 +345,6 @@ def add_vehicle():
             )
 
 
-        # =========================================
-        # DATABASE INSERT
-        # =========================================
-
         connection = None
         cursor = None
 
@@ -350,13 +354,13 @@ def add_vehicle():
 
             cursor = connection.cursor()
 
+
             # =========================================
             # CHECK DUPLICATE VEHICLE NUMBER
             # =========================================
 
             cursor.execute("""
-                SELECT
-                    vehicle_id
+                SELECT vehicle_id
                 FROM vehicles
                 WHERE vehicle_number = %s
             """, (vehicle_number,))
@@ -374,6 +378,10 @@ def add_vehicle():
                     url_for("vehicles.add_vehicle")
                 )
 
+
+            # =========================================
+            # INSERT VEHICLE
+            # =========================================
 
             cursor.execute("""
                 INSERT INTO vehicles
@@ -532,6 +540,7 @@ def edit_vehicle(vehicle_id):
 
         cursor = connection.cursor(dictionary=True)
 
+
         # =========================================
         # GET EXISTING VEHICLE
         # =========================================
@@ -598,10 +607,6 @@ def edit_vehicle(vehicle_id):
             ).strip()
 
 
-            # =========================================
-            # REQUIRED FIELD VALIDATION
-            # =========================================
-
             if (
                 not vehicle_number
                 or not vehicle_type
@@ -623,14 +628,10 @@ def edit_vehicle(vehicle_id):
                 )
 
 
-            # =========================================
-            # VEHICLE NUMBER VALIDATION
-            # =========================================
-
-            if len(vehicle_number) < 2:
+            if len(vehicle_number) < 2 or len(vehicle_number) > 50:
 
                 flash(
-                    "Vehicle number must contain at least 2 characters.",
+                    "Vehicle number must contain between 2 and 50 characters.",
                     "error"
                 )
 
@@ -641,25 +642,6 @@ def edit_vehicle(vehicle_id):
                     )
                 )
 
-
-            if len(vehicle_number) > 50:
-
-                flash(
-                    "Vehicle number cannot exceed 50 characters.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for(
-                        "vehicles.edit_vehicle",
-                        vehicle_id=vehicle_id
-                    )
-                )
-
-
-            # =========================================
-            # VEHICLE TYPE VALIDATION
-            # =========================================
 
             if vehicle_type not in VALID_VEHICLE_TYPES:
 
@@ -675,10 +657,6 @@ def edit_vehicle(vehicle_id):
                     )
                 )
 
-
-            # =========================================
-            # CAPACITY VALIDATION
-            # =========================================
 
             try:
 
@@ -714,16 +692,12 @@ def edit_vehicle(vehicle_id):
                 )
 
 
-            # =========================================
-            # DRIVER NAME VALIDATION
-            # =========================================
-
             if driver_name:
 
-                if len(driver_name) < 2:
+                if len(driver_name) < 2 or len(driver_name) > 100:
 
                     flash(
-                        "Driver name must contain at least 2 characters.",
+                        "Driver name must contain between 2 and 100 characters.",
                         "error"
                     )
 
@@ -734,25 +708,6 @@ def edit_vehicle(vehicle_id):
                         )
                     )
 
-
-                if len(driver_name) > 100:
-
-                    flash(
-                        "Driver name cannot exceed 100 characters.",
-                        "error"
-                    )
-
-                    return redirect(
-                        url_for(
-                            "vehicles.edit_vehicle",
-                            vehicle_id=vehicle_id
-                        )
-                    )
-
-
-            # =========================================
-            # DRIVER CONTACT VALIDATION
-            # =========================================
 
             if driver_contact:
 
@@ -786,14 +741,10 @@ def edit_vehicle(vehicle_id):
                     )
 
 
-            # =========================================
-            # LOCATION VALIDATION
-            # =========================================
-
-            if len(location) < 2:
+            if len(location) < 2 or len(location) > 255:
 
                 flash(
-                    "Location must contain at least 2 characters.",
+                    "Location must contain between 2 and 255 characters.",
                     "error"
                 )
 
@@ -804,25 +755,6 @@ def edit_vehicle(vehicle_id):
                     )
                 )
 
-
-            if len(location) > 255:
-
-                flash(
-                    "Location cannot exceed 255 characters.",
-                    "error"
-                )
-
-                return redirect(
-                    url_for(
-                        "vehicles.edit_vehicle",
-                        vehicle_id=vehicle_id
-                    )
-                )
-
-
-            # =========================================
-            # STATUS VALIDATION
-            # =========================================
 
             if status not in VALID_STATUSES:
 
@@ -844,8 +776,7 @@ def edit_vehicle(vehicle_id):
             # =========================================
 
             cursor.execute("""
-                SELECT
-                    vehicle_id
+                SELECT vehicle_id
                 FROM vehicles
                 WHERE vehicle_number = %s
                 AND vehicle_id != %s
@@ -950,6 +881,7 @@ def edit_vehicle(vehicle_id):
 
 # =========================================
 # DELETE VEHICLE
+# ADMIN / COORDINATOR ONLY
 # =========================================
 
 @vehicles.route(
@@ -959,8 +891,35 @@ def edit_vehicle(vehicle_id):
 def delete_vehicle(vehicle_id):
 
     if "user_id" not in session:
-        flash("Please login first.", "error")
-        return redirect(url_for("auth.login"))
+
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+
+    # =========================================
+    # ROLE SECURITY
+    # =========================================
+
+    if not can_manage_vehicles():
+
+        flash(
+            "You do not have permission to delete vehicles.",
+            "error"
+        )
+
+        return redirect(
+            url_for(
+                "vehicles.vehicle_details",
+                vehicle_id=vehicle_id
+            )
+        )
+
 
     connection = None
     cursor = None
@@ -970,6 +929,7 @@ def delete_vehicle(vehicle_id):
         connection = get_db_connection()
 
         cursor = connection.cursor()
+
 
         # =========================================
         # CHECK VEHICLE EXISTS
