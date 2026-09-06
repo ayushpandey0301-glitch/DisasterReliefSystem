@@ -252,10 +252,6 @@ def add_request():
             "Pending"
         ).strip()
 
-        # -------------------------------------------------
-        # REQUIRED FIELD VALIDATION
-        # -------------------------------------------------
-
         if (
             not disaster_id
             or not request_type
@@ -272,10 +268,6 @@ def add_request():
             return redirect(
                 url_for("requests.add_request")
             )
-
-        # -------------------------------------------------
-        # DISASTER ID VALIDATION
-        # -------------------------------------------------
 
         if not disaster_id.isdigit():
 
@@ -301,10 +293,6 @@ def add_request():
                 url_for("requests.add_request")
             )
 
-        # -------------------------------------------------
-        # RESOURCE TYPE VALIDATION
-        # -------------------------------------------------
-
         if request_type not in VALID_REQUEST_TYPES:
 
             flash(
@@ -315,10 +303,6 @@ def add_request():
             return redirect(
                 url_for("requests.add_request")
             )
-
-        # -------------------------------------------------
-        # RESOURCE NAME VALIDATION
-        # -------------------------------------------------
 
         if len(resource_name) < 2:
 
@@ -341,10 +325,6 @@ def add_request():
             return redirect(
                 url_for("requests.add_request")
             )
-
-        # -------------------------------------------------
-        # QUANTITY VALIDATION
-        # -------------------------------------------------
 
         if not quantity_requested.isdigit():
 
@@ -370,10 +350,6 @@ def add_request():
                 url_for("requests.add_request")
             )
 
-        # -------------------------------------------------
-        # DESCRIPTION VALIDATION
-        # -------------------------------------------------
-
         if len(description) > 1000:
 
             flash(
@@ -384,10 +360,6 @@ def add_request():
             return redirect(
                 url_for("requests.add_request")
             )
-
-        # -------------------------------------------------
-        # LOCATION VALIDATION
-        # -------------------------------------------------
 
         if len(location) < 2:
 
@@ -411,10 +383,6 @@ def add_request():
                 url_for("requests.add_request")
             )
 
-        # -------------------------------------------------
-        # PRIORITY VALIDATION
-        # -------------------------------------------------
-
         if priority not in VALID_PRIORITIES:
 
             flash(
@@ -425,10 +393,6 @@ def add_request():
             return redirect(
                 url_for("requests.add_request")
             )
-
-        # -------------------------------------------------
-        # STATUS VALIDATION
-        # -------------------------------------------------
 
         if status not in VALID_STATUSES:
 
@@ -441,10 +405,6 @@ def add_request():
                 url_for("requests.add_request")
             )
 
-        # -------------------------------------------------
-        # DATABASE INSERT
-        # -------------------------------------------------
-
         connection = None
         cursor = None
 
@@ -452,10 +412,6 @@ def add_request():
 
             connection = get_db_connection()
             cursor = connection.cursor()
-
-            # -------------------------------------------------
-            # CHECK DISASTER EXISTS
-            # -------------------------------------------------
 
             cursor.execute("""
                 SELECT disaster_id
@@ -475,10 +431,6 @@ def add_request():
                 return redirect(
                     url_for("requests.add_request")
                 )
-
-            # -------------------------------------------------
-            # INSERT REQUEST
-            # -------------------------------------------------
 
             cursor.execute("""
                 INSERT INTO resource_requests
@@ -660,10 +612,6 @@ def edit_request(request_id):
                 "Pending"
             ).strip()
 
-            # -------------------------------------------------
-            # REQUIRED FIELD VALIDATION
-            # -------------------------------------------------
-
             if (
                 not disaster_id
                 or not request_type
@@ -683,10 +631,6 @@ def edit_request(request_id):
                         request_id=request_id
                     )
                 )
-
-            # -------------------------------------------------
-            # DISASTER ID VALIDATION
-            # -------------------------------------------------
 
             if not disaster_id.isdigit():
 
@@ -718,10 +662,6 @@ def edit_request(request_id):
                     )
                 )
 
-            # -------------------------------------------------
-            # CHECK DISASTER EXISTS
-            # -------------------------------------------------
-
             cursor.execute("""
                 SELECT disaster_id
                 FROM disasters
@@ -744,10 +684,6 @@ def edit_request(request_id):
                     )
                 )
 
-            # -------------------------------------------------
-            # REQUEST TYPE VALIDATION
-            # -------------------------------------------------
-
             if request_type not in VALID_REQUEST_TYPES:
 
                 flash(
@@ -761,10 +697,6 @@ def edit_request(request_id):
                         request_id=request_id
                     )
                 )
-
-            # -------------------------------------------------
-            # RESOURCE NAME VALIDATION
-            # -------------------------------------------------
 
             if len(resource_name) < 2:
 
@@ -793,10 +725,6 @@ def edit_request(request_id):
                         request_id=request_id
                     )
                 )
-
-            # -------------------------------------------------
-            # QUANTITY VALIDATION
-            # -------------------------------------------------
 
             if not quantity_requested.isdigit():
 
@@ -828,10 +756,6 @@ def edit_request(request_id):
                     )
                 )
 
-            # -------------------------------------------------
-            # DESCRIPTION VALIDATION
-            # -------------------------------------------------
-
             if len(description) > 1000:
 
                 flash(
@@ -845,10 +769,6 @@ def edit_request(request_id):
                         request_id=request_id
                     )
                 )
-
-            # -------------------------------------------------
-            # LOCATION VALIDATION
-            # -------------------------------------------------
 
             if len(location) < 2:
 
@@ -878,10 +798,6 @@ def edit_request(request_id):
                     )
                 )
 
-            # -------------------------------------------------
-            # PRIORITY VALIDATION
-            # -------------------------------------------------
-
             if priority not in VALID_PRIORITIES:
 
                 flash(
@@ -896,10 +812,6 @@ def edit_request(request_id):
                     )
                 )
 
-            # -------------------------------------------------
-            # STATUS VALIDATION
-            # -------------------------------------------------
-
             if status not in VALID_STATUSES:
 
                 flash(
@@ -913,10 +825,6 @@ def edit_request(request_id):
                         request_id=request_id
                     )
                 )
-
-            # -------------------------------------------------
-            # DATABASE UPDATE
-            # -------------------------------------------------
 
             cursor.execute("""
                 UPDATE resource_requests
@@ -990,7 +898,7 @@ def edit_request(request_id):
 
 
 # =========================================================
-# DELETE RELIEF REQUEST
+# DELETE RELIEF REQUEST - ADMIN ONLY
 # =========================================================
 
 @requests.route(
@@ -999,21 +907,51 @@ def edit_request(request_id):
 )
 def delete_request(request_id):
 
+    # LOGIN CHECK
+
     if "user_id" not in session:
-        flash("Please login first.", "error")
-        return redirect(url_for("auth.login"))
+
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+
+    # ADMIN ONLY CHECK
+
+    user_role = str(
+        session.get("role", "")
+    ).strip().lower()
+
+
+    if user_role != "admin":
+
+        flash(
+            "Only administrators can delete relief requests.",
+            "error"
+        )
+
+        return redirect(
+            url_for("requests.request_list")
+        )
+
 
     connection = None
     cursor = None
 
+
     try:
 
         connection = get_db_connection()
+
         cursor = connection.cursor()
 
-        # -------------------------------------------------
-        # CHECK REQUEST EXISTS
-        # -------------------------------------------------
+
+        # CHECK IF REQUEST EXISTS
 
         cursor.execute("""
             SELECT request_id
@@ -1021,7 +959,9 @@ def delete_request(request_id):
             WHERE request_id = %s
         """, (request_id,))
 
+
         relief_request = cursor.fetchone()
+
 
         if not relief_request:
 
@@ -1034,36 +974,41 @@ def delete_request(request_id):
                 url_for("requests.request_list")
             )
 
-        # -------------------------------------------------
+
         # DELETE REQUEST
-        # -------------------------------------------------
 
         cursor.execute("""
             DELETE FROM resource_requests
             WHERE request_id = %s
         """, (request_id,))
 
+
         connection.commit()
+
 
         flash(
             "Relief request deleted successfully.",
             "success"
         )
 
+
     except Exception as e:
 
         if connection:
             connection.rollback()
+
 
         print(
             "DELETE REQUEST ERROR:",
             repr(e)
         )
 
+
         flash(
             "Unable to delete relief request.",
             "error"
         )
+
 
     finally:
 
@@ -1072,6 +1017,7 @@ def delete_request(request_id):
 
         if connection:
             connection.close()
+
 
     return redirect(
         url_for("requests.request_list")
