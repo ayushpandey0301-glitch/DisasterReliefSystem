@@ -500,6 +500,7 @@ Relief Requests | Disaster Relief Management System
     }
 
     @media (max-width: 700px) {
+
         .request-actions {
             flex-direction: column;
             align-items: stretch;
@@ -512,6 +513,7 @@ Relief Requests | Disaster Relief Management System
         .request-filters {
             grid-template-columns: 1fr;
         }
+
     }
 
 </style>
@@ -627,11 +629,15 @@ Relief Requests | Disaster Relief Management System
             </div>
 
             <div>
-                <strong>{{ session["full_name"] }}</strong>
+
+                <strong>
+                    {{ session["full_name"] }}
+                </strong>
 
                 <span>
                     {{ session.get("role", "volunteer") | title }}
                 </span>
+
             </div>
 
         </div>
@@ -806,34 +812,43 @@ Relief Requests | Disaster Relief Management System
                                 data-status="{{ (item.status or '') | lower }}">
 
                                 <td>
+
                                     <span class="request-id">
                                         #{{ item.request_id }}
                                     </span>
+
                                 </td>
 
 
                                 <td>
+
                                     <strong class="requester-name">
                                         {{ item.requester_name or "N/A" }}
                                     </strong>
+
                                 </td>
 
 
                                 <td>
+
                                     <span class="request-contact">
                                         {{ item.contact or "N/A" }}
                                     </span>
+
                                 </td>
 
 
                                 <td>
+
                                     <span class="request-type">
                                         {{ item.request_type }}
                                     </span>
+
                                 </td>
 
 
                                 <td>
+
                                     <span class="request-location">
 
                                         <i class="fa-solid fa-location-dot"></i>
@@ -841,22 +856,36 @@ Relief Requests | Disaster Relief Management System
                                         {{ item.location }}
 
                                     </span>
+
                                 </td>
 
 
                                 <td>
 
                                     {% if item.priority == "Low" %}
-                                        <span class="priority priority-low">Low</span>
+
+                                        <span class="priority priority-low">
+                                            Low
+                                        </span>
 
                                     {% elif item.priority == "Medium" %}
-                                        <span class="priority priority-medium">Medium</span>
+
+                                        <span class="priority priority-medium">
+                                            Medium
+                                        </span>
 
                                     {% elif item.priority == "High" %}
-                                        <span class="priority priority-high">High</span>
+
+                                        <span class="priority priority-high">
+                                            High
+                                        </span>
 
                                     {% else %}
-                                        <span class="priority priority-critical">Critical</span>
+
+                                        <span class="priority priority-critical">
+                                            Critical
+                                        </span>
+
                                     {% endif %}
 
                                 </td>
@@ -900,9 +929,11 @@ Relief Requests | Disaster Relief Management System
 
 
                                 <td>
+
                                     <span class="created-date">
                                         {{ item.created_at }}
                                     </span>
+
                                 </td>
 
 
@@ -961,6 +992,14 @@ Relief Requests | Disaster Relief Management System
                                                 ) }}"
                                                 class="delete-request-form"
                                                 style="display: inline;">
+
+                                                <!-- CSRF PROTECTION -->
+
+                                                <input
+                                                    type="hidden"
+                                                    name="csrf_token"
+                                                    value="{{ csrf_token() }}"
+                                                >
 
                                                 <button
                                                     type="button"
