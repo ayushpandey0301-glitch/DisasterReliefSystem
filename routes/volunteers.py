@@ -18,6 +18,17 @@ VALID_STATUSES = {
 
 
 # =========================================================
+# ROLE HELPER
+# =========================================================
+
+def get_user_role():
+
+    return str(
+        session.get("role", "")
+    ).strip().lower()
+
+
+# =========================================================
 # VOLUNTEER LIST
 # =========================================================
 
@@ -159,6 +170,7 @@ def volunteer_details(user_id):
 
 # =========================================================
 # ADD VOLUNTEER
+# ADMIN + COORDINATOR ONLY
 # =========================================================
 
 @volunteers.route(
@@ -168,8 +180,34 @@ def volunteer_details(user_id):
 def add_volunteer():
 
     if "user_id" not in session:
-        flash("Please login first.", "error")
-        return redirect(url_for("auth.login"))
+
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+
+    # =====================================================
+    # ROLE CHECK
+    # =====================================================
+
+    user_role = get_user_role()
+
+    if user_role not in {"admin", "coordinator"}:
+
+        flash(
+            "Only administrators and coordinators can add volunteers.",
+            "error"
+        )
+
+        return redirect(
+            url_for("volunteers.volunteer_list")
+        )
+
 
     if request.method == "POST":
 
@@ -379,10 +417,6 @@ def add_volunteer():
             connection = get_db_connection()
             cursor = connection.cursor()
 
-            # -------------------------------------------------
-            # CHECK DUPLICATE EMAIL
-            # -------------------------------------------------
-
             cursor.execute("""
                 SELECT
                     user_id
@@ -452,7 +486,6 @@ def add_volunteer():
                 repr(e)
             )
 
-            # Handle duplicate email separately
             if "Duplicate entry" in str(e):
 
                 flash(
@@ -479,6 +512,7 @@ def add_volunteer():
             if connection:
                 connection.close()
 
+
     return render_template(
         "volunteers/add.html"
     )
@@ -486,6 +520,7 @@ def add_volunteer():
 
 # =========================================================
 # EDIT VOLUNTEER
+# ADMIN + COORDINATOR ONLY
 # =========================================================
 
 @volunteers.route(
@@ -495,8 +530,34 @@ def add_volunteer():
 def edit_volunteer(user_id):
 
     if "user_id" not in session:
-        flash("Please login first.", "error")
-        return redirect(url_for("auth.login"))
+
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+
+    # =====================================================
+    # ROLE CHECK
+    # =====================================================
+
+    user_role = get_user_role()
+
+    if user_role not in {"admin", "coordinator"}:
+
+        flash(
+            "Only administrators and coordinators can edit volunteers.",
+            "error"
+        )
+
+        return redirect(
+            url_for("volunteers.volunteer_list")
+        )
+
 
     connection = None
     cursor = None
@@ -822,6 +883,7 @@ def edit_volunteer(user_id):
 
 # =========================================================
 # DELETE VOLUNTEER
+# ADMIN ONLY
 # =========================================================
 
 @volunteers.route(
@@ -830,9 +892,39 @@ def edit_volunteer(user_id):
 )
 def delete_volunteer(user_id):
 
+    # =====================================================
+    # LOGIN CHECK
+    # =====================================================
+
     if "user_id" not in session:
-        flash("Please login first.", "error")
-        return redirect(url_for("auth.login"))
+
+        flash(
+            "Please login first.",
+            "error"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
+
+
+    # =====================================================
+    # ADMIN ONLY CHECK
+    # =====================================================
+
+    user_role = get_user_role()
+
+    if user_role != "admin":
+
+        flash(
+            "Only administrators can delete volunteers.",
+            "error"
+        )
+
+        return redirect(
+            url_for("volunteers.volunteer_list")
+        )
+
 
     connection = None
     cursor = None
@@ -841,6 +933,7 @@ def delete_volunteer(user_id):
 
         connection = get_db_connection()
         cursor = connection.cursor()
+
 
         # -------------------------------------------------
         # CHECK VOLUNTEER EXISTS
@@ -884,6 +977,7 @@ def delete_volunteer(user_id):
             "success"
         )
 
+
     except Exception as e:
 
         if connection:
@@ -906,6 +1000,7 @@ def delete_volunteer(user_id):
 
         if connection:
             connection.close()
+
 
     return redirect(
         url_for("volunteers.volunteer_list")

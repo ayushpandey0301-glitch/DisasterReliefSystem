@@ -326,7 +326,7 @@ Volunteers | Disaster Relief Management System
         transition: 0.2s ease;
     }
 
-    /* VIEW - BLUE */
+    /* VIEW */
 
     .view-btn {
         background: #DBEAFE;
@@ -339,7 +339,7 @@ Volunteers | Disaster Relief Management System
         transform: translateY(-1px);
     }
 
-    /* EDIT - YELLOW */
+    /* EDIT */
 
     .edit-btn {
         background: #FEF3C7;
@@ -352,7 +352,7 @@ Volunteers | Disaster Relief Management System
         transform: translateY(-1px);
     }
 
-    /* DELETE - RED */
+    /* DELETE */
 
     .delete-btn {
         background: var(--danger-light);
@@ -562,149 +562,147 @@ Volunteers | Disaster Relief Management System
 
 {% endblock %}
 
-
 {% block content %}
 
 <div class="dashboard-container">
 
-    <!-- ========================================= -->
-    <!-- SIDEBAR -->
-    <!-- ========================================= -->
+```
+<aside class="sidebar">
 
-    <aside class="sidebar">
+    <div class="sidebar-header">
 
-        <div class="sidebar-header">
+        <div class="logo-icon">
+            <i class="fa-solid fa-house-medical"></i>
+        </div>
 
-            <div class="logo-icon">
-                <i class="fa-solid fa-house-medical"></i>
-            </div>
+        <div>
+            <h2>DRRMS</h2>
+            <span>Relief Management</span>
+        </div>
 
-            <div>
-                <h2>DRRMS</h2>
-                <span>Relief Management</span>
-            </div>
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="{{ url_for('dashboard.dashboard_home') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a href="{{ url_for('disaster.disaster_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Disasters</span>
+
+        </a>
+
+
+        <a href="{{ url_for('resource.resource_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-boxes-stacked"></i>
+            <span>Resources</span>
+
+        </a>
+
+
+        <a href="{{ url_for('shelters.shelter_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-house"></i>
+            <span>Shelters</span>
+
+        </a>
+
+
+        <a href="{{ url_for('vehicles.vehicle_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-truck"></i>
+            <span>Vehicles</span>
+
+        </a>
+
+
+        <a href="{{ url_for('volunteers.volunteer_list') }}"
+           class="nav-item active">
+
+            <i class="fa-solid fa-people-group"></i>
+            <span>Volunteers</span>
+
+        </a>
+
+
+        <a href="{{ url_for('requests.request_list') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-hand-holding-heart"></i>
+            <span>Relief Requests</span>
+
+        </a>
+
+
+        <a href="{{ url_for('reports.reports_home') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Reports</span>
+
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <a href="{{ url_for('settings.settings_home') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+
+        </a>
+
+
+        <a href="{{ url_for('auth.logout') }}"
+           class="nav-item">
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+
+        </a>
+
+    </div>
+
+</aside>
+
+
+<main class="main-content">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>Volunteers</h1>
+
+            <p>
+                Manage and monitor registered volunteers.
+            </p>
 
         </div>
 
 
-        <nav class="sidebar-nav">
+        <!-- ADD VOLUNTEER: ADMIN + COORDINATOR -->
 
-            <a href="{{ url_for('dashboard.dashboard_home') }}"
-               class="nav-item">
+        {% set user_role = session.get("role", "") | string | trim | lower %}
 
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Dashboard</span>
-
-            </a>
-
-
-            <a href="{{ url_for('disaster.disaster_list') }}"
-               class="nav-item">
-
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>Disasters</span>
-
-            </a>
-
-
-            <a href="{{ url_for('resource.resource_list') }}"
-               class="nav-item">
-
-                <i class="fa-solid fa-boxes-stacked"></i>
-                <span>Resources</span>
-
-            </a>
-
-
-            <a href="{{ url_for('shelters.shelter_list') }}"
-               class="nav-item">
-
-                <i class="fa-solid fa-house"></i>
-                <span>Shelters</span>
-
-            </a>
-
-
-            <a href="{{ url_for('vehicles.vehicle_list') }}"
-               class="nav-item">
-
-                <i class="fa-solid fa-truck"></i>
-                <span>Vehicles</span>
-
-            </a>
-
-
-            <a href="{{ url_for('volunteers.volunteer_list') }}"
-               class="nav-item active">
-
-                <i class="fa-solid fa-people-group"></i>
-                <span>Volunteers</span>
-
-            </a>
-
-
-            <a href="{{ url_for('requests.request_list') }}"
-               class="nav-item">
-
-                <i class="fa-solid fa-hand-holding-heart"></i>
-                <span>Relief Requests</span>
-
-            </a>
-
-
-            <a href="{{ url_for('reports.reports_home') }}"
-               class="nav-item">
-
-                <i class="fa-solid fa-chart-pie"></i>
-                <span>Reports</span>
-
-            </a>
-
-        </nav>
-
-
-        <div class="sidebar-bottom">
-
-            <a href="{{ url_for('settings.settings_home') }}"
-               class="nav-item">
-
-                <i class="fa-solid fa-gear"></i>
-                <span>Settings</span>
-
-            </a>
-
-
-            <a href="{{ url_for('auth.logout') }}"
-               class="nav-item">
-
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Logout</span>
-
-            </a>
-
-        </div>
-
-    </aside>
-
-
-    <!-- ========================================= -->
-    <!-- MAIN CONTENT -->
-    <!-- ========================================= -->
-
-    <main class="main-content">
-
-        <div class="page-header">
-
-            <div>
-
-                <h1>Volunteers</h1>
-
-                <p>
-                    Manage and monitor registered volunteers.
-                </p>
-
-            </div>
-
+        {% if user_role == "admin" or user_role == "coordinator" %}
 
             <a href="{{ url_for('volunteers.add_volunteer') }}"
                class="add-volunteer-btn">
@@ -715,195 +713,189 @@ Volunteers | Disaster Relief Management System
 
             </a>
 
-        </div>
+        {% endif %}
+
+    </div>
 
 
-        <!-- ========================================= -->
-        <!-- FILTERS -->
-        <!-- ========================================= -->
+    <div class="volunteer-filters">
 
-        <div class="volunteer-filters">
+        <div class="filter-group">
 
-            <div class="filter-group">
+            <label for="volunteerSearch">
+                Search Volunteers
+            </label>
 
-                <label for="volunteerSearch">
-                    Search Volunteers
-                </label>
-
-                <input
-                    type="text"
-                    id="volunteerSearch"
-                    placeholder="Search by name, email or phone..."
-                >
-
-            </div>
-
-
-            <div class="filter-group">
-
-                <label for="statusFilter">
-                    Status
-                </label>
-
-                <select id="statusFilter">
-
-                    <option value="">
-                        All Status
-                    </option>
-
-                    <option value="active">
-                        Active
-                    </option>
-
-                    <option value="inactive">
-                        Inactive
-                    </option>
-
-                </select>
-
-            </div>
+            <input
+                type="text"
+                id="volunteerSearch"
+                placeholder="Search by name, email or phone..."
+            >
 
         </div>
 
 
-        <!-- ========================================= -->
-        <!-- VOLUNTEER TABLE -->
-        <!-- ========================================= -->
+        <div class="filter-group">
 
-        <div class="table-card">
+            <label for="statusFilter">
+                Status
+            </label>
 
-            {% if volunteers %}
+            <select id="statusFilter">
 
-            <div class="table-wrapper">
+                <option value="">
+                    All Status
+                </option>
 
-                <table class="volunteer-table">
+                <option value="active">
+                    Active
+                </option>
 
-                    <thead>
+                <option value="inactive">
+                    Inactive
+                </option>
 
-                        <tr>
+            </select>
 
-                            <th>ID</th>
+        </div>
 
-                            <th>Name</th>
-
-                            <th>Email</th>
-
-                            <th>Phone</th>
-
-                            <th>Role</th>
-
-                            <th>Status</th>
-
-                            <th>Created At</th>
-
-                            <th>Actions</th>
-
-                        </tr>
-
-                    </thead>
+    </div>
 
 
-                    <tbody id="volunteerTableBody">
+    <div class="table-card">
 
-                        {% for volunteer in volunteers %}
+        {% if volunteers %}
 
-                        <tr
-                            class="volunteer-row"
-                            data-status="{{ volunteer.status|lower }}"
-                        >
+        <div class="table-wrapper">
 
-                            <td>
-                                <span class="volunteer-id">
-                                    #{{ volunteer.user_id }}
-                                </span>
-                            </td>
+            <table class="volunteer-table">
 
+                <thead>
 
-                            <td>
+                    <tr>
 
-                                <strong class="volunteer-name">
-                                    {{ volunteer.full_name }}
-                                </strong>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
 
-                            </td>
+                    </tr>
 
-
-                            <td>
-
-                                <span class="volunteer-email">
-                                    {{ volunteer.email }}
-                                </span>
-
-                            </td>
+                </thead>
 
 
-                            <td>
+                <tbody id="volunteerTableBody">
 
-                                <span class="volunteer-phone">
-                                    {{ volunteer.phone or '—' }}
-                                </span>
+                    {% for volunteer in volunteers %}
 
-                            </td>
+                    <tr
+                        class="volunteer-row"
+                        data-status="{{ volunteer.status|lower }}"
+                    >
 
-
-                            <td>
-
-                                <span class="role-badge">
-                                    {{ volunteer.role|capitalize }}
-                                </span>
-
-                            </td>
+                        <td>
+                            <span class="volunteer-id">
+                                #{{ volunteer.user_id }}
+                            </span>
+                        </td>
 
 
-                            <td>
+                        <td>
 
-                                {% if volunteer.status|lower == 'active' %}
+                            <strong class="volunteer-name">
+                                {{ volunteer.full_name }}
+                            </strong>
 
-                                <span class="status-badge status-active">
-                                    Active
-                                </span>
-
-                                {% else %}
-
-                                <span class="status-badge status-inactive">
-                                    Inactive
-                                </span>
-
-                                {% endif %}
-
-                            </td>
+                        </td>
 
 
-                            <td>
+                        <td>
 
-                                <span class="created-date">
-                                    {{ volunteer.created_at.strftime('%d %b %Y') if volunteer.created_at else '—' }}
-                                </span>
+                            <span class="volunteer-email">
+                                {{ volunteer.email }}
+                            </span>
 
-                            </td>
-
-
-                            <td>
-
-                                <div class="action-buttons">
-
-                                    <!-- VIEW -->
-
-                                    <a
-                                        href="{{ url_for(
-                                            'volunteers.volunteer_details',
-                                            user_id=volunteer.user_id
-                                        ) }}"
-                                        class="action-btn view-btn"
-                                        title="View"
-                                    >
-
-                                        <i class="fa-solid fa-eye"></i>
-
-                                    </a>
+                        </td>
 
 
-                                    <!-- EDIT -->
+                        <td>
+
+                            <span class="volunteer-phone">
+                                {{ volunteer.phone or '—' }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="role-badge">
+                                {{ volunteer.role|capitalize }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {% if volunteer.status|lower == 'active' %}
+
+                            <span class="status-badge status-active">
+                                Active
+                            </span>
+
+                            {% else %}
+
+                            <span class="status-badge status-inactive">
+                                Inactive
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="created-date">
+                                {{ volunteer.created_at.strftime('%d %b %Y') if volunteer.created_at else '—' }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- ========================================= -->
+                        <!-- ROLE BASED ACTIONS -->
+                        <!-- ========================================= -->
+
+                        <td>
+
+                            <div class="action-buttons">
+
+
+                                <!-- VIEW: ALL USERS -->
+
+                                <a
+                                    href="{{ url_for(
+                                        'volunteers.volunteer_details',
+                                        user_id=volunteer.user_id
+                                    ) }}"
+                                    class="action-btn view-btn"
+                                    title="View"
+                                >
+
+                                    <i class="fa-solid fa-eye"></i>
+
+                                </a>
+
+
+                                <!-- EDIT: ADMIN + COORDINATOR -->
+
+                                {% if user_role == "admin" or user_role == "coordinator" %}
 
                                     <a
                                         href="{{ url_for(
@@ -918,8 +910,12 @@ Volunteers | Disaster Relief Management System
 
                                     </a>
 
+                                {% endif %}
 
-                                    <!-- DELETE -->
+
+                                <!-- DELETE: ADMIN ONLY -->
+
+                                {% if user_role == "admin" %}
 
                                     <form
                                         method="POST"
@@ -950,32 +946,39 @@ Volunteers | Disaster Relief Management System
 
                                     </form>
 
-                                </div>
+                                {% endif %}
 
-                            </td>
 
-                        </tr>
+                            </div>
 
-                        {% endfor %}
+                        </td>
 
-                    </tbody>
+                    </tr>
 
-                </table>
+                    {% endfor %}
 
-            </div>
+                </tbody>
 
-            {% else %}
+            </table>
 
-            <div class="empty-state">
+        </div>
 
-                <i class="fa-solid fa-people-group"></i>
+        {% else %}
 
-                <h3>No Volunteers Found</h3>
+        <div class="empty-state">
 
-                <p>
-                    Start by adding your first volunteer.
-                </p>
+            <i class="fa-solid fa-people-group"></i>
 
+            <h3>No Volunteers Found</h3>
+
+            <p>
+                Start by adding your first volunteer.
+            </p>
+
+
+            <!-- ADD VOLUNTEER: ADMIN + COORDINATOR -->
+
+            {% if user_role == "admin" or user_role == "coordinator" %}
 
                 <a
                     href="{{ url_for('volunteers.add_volunteer') }}"
@@ -988,19 +991,23 @@ Volunteers | Disaster Relief Management System
 
                 </a>
 
-            </div>
-
             {% endif %}
 
         </div>
 
-    </main>
+        {% endif %}
+
+    </div>
+
+</main>
+```
 
 </div>
 
-
 <!-- ========================================= -->
+
 <!-- DELETE MODAL -->
+
 <!-- ========================================= -->
 
 <div
@@ -1008,55 +1015,56 @@ Volunteers | Disaster Relief Management System
     class="delete-modal"
 >
 
-    <div class="delete-modal-content">
+```
+<div class="delete-modal-content">
 
-        <div class="delete-icon">
+    <div class="delete-icon">
 
-            <i class="fa-solid fa-trash"></i>
+        <i class="fa-solid fa-trash"></i>
 
-        </div>
-
-
-        <h3>
-            Delete Volunteer?
-        </h3>
+    </div>
 
 
-        <p>
-            Are you sure you want to delete this volunteer?
-            This action cannot be undone.
-        </p>
+    <h3>
+        Delete Volunteer?
+    </h3>
 
 
-        <div class="modal-actions">
-
-            <button
-                type="button"
-                class="modal-btn cancel-modal-btn"
-                onclick="closeDeleteModal()"
-            >
-
-                Cancel
-
-            </button>
+    <p>
+        Are you sure you want to delete this volunteer?
+        This action cannot be undone.
+    </p>
 
 
-            <button
-                type="button"
-                class="modal-btn confirm-delete-btn"
-                onclick="confirmDelete()"
-            >
+    <div class="modal-actions">
 
-                Delete
+        <button
+            type="button"
+            class="modal-btn cancel-modal-btn"
+            onclick="closeDeleteModal()"
+        >
 
-            </button>
+            Cancel
 
-        </div>
+        </button>
+
+
+        <button
+            type="button"
+            class="modal-btn confirm-delete-btn"
+            onclick="confirmDelete()"
+        >
+
+            Delete
+
+        </button>
 
     </div>
 
 </div>
+```
 
+</div>
 
 <script>
 
@@ -1204,6 +1212,24 @@ Volunteers | Disaster Relief Management System
 
             }
         );
+
+
+    /* ========================================= */
+    /* CLOSE MODAL WITH ESC KEY */
+    /* ========================================= */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Escape") {
+
+                closeDeleteModal();
+
+            }
+
+        }
+    );
 
 </script>
 
