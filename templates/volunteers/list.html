@@ -4,705 +4,930 @@
 Volunteers | Disaster Relief Management System
 {% endblock %}
 
-{% block extra_css %}
 
-<link rel="stylesheet"
-      href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% block extra_css %}
 
 <style>
 
-    /* ========================================= */
-    /* VOLUNTEER PAGE */
-    /* ========================================= */
+/* =========================================================
+   GLOBAL
+   ========================================================= */
 
-    html {
-        scrollbar-gutter: stable;
+html {
+    scrollbar-gutter: stable;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   PAGE LAYOUT
+   ========================================================= */
+
+.dashboard-container {
+    min-height: 100vh;
+    display: flex;
+    background: #f5f7fb;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   SAME AS DISASTER PAGE
+   ========================================================= */
+
+.sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: #111827;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 25px 18px;
+    flex-shrink: 0;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 35px;
+}
+
+.sidebar-brand .brand-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.25);
+}
+
+.sidebar-brand h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.sidebar-brand span {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    color: #d1d5db;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.nav-item i {
+    width: 20px;
+    text-align: center;
+}
+
+.nav-item:hover {
+    background: #1f2937;
+    color: white;
+    transform: translateX(2px);
+}
+
+.nav-item.active {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.20);
+}
+
+.nav-item.logout {
+    margin-top: auto;
+    color: #fca5a5;
+}
+
+.nav-item.logout:hover {
+    background: #3f1d1d;
+    color: #fecaca;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 30px;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: #111827;
+}
+
+.page-header p {
+    margin: 7px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   USER PROFILE
+   ========================================================= */
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    flex-shrink: 0;
+    padding: 8px 13px 8px 8px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 13px;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+}
+
+.user-avatar {
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.user-profile strong {
+    display: block;
+    color: #111827;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.user-profile span {
+    display: block;
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   ADD VOLUNTEER BUTTON
+   ========================================================= */
+
+.add-volunteer-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    transition: 0.2s ease;
+}
+
+.add-volunteer-btn:hover {
+    background: #1d4ed8;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.20);
+}
+
+.add-volunteer-btn i {
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   FILTERS
+   ========================================================= */
+
+.volunteer-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 13px;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 220px;
+}
+
+.filter-group label {
+    font-size: 12px;
+    font-weight: 650;
+    color: #374151;
+}
+
+.filter-group input,
+.filter-group select {
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #111827;
+    outline: none;
+    transition: 0.2s ease;
+    font-size: 13px;
+}
+
+.filter-group input::placeholder {
+    color: #94a3b8;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* =========================================================
+   TABLE CARD
+   ========================================================= */
+
+.table-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.05);
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    height: 7px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.volunteer-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 950px;
+}
+
+.volunteer-table th {
+    background: #f8fafc;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+.volunteer-table td {
+    padding: 15px;
+    border-bottom: 1px solid #eef2f7;
+    color: #4b5563;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.volunteer-table tr:last-child td {
+    border-bottom: none;
+}
+
+.volunteer-table tbody tr {
+    transition: 0.15s ease;
+}
+
+.volunteer-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+/* =========================================================
+   VOLUNTEER ID
+   ========================================================= */
+
+.volunteer-id {
+    color: #64748b;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   VOLUNTEER NAME
+   ========================================================= */
+
+.volunteer-name {
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   EMAIL
+   ========================================================= */
+
+.volunteer-email {
+    color: #475569;
+}
+
+
+/* =========================================================
+   PHONE
+   ========================================================= */
+
+.volunteer-phone {
+    color: #475569;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   ROLE
+   ========================================================= */
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-active::before {
+    background: #16a34a;
+}
+
+.status-inactive {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.status-inactive::before {
+    background: #9ca3af;
+}
+
+
+/* =========================================================
+   CREATED DATE
+   ========================================================= */
+
+.created-date {
+    color: #64748b;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.action-btn {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+
+/* VIEW */
+
+.view-btn {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.view-btn:hover {
+    background: #bfdbfe;
+    color: #1d4ed8;
+}
+
+
+/* EDIT */
+
+.edit-btn {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.edit-btn:hover {
+    background: #fde68a;
+    color: #b45309;
+}
+
+
+/* DELETE */
+
+.delete-btn {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.delete-btn:hover {
+    background: #fecaca;
+    color: #b91c1c;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state i {
+    font-size: 45px;
+    color: #93c5fd;
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+.empty-state p {
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   DELETE MODAL
+   ========================================================= */
+
+.delete-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s ease;
+    padding: 20px;
+}
+
+.delete-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.delete-modal-content {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+    transform: translateY(10px);
+    transition: 0.2s ease;
+}
+
+.delete-modal.show .delete-modal-content {
+    transform: translateY(0);
+}
+
+.delete-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fee2e2;
+    color: #dc2626;
+    font-size: 24px;
+}
+
+.delete-modal-content h3 {
+    margin-bottom: 8px;
+    font-size: 21px;
+    color: #111827;
+}
+
+.delete-modal-content p {
+    color: #6b7280;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.modal-btn {
+    min-width: 110px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.cancel-modal-btn {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.cancel-modal-btn:hover {
+    background: #e5e7eb;
+}
+
+.confirm-delete-btn {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.confirm-delete-btn:hover {
+    background: #b91c1c;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .dashboard-container {
+        flex-direction: column;
     }
 
-    body {
-        overflow-x: hidden;
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .nav-menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .nav-item {
+        flex: 1;
+        min-width: 130px;
+    }
+
+    .nav-item.logout {
+        margin-top: 0;
     }
 
     .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-    }
-
-    .page-header h1 {
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 5px;
-    }
-
-    .page-header p {
-        color: var(--muted);
-        margin: 0;
-    }
-
-    /* ========================================= */
-    /* ADD VOLUNTEER BUTTON */
-    /* ========================================= */
-
-    .add-volunteer-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 11px 18px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        background: #2563eb;
-        color: #ffffff;
-        border: 1px solid #2563eb;
-        transition: 0.2s ease;
-    }
-
-    .add-volunteer-btn:hover {
-        background: #1d4ed8;
-        border-color: #1d4ed8;
-        color: #ffffff;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
-    }
-
-    .add-volunteer-btn i {
-        font-size: 13px;
-    }
-
-    /* ========================================= */
-    /* FILTERS */
-    /* ========================================= */
-
-    .volunteer-filters {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: end;
-        gap: 15px;
-        margin-bottom: 25px;
-        padding: 20px;
-        background: var(--white);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
-    }
-
-    .filter-group {
-        display: flex;
         flex-direction: column;
-        gap: 7px;
-        min-width: 220px;
+        align-items: flex-start;
     }
 
-    .filter-group label {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text);
-    }
+}
 
-    .filter-group input,
-    .filter-group select {
-        height: 42px;
-        padding: 0 12px;
-        border: 1px solid var(--border);
-        border-radius: 7px;
-        background: var(--white);
-        color: var(--text);
-        outline: none;
-        transition: 0.2s ease;
-    }
 
-    .filter-group input::placeholder {
-        color: #94A3B8;
-    }
+@media (max-width: 480px) {
 
-    .filter-group input:focus,
-    .filter-group select:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
-    }
-
-    /* ========================================= */
-    /* TABLE CARD */
-    /* ========================================= */
-
-    .table-card {
-        background: var(--white);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
-    }
-
-    .table-wrapper {
-        width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-        scrollbar-width: thin;
-    }
-
-    .table-wrapper::-webkit-scrollbar {
-        height: 7px;
-    }
-
-    .table-wrapper::-webkit-scrollbar-track {
-        background: #F1F5F9;
-    }
-
-    .table-wrapper::-webkit-scrollbar-thumb {
-        background: #CBD5E1;
-        border-radius: 10px;
-    }
-
-    .table-wrapper::-webkit-scrollbar-thumb:hover {
-        background: #94A3B8;
-    }
-
-    .volunteer-table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 950px;
-    }
-
-    .volunteer-table th {
-        background: #F8FAFC;
-        color: var(--text);
-        font-size: 13px;
-        font-weight: 700;
-        text-align: left;
-        padding: 15px;
-        border-bottom: 1px solid var(--border);
-        white-space: nowrap;
-    }
-
-    .volunteer-table td {
-        padding: 15px;
-        border-bottom: 1px solid var(--border);
-        color: var(--text);
-        font-size: 14px;
-        vertical-align: middle;
-    }
-
-    .volunteer-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .volunteer-table tbody tr {
-        transition: 0.15s ease;
-    }
-
-    .volunteer-table tbody tr:hover {
-        background: #F8FBFF;
-    }
-
-    /* ========================================= */
-    /* VOLUNTEER ID */
-    /* ========================================= */
-
-    .volunteer-id {
-        color: #64748B;
-        font-weight: 600;
-        font-size: 13px;
-    }
-
-    /* ========================================= */
-    /* VOLUNTEER NAME */
-    /* ========================================= */
-
-    .volunteer-name {
-        color: #2563eb;
-        font-weight: 700;
-        font-size: 15px;
-        transition: 0.2s ease;
-    }
-
-    .volunteer-row:hover .volunteer-name {
-        color: #1d4ed8;
-    }
-
-    /* ========================================= */
-    /* EMAIL */
-    /* ========================================= */
-
-    .volunteer-email {
-        color: #475569;
-    }
-
-    /* ========================================= */
-    /* PHONE */
-    /* ========================================= */
-
-    .volunteer-phone {
-        color: #475569;
-        white-space: nowrap;
-    }
-
-    /* ========================================= */
-    /* ROLE */
-    /* ========================================= */
-
-    .role-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 5px 10px;
-        border-radius: 999px;
-        background: #EFF6FF;
-        color: #2563EB;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    /* ========================================= */
-    /* STATUS */
-    /* ========================================= */
-
-    .status-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 5px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .status-badge::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        display: inline-block;
-    }
-
-    .status-active {
-        background: #DCFCE7;
-        color: #15803D;
-    }
-
-    .status-active::before {
-        background: #16A34A;
-    }
-
-    .status-inactive {
-        background: #F3F4F6;
-        color: #6B7280;
-    }
-
-    .status-inactive::before {
-        background: #9CA3AF;
-    }
-
-    /* ========================================= */
-    /* CREATED DATE */
-    /* ========================================= */
-
-    .created-date {
-        color: #64748B;
-        white-space: nowrap;
-    }
-
-    /* ========================================= */
-    /* ACTIONS */
-    /* ========================================= */
-
-    .action-buttons {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-    }
-
-    .action-btn {
-        width: 34px;
-        height: 34px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 7px;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-        transition: 0.2s ease;
-    }
-
-    /* VIEW */
-
-    .view-btn {
-        background: #DBEAFE;
-        color: #2563EB;
-    }
-
-    .view-btn:hover {
-        background: #BFDBFE;
-        color: #1D4ED8;
-        transform: translateY(-1px);
-    }
-
-    /* EDIT */
-
-    .edit-btn {
-        background: #FEF3C7;
-        color: #D97706;
-    }
-
-    .edit-btn:hover {
-        background: #FDE68A;
-        color: #B45309;
-        transform: translateY(-1px);
-    }
-
-    /* DELETE */
-
-    .delete-btn {
-        background: var(--danger-light);
-        color: var(--danger);
-    }
-
-    .delete-btn:hover {
-        background: #FECACA;
-        color: #B91C1C;
-        transform: translateY(-1px);
-    }
-
-    /* ========================================= */
-    /* EMPTY STATE */
-    /* ========================================= */
-
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-    }
-
-    .empty-state i {
-        font-size: 45px;
-        color: #93C5FD;
-        margin-bottom: 15px;
-    }
-
-    .empty-state h3 {
-        font-size: 20px;
-        margin-bottom: 8px;
-    }
-
-    .empty-state p {
-        color: var(--muted);
-        margin-bottom: 20px;
-    }
-
-    /* ========================================= */
-    /* DELETE MODAL */
-    /* ========================================= */
-
-    .delete-modal {
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.55);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        opacity: 0;
-        visibility: hidden;
-        transition: 0.2s ease;
+    .main-content {
         padding: 20px;
-    }
-
-    .delete-modal.show {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .delete-modal-content {
-        width: 100%;
-        max-width: 430px;
-        background: var(--white);
-        border-radius: 14px;
-        padding: 28px;
-        text-align: center;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
-        transform: translateY(10px);
-        transition: 0.2s ease;
-    }
-
-    .delete-modal.show .delete-modal-content {
-        transform: translateY(0);
-    }
-
-    .delete-icon {
-        width: 60px;
-        height: 60px;
-        margin: 0 auto 16px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--danger-light);
-        color: var(--danger);
-        font-size: 24px;
-    }
-
-    .delete-modal-content h3 {
-        margin-bottom: 8px;
-        font-size: 21px;
-    }
-
-    .delete-modal-content p {
-        color: var(--muted);
-        margin-bottom: 24px;
-        line-height: 1.5;
     }
 
     .modal-actions {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
+        flex-direction: column;
     }
 
     .modal-btn {
-        min-width: 110px;
-        padding: 10px 16px;
-        border-radius: 7px;
-        border: none;
-        cursor: pointer;
-        font-weight: 600;
-        transition: 0.2s ease;
+        width: 100%;
     }
 
-    .cancel-modal-btn {
-        background: #F3F4F6;
-        color: var(--text);
-    }
-
-    .cancel-modal-btn:hover {
-        background: #E5E7EB;
-    }
-
-    .confirm-delete-btn {
-        background: var(--danger);
-        color: var(--white);
-    }
-
-    .confirm-delete-btn:hover {
-        background: #B91C1C;
-    }
-
-    /* ========================================= */
-    /* RESPONSIVE */
-    /* ========================================= */
-
-    @media (max-width: 768px) {
-
-        .page-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 15px;
-        }
-
-        .page-header h1 {
-            font-size: 24px;
-        }
-
-        .add-volunteer-btn {
-            width: 100%;
-            justify-content: center;
-        }
-
-        .volunteer-filters {
-            flex-direction: column;
-            align-items: stretch;
-            padding: 16px;
-        }
-
-        .filter-group {
-            width: 100%;
-            min-width: 0;
-        }
-
-        .filter-group input,
-        .filter-group select {
-            width: 100%;
-        }
-
-        .table-card {
-            border-radius: 10px;
-        }
-
-    }
-
-    @media (max-width: 480px) {
-
-        .page-header h1 {
-            font-size: 22px;
-        }
-
-        .page-header p {
-            font-size: 13px;
-        }
-
-        .volunteer-filters {
-            margin-bottom: 18px;
-        }
-
-        .delete-modal-content {
-            padding: 24px 20px;
-        }
-
-        .modal-actions {
-            flex-direction: column;
-        }
-
-        .modal-btn {
-            width: 100%;
-        }
-
-    }
+}
 
 </style>
 
 {% endblock %}
 
+
 {% block content %}
+
 
 <div class="dashboard-container">
 
-```
-<aside class="sidebar">
 
-    <div class="sidebar-header">
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
 
-        <div class="logo-icon">
-            <i class="fa-solid fa-house-medical"></i>
-        </div>
-
-        <div>
-            <h2>DRRMS</h2>
-            <span>Relief Management</span>
-        </div>
-
-    </div>
+    <aside class="sidebar">
 
 
-    <nav class="sidebar-nav">
+        <div class="sidebar-brand">
 
-        <a href="{{ url_for('dashboard.dashboard_home') }}"
-           class="nav-item">
+            <div class="brand-icon">
 
-            <i class="fa-solid fa-chart-line"></i>
-            <span>Dashboard</span>
+                <i class="fa-solid fa-hand-holding-heart"></i>
 
-        </a>
+            </div>
 
 
-        <a href="{{ url_for('disaster.disaster_list') }}"
-           class="nav-item">
+            <div>
 
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>Disasters</span>
+                <h2>DRRMS</h2>
 
-        </a>
+                <span>Disaster Relief</span>
 
-
-        <a href="{{ url_for('resource.resource_list') }}"
-           class="nav-item">
-
-            <i class="fa-solid fa-boxes-stacked"></i>
-            <span>Resources</span>
-
-        </a>
-
-
-        <a href="{{ url_for('shelters.shelter_list') }}"
-           class="nav-item">
-
-            <i class="fa-solid fa-house"></i>
-            <span>Shelters</span>
-
-        </a>
-
-
-        <a href="{{ url_for('vehicles.vehicle_list') }}"
-           class="nav-item">
-
-            <i class="fa-solid fa-truck"></i>
-            <span>Vehicles</span>
-
-        </a>
-
-
-        <a href="{{ url_for('volunteers.volunteer_list') }}"
-           class="nav-item active">
-
-            <i class="fa-solid fa-people-group"></i>
-            <span>Volunteers</span>
-
-        </a>
-
-
-        <a href="{{ url_for('requests.request_list') }}"
-           class="nav-item">
-
-            <i class="fa-solid fa-hand-holding-heart"></i>
-            <span>Relief Requests</span>
-
-        </a>
-
-
-        <a href="{{ url_for('reports.reports_home') }}"
-           class="nav-item">
-
-            <i class="fa-solid fa-chart-pie"></i>
-            <span>Reports</span>
-
-        </a>
-
-    </nav>
-
-
-    <div class="sidebar-bottom">
-
-        <a href="{{ url_for('settings.settings_home') }}"
-           class="nav-item">
-
-            <i class="fa-solid fa-gear"></i>
-            <span>Settings</span>
-
-        </a>
-
-
-        <a href="{{ url_for('auth.logout') }}"
-           class="nav-item">
-
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span>Logout</span>
-
-        </a>
-
-    </div>
-
-</aside>
-
-
-<main class="main-content">
-
-    <div class="page-header">
-
-        <div>
-
-            <h1>Volunteers</h1>
-
-            <p>
-                Manage and monitor registered volunteers.
-            </p>
+            </div>
 
         </div>
 
 
-        <!-- ADD VOLUNTEER: ADMIN + COORDINATOR -->
+        <nav class="nav-menu">
+
+
+            <a href="{{ url_for('dashboard.dashboard_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{{ url_for('disaster.disaster_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                <span>Disasters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('resource.resource_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+
+                <span>Resources</span>
+
+            </a>
+
+
+            <a href="{{ url_for('shelters.shelter_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-house-medical"></i>
+
+                <span>Shelters</span>
+
+            </a>
+
+
+            <a href="{{ url_for('vehicles.vehicle_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-truck"></i>
+
+                <span>Vehicles</span>
+
+            </a>
+
+
+            <!-- ACTIVE -->
+
+            <a href="{{ url_for('volunteers.volunteer_list') }}"
+               class="nav-item active">
+
+                <i class="fa-solid fa-users"></i>
+
+                <span>Volunteers</span>
+
+            </a>
+
+
+            <a href="{{ url_for('requests.request_list') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-clipboard-list"></i>
+
+                <span>Relief Requests</span>
+
+            </a>
+
+
+            <a href="{{ url_for('reports.reports_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-chart-pie"></i>
+
+                <span>Reports</span>
+
+            </a>
+
+
+            <a href="{{ url_for('settings.settings_home') }}"
+               class="nav-item">
+
+                <i class="fa-solid fa-gear"></i>
+
+                <span>Settings</span>
+
+            </a>
+
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>Logout</span>
+
+            </a>
+
+
+        </nav>
+
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="main-content">
+
+
+        <div class="page-header">
+
+
+            <div>
+
+                <h1>Volunteers</h1>
+
+                <p>
+                    Manage and monitor registered volunteers.
+                </p>
+
+            </div>
+
+
+            <div class="user-profile">
+
+
+                <div class="user-avatar">
+
+                    {{ session.get("full_name", "U")[0] | upper }}
+
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        {{ session.get("full_name", "User") }}
+                    </strong>
+
+                    <span>
+                        {{ session.get("role", "User") | title }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
 
         {% set user_role = session.get("role", "") | string | trim | lower %}
 
+
+        <!-- ADD BUTTON -->
+
         {% if user_role == "admin" or user_role == "coordinator" %}
+
+        <div style="margin-bottom: 20px;">
 
             <a href="{{ url_for('volunteers.add_volunteer') }}"
                class="add-volunteer-btn">
@@ -713,189 +938,220 @@ Volunteers | Disaster Relief Management System
 
             </a>
 
+        </div>
+
         {% endif %}
 
-    </div>
+
+        <!-- =================================================
+             FILTERS
+             ================================================= -->
+
+        <div class="volunteer-filters">
 
 
-    <div class="volunteer-filters">
+            <div class="filter-group">
 
-        <div class="filter-group">
+                <label for="volunteerSearch">
+                    Search Volunteers
+                </label>
 
-            <label for="volunteerSearch">
-                Search Volunteers
-            </label>
+                <input
+                    type="text"
+                    id="volunteerSearch"
+                    placeholder="Search by name, email or phone..."
+                >
 
-            <input
-                type="text"
-                id="volunteerSearch"
-                placeholder="Search by name, email or phone..."
-            >
+            </div>
+
+
+            <div class="filter-group">
+
+                <label for="statusFilter">
+                    Status
+                </label>
+
+                <select id="statusFilter">
+
+                    <option value="">
+                        All Status
+                    </option>
+
+                    <option value="active">
+                        Active
+                    </option>
+
+                    <option value="inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
 
         </div>
 
 
-        <div class="filter-group">
+        <!-- =================================================
+             TABLE
+             ================================================= -->
 
-            <label for="statusFilter">
-                Status
-            </label>
-
-            <select id="statusFilter">
-
-                <option value="">
-                    All Status
-                </option>
-
-                <option value="active">
-                    Active
-                </option>
-
-                <option value="inactive">
-                    Inactive
-                </option>
-
-            </select>
-
-        </div>
-
-    </div>
+        <div class="table-card">
 
 
-    <div class="table-card">
-
-        {% if volunteers %}
-
-        <div class="table-wrapper">
-
-            <table class="volunteer-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                        <th>Actions</th>
-
-                    </tr>
-
-                </thead>
+            {% if volunteers %}
 
 
-                <tbody id="volunteerTableBody">
-
-                    {% for volunteer in volunteers %}
-
-                    <tr
-                        class="volunteer-row"
-                        data-status="{{ volunteer.status|lower }}"
-                    >
-
-                        <td>
-                            <span class="volunteer-id">
-                                #{{ volunteer.user_id }}
-                            </span>
-                        </td>
+            <div class="table-wrapper">
 
 
-                        <td>
-
-                            <strong class="volunteer-name">
-                                {{ volunteer.full_name }}
-                            </strong>
-
-                        </td>
+                <table class="volunteer-table">
 
 
-                        <td>
+                    <thead>
 
-                            <span class="volunteer-email">
-                                {{ volunteer.email }}
-                            </span>
+                        <tr>
 
-                        </td>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
 
+                        </tr>
 
-                        <td>
-
-                            <span class="volunteer-phone">
-                                {{ volunteer.phone or '—' }}
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="role-badge">
-                                {{ volunteer.role|capitalize }}
-                            </span>
-
-                        </td>
+                    </thead>
 
 
-                        <td>
-
-                            {% if volunteer.status|lower == 'active' %}
-
-                            <span class="status-badge status-active">
-                                Active
-                            </span>
-
-                            {% else %}
-
-                            <span class="status-badge status-inactive">
-                                Inactive
-                            </span>
-
-                            {% endif %}
-
-                        </td>
+                    <tbody id="volunteerTableBody">
 
 
-                        <td>
-
-                            <span class="created-date">
-                                {{ volunteer.created_at.strftime('%d %b %Y') if volunteer.created_at else '—' }}
-                            </span>
-
-                        </td>
+                        {% for volunteer in volunteers %}
 
 
-                        <!-- ========================================= -->
-                        <!-- ROLE BASED ACTIONS -->
-                        <!-- ========================================= -->
-
-                        <td>
-
-                            <div class="action-buttons">
+                        <tr
+                            class="volunteer-row"
+                            data-status="{{ volunteer.status|lower }}"
+                        >
 
 
-                                <!-- VIEW: ALL USERS -->
+                            <td>
 
-                                <a
-                                    href="{{ url_for(
-                                        'volunteers.volunteer_details',
-                                        user_id=volunteer.user_id
-                                    ) }}"
-                                    class="action-btn view-btn"
-                                    title="View"
-                                >
+                                <span class="volunteer-id">
+                                    #{{ volunteer.user_id }}
+                                </span>
 
-                                    <i class="fa-solid fa-eye"></i>
-
-                                </a>
+                            </td>
 
 
-                                <!-- EDIT: ADMIN + COORDINATOR -->
+                            <td>
 
-                                {% if user_role == "admin" or user_role == "coordinator" %}
+                                <strong class="volunteer-name">
+
+                                    {{ volunteer.full_name }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="volunteer-email">
+
+                                    {{ volunteer.email }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="volunteer-phone">
+
+                                    {{ volunteer.phone or '—' }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="role-badge">
+
+                                    {{ volunteer.role|capitalize }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+
+                                {% if volunteer.status|lower == 'active' %}
+
+                                <span class="status-badge status-active">
+                                    Active
+                                </span>
+
+
+                                {% else %}
+
+                                <span class="status-badge status-inactive">
+                                    Inactive
+                                </span>
+
+                                {% endif %}
+
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="created-date">
+
+                                    {{ volunteer.created_at.strftime('%d %b %Y') if volunteer.created_at else '—' }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+
+                                <div class="action-buttons">
+
+
+                                    <!-- VIEW -->
+
+                                    <a
+                                        href="{{ url_for(
+                                            'volunteers.volunteer_details',
+                                            user_id=volunteer.user_id
+                                        ) }}"
+                                        class="action-btn view-btn"
+                                        title="View"
+                                    >
+
+                                        <i class="fa-solid fa-eye"></i>
+
+                                    </a>
+
+
+                                    <!-- EDIT -->
+
+                                    {% if user_role == "admin" or user_role == "coordinator" %}
 
                                     <a
                                         href="{{ url_for(
@@ -910,12 +1166,12 @@ Volunteers | Disaster Relief Management System
 
                                     </a>
 
-                                {% endif %}
+                                    {% endif %}
 
 
-                                <!-- DELETE: ADMIN ONLY -->
+                                    <!-- DELETE -->
 
-                                {% if user_role == "admin" %}
+                                    {% if user_role == "admin" %}
 
                                     <form
                                         method="POST"
@@ -925,6 +1181,7 @@ Volunteers | Disaster Relief Management System
                                         ) }}"
                                         style="display: inline;"
                                     >
+
 
                                         <input
                                             type="hidden"
@@ -944,41 +1201,56 @@ Volunteers | Disaster Relief Management System
 
                                         </button>
 
+
                                     </form>
 
-                                {% endif %}
+                                    {% endif %}
 
 
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-        {% else %}
-
-        <div class="empty-state">
-
-            <i class="fa-solid fa-people-group"></i>
-
-            <h3>No Volunteers Found</h3>
-
-            <p>
-                Start by adding your first volunteer.
-            </p>
+                                </div>
 
 
-            <!-- ADD VOLUNTEER: ADMIN + COORDINATOR -->
+                            </td>
 
-            {% if user_role == "admin" or user_role == "coordinator" %}
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+            {% else %}
+
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+
+                <i class="fa-solid fa-people-group"></i>
+
+
+                <h3>
+                    No Volunteers Found
+                </h3>
+
+
+                <p>
+                    Start by adding your first volunteer.
+                </p>
+
+
+                {% if user_role == "admin" or user_role == "coordinator" %}
+
 
                 <a
                     href="{{ url_for('volunteers.add_volunteer') }}"
@@ -991,238 +1263,250 @@ Volunteers | Disaster Relief Management System
 
                 </a>
 
+
+                {% endif %}
+
+
+            </div>
+
+
             {% endif %}
+
 
         </div>
 
-        {% endif %}
 
-    </div>
+    </main>
 
-</main>
-```
 
 </div>
 
-<!-- ========================================= -->
 
-<!-- DELETE MODAL -->
-
-<!-- ========================================= -->
+<!-- =========================================================
+     DELETE MODAL
+     ========================================================= -->
 
 <div
     id="deleteModal"
     class="delete-modal"
 >
 
-```
-<div class="delete-modal-content">
 
-    <div class="delete-icon">
+    <div class="delete-modal-content">
 
-        <i class="fa-solid fa-trash"></i>
+
+        <div class="delete-icon">
+
+            <i class="fa-solid fa-trash"></i>
+
+        </div>
+
+
+        <h3>
+            Delete Volunteer?
+        </h3>
+
+
+        <p>
+            Are you sure you want to delete this volunteer?
+            This action cannot be undone.
+        </p>
+
+
+        <div class="modal-actions">
+
+
+            <button
+                type="button"
+                class="modal-btn cancel-modal-btn"
+                onclick="closeDeleteModal()"
+            >
+
+                Cancel
+
+            </button>
+
+
+            <button
+                type="button"
+                class="modal-btn confirm-delete-btn"
+                onclick="confirmDelete()"
+            >
+
+                Delete
+
+            </button>
+
+
+        </div>
+
 
     </div>
 
 
-    <h3>
-        Delete Volunteer?
-    </h3>
-
-
-    <p>
-        Are you sure you want to delete this volunteer?
-        This action cannot be undone.
-    </p>
-
-
-    <div class="modal-actions">
-
-        <button
-            type="button"
-            class="modal-btn cancel-modal-btn"
-            onclick="closeDeleteModal()"
-        >
-
-            Cancel
-
-        </button>
-
-
-        <button
-            type="button"
-            class="modal-btn confirm-delete-btn"
-            onclick="confirmDelete()"
-        >
-
-            Delete
-
-        </button>
-
-    </div>
-
 </div>
-```
 
-</div>
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
 
 <script>
 
-    /* ========================================= */
-    /* VOLUNTEER SEARCH + FILTER */
-    /* ========================================= */
 
-    const volunteerSearch =
-        document.getElementById("volunteerSearch");
+/* =========================================================
+   VOLUNTEER SEARCH + FILTER
+   ========================================================= */
 
-
-    const statusFilter =
-        document.getElementById("statusFilter");
+const volunteerSearch =
+    document.getElementById("volunteerSearch");
 
 
-    const volunteerRows =
-        document.querySelectorAll(".volunteer-row");
+const statusFilter =
+    document.getElementById("statusFilter");
 
 
-    function filterVolunteers() {
-
-        const searchValue =
-            volunteerSearch.value.toLowerCase().trim();
+const volunteerRows =
+    document.querySelectorAll(".volunteer-row");
 
 
-        const statusValue =
-            statusFilter.value.toLowerCase().trim();
+function filterVolunteers() {
 
 
-        volunteerRows.forEach(function(row) {
-
-            const rowText =
-                row.innerText.toLowerCase();
-
-
-            const rowStatus =
-                row.dataset.status.toLowerCase();
+    const searchValue =
+        volunteerSearch.value
+            .toLowerCase()
+            .trim();
 
 
-            const matchesSearch =
-                rowText.includes(searchValue);
+    const statusValue =
+        statusFilter.value
+            .toLowerCase()
+            .trim();
 
 
-            const matchesStatus =
-                !statusValue ||
-                rowStatus === statusValue;
+    volunteerRows.forEach(function(row) {
 
 
-            if (
-                matchesSearch &&
-                matchesStatus
-            ) {
-
-                row.style.display = "";
-
-            } else {
-
-                row.style.display = "none";
-
-            }
-
-        });
-
-    }
+        const rowText =
+            row.innerText.toLowerCase();
 
 
-    if (volunteerSearch) {
-
-        volunteerSearch.addEventListener(
-            "input",
-            filterVolunteers
-        );
-
-    }
+        const rowStatus =
+            row.dataset.status.toLowerCase();
 
 
-    if (statusFilter) {
-
-        statusFilter.addEventListener(
-            "change",
-            filterVolunteers
-        );
-
-    }
+        const matchesSearch =
+            rowText.includes(searchValue);
 
 
-    /* ========================================= */
-    /* DELETE MODAL */
-    /* ========================================= */
-
-    let deleteForm = null;
+        const matchesStatus =
+            !statusValue ||
+            rowStatus === statusValue;
 
 
-    function openDeleteModal(button) {
+        if (
+            matchesSearch &&
+            matchesStatus
+        ) {
 
-        deleteForm =
-            button.closest("form");
-
-
-        document
-            .getElementById("deleteModal")
-            .classList.add("show");
-
-    }
-
-
-    function closeDeleteModal() {
-
-        document
-            .getElementById("deleteModal")
-            .classList.remove("show");
-
-
-        deleteForm = null;
-
-    }
-
-
-    function confirmDelete() {
-
-        if (deleteForm) {
-
-            deleteForm.submit();
+            row.style.display = "";
 
         }
 
-    }
+        else {
+
+            row.style.display = "none";
+
+        }
 
 
-    /* ========================================= */
-    /* CLOSE MODAL OUTSIDE */
-    /* ========================================= */
+    });
+
+
+}
+
+
+if (volunteerSearch) {
+
+    volunteerSearch.addEventListener(
+        "input",
+        filterVolunteers
+    );
+
+}
+
+
+if (statusFilter) {
+
+    statusFilter.addEventListener(
+        "change",
+        filterVolunteers
+    );
+
+}
+
+
+/* =========================================================
+   DELETE MODAL
+   ========================================================= */
+
+let deleteForm = null;
+
+
+function openDeleteModal(button) {
+
+
+    deleteForm =
+        button.closest("form");
+
 
     document
         .getElementById("deleteModal")
-        .addEventListener(
-            "click",
-            function(event) {
-
-                if (event.target === this) {
-
-                    closeDeleteModal();
-
-                }
-
-            }
-        );
+        .classList.add("show");
 
 
-    /* ========================================= */
-    /* CLOSE MODAL WITH ESC KEY */
-    /* ========================================= */
+}
 
-    document.addEventListener(
-        "keydown",
+
+function closeDeleteModal() {
+
+
+    document
+        .getElementById("deleteModal")
+        .classList.remove("show");
+
+
+    deleteForm = null;
+
+
+}
+
+
+function confirmDelete() {
+
+
+    if (deleteForm) {
+
+        deleteForm.submit();
+
+    }
+
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL OUTSIDE
+   ========================================================= */
+
+document
+    .getElementById("deleteModal")
+    .addEventListener(
+        "click",
         function(event) {
 
-            if (event.key === "Escape") {
+            if (event.target === this) {
 
                 closeDeleteModal();
 
@@ -1231,6 +1515,26 @@ Volunteers | Disaster Relief Management System
         }
     );
 
+
+/* =========================================================
+   CLOSE MODAL WITH ESC KEY
+   ========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Escape") {
+
+            closeDeleteModal();
+
+        }
+
+    }
+);
+
+
 </script>
+
 
 {% endblock %}
